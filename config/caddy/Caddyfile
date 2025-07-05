@@ -1,0 +1,20 @@
+{$SITE_HOSTNAME:http://localhost:8000} {
+	log {
+		format json
+		output file /var/log/access.log {
+			roll_size 2gb
+			roll_keep 5
+			roll_keep_for 720h
+		}
+	}
+
+	@php_routes expression {path}.endsWith(".php") || {path} == "/"
+
+	reverse_proxy @php_routes {$PHP_URI} {
+		header_up X-Real-IP {client_ip}
+	}
+
+	reverse_proxy {$RUST_URI} {
+		header_up X-Real-IP {client_ip}
+	}
+}

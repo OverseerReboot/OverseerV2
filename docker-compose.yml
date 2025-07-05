@@ -1,6 +1,7 @@
 services:
   database:
     &database
+    restart: always
     profiles:
       - prod
     build:
@@ -15,6 +16,7 @@ services:
   
   database-dev:
     <<: *database
+    restart: on-failure
     profiles:
       - dev
     ports:
@@ -24,16 +26,13 @@ services:
     &php
     profiles:
       - prod
-    restart: on-failure
+    restart: always
     build:
       dockerfile: ./config/php/Dockerfile.prod
     volumes:
       - session_data:/var/www/sessions/
     env_file:
       - .env
-    ports:
-      - 80:80
-      - 443:443
     depends_on:
       - database
   
@@ -56,7 +55,7 @@ services:
     &rust
     profiles:
       - prod
-    restart: on-failure
+    restart: always
     build:
       dockerfile: ./config/rust/Dockerfile.prod
     env_file:
@@ -66,9 +65,6 @@ services:
       - OVERSEER_ROOT=/php/
     volumes:
       - session_data:${OVERSEER_PHP_SESSIONS_ROOT}
-    ports:
-      - 80:80
-      - 443:443
     depends_on:
       - database
   
@@ -90,6 +86,48 @@ services:
     depends_on:
       - database-dev
 
+  proxy:
+    &proxy
+    profiles:
+      - prod
+    image: caddy:2.10-alpine
+    restart: always
+    build:
+      context: ./config/caddy
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - '80:80'
+      - '443:443'
+      - '443:443/udp'
+    volumes:
+      - ./config/caddy/Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    environment:
+      - SITE_HOSTNAME=${SITE_HOSTNAME}
+      - RUST_URI=http://rust:8010
+      - PHP_URI=http://php:9000
+    depends_on:
+      - php
+      - rust
+
+  proxy-dev:
+    <<: *proxy
+    profiles:
+      - dev
+    environment:
+      - SITE_HOSTNAME=http://localhost:8000
+      - RUST_URI=http://rust-dev:8010
+      - PHP_URI=http://php-dev:9000
+    ports:
+      - 8000:8000
+    depends_on:
+      - php-dev
+      - rust-dev
+
 volumes:
   db_data:
   session_data:
+  caddy_data:
+  caddy_config:
