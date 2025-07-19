@@ -2,9 +2,9 @@
 
 require_once "header.php";
 if (empty($_POST['orderby'])) {
-    $itemresult = mysqli_query($connection, "SELECT * FROM Captchalogue ORDER BY name ASC;");
+    $itemresult = mysqli_query($connection, "SELECT * FROM `captchalogue` ORDER BY name ASC;");
 } else {
-    $itemresult = mysqli_query($connection, "SELECT * FROM Captchalogue ORDER BY " . mysqli_real_escape_string($connection, $_POST['orderby']) . " ASC;");
+    $itemresult = mysqli_query($connection, "SELECT * FROM `captchalogue` ORDER BY " . mysqli_real_escape_string($connection, $_POST['orderby']) . " ASC;");
 }
 if ($accrow['modlevel'] >= 3) {
     echo "Reorder the list by:<br />";

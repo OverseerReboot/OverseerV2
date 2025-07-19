@@ -49,7 +49,7 @@ require_once "includes/additem.php";
 function genEncounter($minpower, $maxpower, $search): string|false
 {
     global $connection;
-    $enemyresult = mysqli_query($connection, "SELECT * FROM Enemy_Types WHERE ($search) AND basepower * 9 + 81 > $minpower AND basepower < $maxpower ORDER BY RAND()"); //return a random enemy that fits the criteria
+    $enemyresult = mysqli_query($connection, "SELECT * FROM `enemy`_Types WHERE ($search) AND basepower * 9 + 81 > $minpower AND basepower < $maxpower ORDER BY RAND()"); //return a random enemy that fits the criteria
     if ($row = mysqli_fetch_array($enemyresult)) { //see if we found anything
         $i = 1;
         while ($i < 10) {
@@ -87,7 +87,7 @@ function genEncounter($minpower, $maxpower, $search): string|false
 function genLoot($minloot, $maxloot, $search, $session): string|false
 {
     global $connection;
-    $lootresult = mysqli_query($connection, "SELECT * FROM Captchalogue WHERE $search AND (session = 0 OR session = $session) ORDER BY RAND()");
+    $lootresult = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE $search AND (session = 0 OR session = $session) ORDER BY RAND()");
     while ($row = mysqli_fetch_array($lootresult)) {
         $grists = explode("|", $row['gristcosts']);
         $i = 0;
@@ -134,7 +134,7 @@ if (empty($_SESSION['character'])) {
                 echo "You don't have access to the main part of your land yet, and cannot access any dungeons. Tell your server to build up your house!<br />";
             }
         } else {
-            $dungeonresult = mysqli_query($connection, "SELECT * FROM Dungeons WHERE ID = " . strval($charrow['dungeon']));
+            $dungeonresult = mysqli_query($connection, "SELECT * FROM `dungeons` WHERE ID = " . strval($charrow['dungeon']));
             $dungeonrow = mysqli_fetch_array($dungeonresult);
             $topmost = $dungeonrow['topmost'];
             $leftmost = $dungeonrow['leftmost'];
@@ -193,7 +193,7 @@ if (empty($_SESSION['character'])) {
                     if (!empty($tdir)) {
                         if (strpos($exits, $tdir) !== false) { //chosen movement direction is available
                             if (!$canmove) { //Move hasn't happened yet.
-                                mysqli_query($connection, "UPDATE Characters SET dungeonrow = $trow, dungeoncol = $tcol, olddungeonrow = $row, olddungeoncol = $col WHERE Characters.ID = " . $charrow['id'] . " LIMIT 1;");
+                                mysqli_query($connection, "UPDATE `characters` SET dungeonrow = $trow, dungeoncol = $tcol, olddungeonrow = $row, olddungeoncol = $col WHERE Characters.ID = " . $charrow['id'] . " LIMIT 1;");
                             }
                             $canmove = true;
                             $row = $trow;
@@ -209,7 +209,7 @@ if (empty($_SESSION['character'])) {
                                 $j++;
                                 if ($map[$j] == $troom) { //Transportation success
                                     if (!$canmove) { //Move hasn't happened yet.
-                                        mysqli_query($connection, "UPDATE Characters SET dungeonrow = $trow, dungeoncol = $tcol, olddungeonrow = $row, olddungeoncol = $col WHERE Characters.ID = " . $charrow['id'] . " LIMIT 1;");
+                                        mysqli_query($connection, "UPDATE `characters` SET dungeonrow = $trow, dungeoncol = $tcol, olddungeonrow = $row, olddungeoncol = $col WHERE Characters.ID = " . $charrow['id'] . " LIMIT 1;");
                                     }
                                     $canmove = true;
                                     $row = $trow;
@@ -243,7 +243,7 @@ if (empty($_SESSION['character'])) {
                 if (strpos($dungeonrow['room'], ("ROOM:" . $currentroom . ":")) !== false) { //Room not yet visited, flag it as visited.
                     $dungeonrow['room'] = str_replace(("ROOM:" . $currentroom . ":"), ("VISITED:" . $currentroom . ":"), $dungeonrow['room']);
                     $dungeonstring[$tcol][$trow] = str_replace("ROOM:", "VISITED:", $dungeonstring[$tcol][$trow]);
-                    mysqli_query($connection, "UPDATE Dungeons SET room = '" . $dungeonrow['room'] . "' WHERE Dungeons.ID = " . $dungeonrow['id'] . " LIMIT 1;");
+                    mysqli_query($connection, "UPDATE `dungeons` SET room = '" . $dungeonrow['room'] . "' WHERE Dungeons.ID = " . $dungeonrow['id'] . " LIMIT 1;");
                 }
             }
             $newID = 0;
@@ -294,7 +294,7 @@ if (empty($_SESSION['character'])) {
                     $newencstr = $currentroom . ":EXISTS:BOSS:" . strval($newID);
                     $encstr = implode(":", $enc);
                     $dungeonrow['enc'] = str_replace($encstr, $newencstr, $dungeonrow['enc']);
-                    mysqli_query($connection, "UPDATE Dungeons SET enc = '" . $dungeonrow['enc'] . "' WHERE Dungeons.ID = " . $dungeonrow['id'] . " LIMIT 1;");
+                    mysqli_query($connection, "UPDATE `dungeons` SET enc = '" . $dungeonrow['enc'] . "' WHERE Dungeons.ID = " . $dungeonrow['id'] . " LIMIT 1;");
                 } else { //Encounter not generated yet, so arg 1 is the difficulty
                     $done = false;
                     $mini = $dungeonrow['minpower'] * (1 + ($enc[1] / 10));
@@ -342,11 +342,11 @@ if (empty($_SESSION['character'])) {
                         $newencstr = $currentroom . ":EXISTS:" . strval($newID);
                         $encstr = implode(":", $enc);
                         $dungeonrow['enc'] = str_replace($encstr, $newencstr, $dungeonrow['enc']);
-                        mysqli_query($connection, "UPDATE Dungeons SET enc = '" . $dungeonrow['enc'] . "' WHERE Dungeons.ID = " . $dungeonrow['id'] . " LIMIT 1;");
+                        mysqli_query($connection, "UPDATE `dungeons` SET enc = '" . $dungeonrow['enc'] . "' WHERE Dungeons.ID = " . $dungeonrow['id'] . " LIMIT 1;");
                     }
                 }
                 if ($newID != 0) {
-                    $enemiesresult = mysqli_query($connection, "SELECT * FROM Strifers WHERE strifeID = $newID");
+                    $enemiesresult = mysqli_query($connection, "SELECT * FROM `strifers` WHERE strifeID = $newID");
                     $enemypresent = false;
                     $playerpresent = false;
                     $message = "";
@@ -369,7 +369,7 @@ if (empty($_SESSION['character'])) {
                         echo "<a id='strifelink' href='strifedisplay.php'>==&gt;</a><br />";
                         spendFatigue(10, $charrow);
                         $playerside = 0;
-                        mysqli_query($connection, "UPDATE Strifers SET strifeID = $newID, side = $playerside, leader = 1 WHERE ID = " . strval($strife['id'])); //Add player
+                        mysqli_query($connection, "UPDATE `strifers` SET strifeID = $newID, side = $playerside, leader = 1 WHERE ID = " . strval($strife['id'])); //Add player
                         mysqli_query($connection, "UPDATE `strifers` SET `strifeid` = $newID, `side` = $playerside WHERE `strifers`.`owner` = " . $charrow['id'] . " AND `strifers`.`aspect` = '';"); //Add allies
                     } else { //Encounter was beaten by someone else while the explorer was elsewhere. Remove it.
                         echo "Victory!<br />";
@@ -377,7 +377,7 @@ if (empty($_SESSION['character'])) {
                         $dungeonrow['enc'] = str_replace($newencstr, "", $dungeonrow['enc']);
                         $newencstr = $currentroom . ":EXISTS:BOSS:" . strval($newID);
                         $dungeonrow['enc'] = str_replace($newencstr, "", $dungeonrow['enc']);
-                        mysqli_query($connection, "UPDATE Dungeons SET enc = '" . $dungeonrow['enc'] . "' WHERE Dungeons.ID = " . $dungeonrow['id'] . " LIMIT 1;");
+                        mysqli_query($connection, "UPDATE `dungeons` SET enc = '" . $dungeonrow['enc'] . "' WHERE Dungeons.ID = " . $dungeonrow['id'] . " LIMIT 1;");
                         $newID = 0; //Not fighting anything!
                     }
                 }
@@ -446,10 +446,10 @@ if (empty($_SESSION['character'])) {
                         if ($boonplus > 0) {
                             echo strval($boonplus) . " Boondollars<br />";
                             $charrow['boondollars'] += $boonplus;
-                            mysqli_query($connection, "UPDATE Characters SET boondollars = " . $charrow['boondollars'] . " WHERE Characters.ID = " . $charrow['id'] . " LIMIT 1;");
+                            mysqli_query($connection, "UPDATE `characters` SET boondollars = " . $charrow['boondollars'] . " WHERE Characters.ID = " . $charrow['id'] . " LIMIT 1;");
                         }
                         if ($gotloot) {
-                            $lootresult = mysqli_query($connection, "SELECT ID, `name` FROM Captchalogue WHERE $gotloot AND (`session` = 0 OR `session` = $charrow[session])");
+                            $lootresult = mysqli_query($connection, "SELECT ID, `name` FROM `captchalogue` WHERE $gotloot AND (`session` = 0 OR `session` = $charrow[session])");
                             while ($row = mysqli_fetch_array($lootresult)) {
                                 $got = addItem($charrow, $row['id']);
                                 echo $row['name'];
@@ -483,7 +483,7 @@ if (empty($_SESSION['character'])) {
                             echo "DEBUG: $loots contains " . substr_count($loots, ":") . " colons.<br />";
                         }
                         $dungeonrow['loot'] = substr($dungeonrow['loot'], 1);
-                        mysqli_query($connection, "UPDATE Dungeons SET loot = '" . $dungeonrow['loot'] . "' WHERE ID = " . $dungeonrow['id']);
+                        mysqli_query($connection, "UPDATE `dungeons` SET loot = '" . $dungeonrow['loot'] . "' WHERE ID = " . $dungeonrow['id']);
                     }
                 }
             }

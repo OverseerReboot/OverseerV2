@@ -7,7 +7,7 @@ if ($accrow['modlevel'] < 10) {
     echo "nope.rtf";
 } else {
     echo "let's do a wearable fix.<br/>";
-    $wears = mysqli_query($connection, "SELECT * FROM Captchalogue WHERE abstratus LIKE '%bodygear%' OR abstratus LIKE '%headgear%' OR abstratus LIKE '%facegear%' OR abstratus LIKE '%accessory%' LIMIT 100;"); //doing 100 at a time
+    $wears = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE abstratus LIKE '%bodygear%' OR abstratus LIKE '%headgear%' OR abstratus LIKE '%facegear%' OR abstratus LIKE '%accessory%' LIMIT 100;"); //doing 100 at a time
     while ($wrow = mysqli_fetch_array($wears)) {
         $theseabs = explode(", ", $wrow['abstratus']);
         $i = 0;
@@ -38,7 +38,7 @@ if ($accrow['modlevel'] < 10) {
         } //probably not going to happen but you know what
         echo $wrow['name'] . ": " . $newabs . "; " . $newwears . "<br/>";
         if (!empty($_GET['doit'])) {
-            mysqli_query($connection, "UPDATE Captchalogue SET abstratus = '$newabs', wearable = '$newwears' WHERE ID = " . $wrow['id']);
+            mysqli_query($connection, "UPDATE `captchalogue` SET abstratus = '$newabs', wearable = '$newwears' WHERE ID = " . $wrow['id']);
         }
     }
     echo "done with those 100. refresh the page to do more";

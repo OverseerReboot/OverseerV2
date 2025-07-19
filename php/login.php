@@ -8,7 +8,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/inc/database.php';
 
 
 // Grab the user row for specified user.
-$userrowquery = $db->prepare("SELECT 'username', 'password', 'id' FROM `users` WHERE `users`.`username` = :username");
+$userrowquery = $db->prepare("SELECT `username`, `password`, `id` FROM `users` WHERE `users`.`username` = :username");
 $userrowquery->bindParam(':username', $_POST['username']);
 $userrowquery->execute();
 

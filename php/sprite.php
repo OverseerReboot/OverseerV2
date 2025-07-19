@@ -183,7 +183,7 @@ if (empty($_SESSION['character'])) {
             $maxpower = $power + $spriterow['maxpower']; //add the new power to the current base power
             $maxhealth = abs($maxpower * 10) + 10; //absolute value in case of negative prototyping lol
             $health = $maxhealth; //Prototyping fully heals
-            mysqli_query($connection, "UPDATE Strifers SET name = '" . mysqli_real_escape_string($connection, $name) . "', description = '" . mysqli_real_escape_string($connection, $desc) . "', power = $maxpower, maxpower = $maxpower, health = $health, maxhealth = $maxhealth, effects = '" . mysqli_real_escape_string($connection, $effectstr) . "' WHERE ID = " .strval($spriterow['id']));
+            mysqli_query($connection, "UPDATE `strifers` SET name = '" . mysqli_real_escape_string($connection, $name) . "', description = '" . mysqli_real_escape_string($connection, $desc) . "', power = $maxpower, maxpower = $maxpower, health = $health, maxhealth = $maxhealth, effects = '" . mysqli_real_escape_string($connection, $effectstr) . "' WHERE ID = " .strval($spriterow['id']));
             $spriterow['name'] = $name;
             $spriterow['description'] = $desc;
             $spriterow['maxpower'] = $maxpower;
@@ -197,9 +197,9 @@ if (empty($_SESSION['character'])) {
             if ($charrow['inmedium'] == 0) { //Character not yet in medium: prototyping also gets added to enemies.
                 $effectstr = "POWER:" . strval($power) . "|DESCRIPTION:" . $enemydesc . "|" . $effectstr;
                 $pre = $charrow['proto_preentry'] + 1;
-                mysqli_query($connection, "UPDATE Characters SET proto_preentry = $pre, $thisobj = '" . mysqli_real_escape_string($connection, $obj) . "', proto_effects = '" . mysqli_real_escape_string($connection, $effectstr) . "' WHERE ID = $cid");
+                mysqli_query($connection, "UPDATE `characters` SET proto_preentry = $pre, $thisobj = '" . mysqli_real_escape_string($connection, $obj) . "', proto_effects = '" . mysqli_real_escape_string($connection, $effectstr) . "' WHERE ID = $cid");
             } else { //Character in medium, just update the object string so that we know that a prototyping happened
-                mysqli_query($connection, "UPDATE Characters SET $thisobj = '" . mysqli_real_escape_string($connection, $obj) . "' WHERE ID = $cid");
+                mysqli_query($connection, "UPDATE `characters` SET $thisobj = '" . mysqli_real_escape_string($connection, $obj) . "' WHERE ID = $cid");
             }
             $charrow[$thisobj] = $obj;
             echo "You successfully prototype your sprite with $obj!<br />";
@@ -217,7 +217,7 @@ if (empty($_SESSION['character'])) {
         } else {
             $desc = $_POST['protodesc'];
         }
-        mysqli_query($connection, "UPDATE Strifers SET name = '" . mysqli_real_escape_string($connection, $name) . "', description = '" . mysqli_real_escape_string($connection, $desc) . "' WHERE ID = " .strval($spriterow['id']));
+        mysqli_query($connection, "UPDATE `strifers` SET name = '" . mysqli_real_escape_string($connection, $name) . "', description = '" . mysqli_real_escape_string($connection, $desc) . "' WHERE ID = " .strval($spriterow['id']));
         $spriterow['name'] = $name;
         $spriterow['description'] = $desc;
         echo "Sprite name and/or description updated.<br />";

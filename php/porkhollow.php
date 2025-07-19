@@ -33,7 +33,7 @@ if (empty($_SESSION['character'])) {
                 $sessionid = $charrow['session'];
             } else {
                 $sessionesc = str_replace("'", "''", $_POST['session']);
-                $sessionresult = mysqli_query($connection, "SELECT * FROM Sessions WHERE `name` = '". mysqli_real_escape_string($connection, $sessionesc) ."';");
+                $sessionresult = mysqli_query($connection, "SELECT * FROM `sessions` WHERE `name` = '". mysqli_real_escape_string($connection, $sessionesc) ."';");
                 $sessionrow = mysqli_fetch_array($sessionresult);
                 $sessionid = $sessionrow['id'];
             }
@@ -43,7 +43,7 @@ if (empty($_SESSION['character'])) {
             } elseif (empty($_POST['target'])) {
                 echo "You didn't specify a recipient!<br />";
             } else {
-                $wireresult2 = mysqli_query($connection, "SELECT * FROM Characters WHERE name = '". mysqli_real_escape_string($connection, $_POST['target']) ."' AND session = $sessionid;");
+                $wireresult2 = mysqli_query($connection, "SELECT * FROM `characters` WHERE name = '". mysqli_real_escape_string($connection, $_POST['target']) ."' AND session = $sessionid;");
                 $targetfound = false;
                 $poor = false;
                 if (intval($_POST['amount']) <= $charrow['boondollars']) {
@@ -53,9 +53,9 @@ if (empty($_SESSION['character'])) {
                             $targetfound = true;
                             $modifier = intval($_POST['amount']);
                             notifyCharacter($wirerow2['id'], $charrow['name'] . " has sent you ". $modifier . " boondollars!");
-                            $lessmoney = mysqli_query($connection, "UPDATE Characters SET boondollars = boondollars - $modifier WHERE name = '$charrow[name]' AND session = $charrow[session];");
+                            $lessmoney = mysqli_query($connection, "UPDATE `characters` SET boondollars = boondollars - $modifier WHERE name = '$charrow[name]' AND session = $charrow[session];");
                             $quantity = $charrow['boondollars'] - $modifier;
-                            $moremoney = mysqli_query($connection, "UPDATE Characters SET boondollars = boondollars + $modifier WHERE name = '". mysqli_real_escape_string($connection, $_POST['target']) ."' AND session = $sessionid;");
+                            $moremoney = mysqli_query($connection, "UPDATE `characters` SET boondollars = boondollars + $modifier WHERE name = '". mysqli_real_escape_string($connection, $_POST['target']) ."' AND session = $sessionid;");
                         }
                     }
 

@@ -10,7 +10,7 @@ if (empty($_SESSION['username'])) {
     $allabs = "";
     $donotadd = array("", "notaweapon", "jokerkind", "metakind", "jpegkind"); //any abstrati that shouldn't be selectable go here
     $autoadd = []; //any abstrati that should be selectable but might not get picked up by the script go here
-    $itemresult = mysqli_query($connection, "SELECT * FROM Captchalogue ORDER BY abstratus ASC");
+    $itemresult = mysqli_query($connection, "SELECT * FROM `captchalogue` ORDER BY abstratus ASC");
     while ($row = mysqli_fetch_array($itemresult)) {
         $abs = explode(", ", $row['abstratus']);
         if (!in_array($abs[0], $donotadd)) {

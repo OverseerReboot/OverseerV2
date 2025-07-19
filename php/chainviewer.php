@@ -11,10 +11,10 @@ Session to retrieve info about: <input id="session" name="session" type="text" /
 <?php
 if (!empty($_GET['session'])) {
     $sessionesc = str_replace("'", "''", $_GET['session']);
-    $ownsession = mysqli_query($connection, "SELECT * FROM Sessions WHERE `name` ='" . mysqli_real_escape_string($connection, $sessionesc) . "';");
+    $ownsession = mysqli_query($connection, "SELECT * FROM `sessions` WHERE `name` ='" . mysqli_real_escape_string($connection, $sessionesc) . "';");
     $sessiont = mysqli_fetch_array($ownsession);
 } else {
-    $ownsession = mysqli_query($connection, "SELECT * FROM Sessions WHERE ID = $charrow[session];");
+    $ownsession = mysqli_query($connection, "SELECT * FROM `sessions` WHERE ID = $charrow[session];");
     $sessiont = mysqli_fetch_array($ownsession);
 }
 

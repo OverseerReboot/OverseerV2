@@ -12,18 +12,18 @@ if (!empty($_POST['session'])) {
 } elseif (!empty($_GET['session'])) {
     $session = mysqli_real_escape_string($connection, $_GET['session']);
 } else {
-    $ownsession = mysqli_query($connection, "SELECT name FROM Sessions WHERE `id` = $charrow[session];");
+    $ownsession = mysqli_query($connection, "SELECT name FROM `sessions` WHERE `id` = $charrow[session];");
     $sessiont = mysqli_fetch_array($ownsession);
     $session = str_replace("''", "'", $sessiont['name']);
 }
 if (!empty($session)) { //Session to examine
     $sessionesc = str_replace("'", "''", $session); //Add escape characters so we can find session correctly in database.
-    $sessionresult = mysqli_query($connection, "SELECT * FROM Sessions WHERE `name` = '$sessionesc';");
+    $sessionresult = mysqli_query($connection, "SELECT * FROM `sessions` WHERE `name` = '$sessionesc';");
     $sessionrow = mysqli_fetch_array($sessionresult);
     if ($sessionrow == '') {
         echo "ERROR - Session does not exist.</br>";
     } else {
-        $gateresult = mysqli_query($connection, "SELECT * FROM Gates;"); //begin new chain-following code, shamelessly copypasted and trimmed down from Dungeons
+        $gateresult = mysqli_query($connection, "SELECT * FROM `gates`;"); //begin new chain-following code, shamelessly copypasted and trimmed down from Dungeons
         $gaterow = mysqli_fetch_array($gateresult); //Gates only has one row.
         $gaterow['gate0'] = 0;
         $adv = false;
@@ -47,7 +47,7 @@ if (!empty($session)) { //Session to examine
         $characterids2 = rtrim($characterids2, ', ');
 
 
-        $strifersqlquery = "SELECT * FROM Strifers WHERE owner IN (" . $characterids2 . ");";
+        $strifersqlquery = "SELECT * FROM `strifers` WHERE owner IN (" . $characterids2 . ");";
         $striferquery = mysqli_query($connection, $strifersqlquery);
 
         $strifernames = [];
@@ -57,7 +57,7 @@ if (!empty($session)) { //Session to examine
             $striferpower[$striferrow['id']] = $striferrow['power'];
         }
 
-        $itemquery = mysqli_query($connection, "SELECT * FROM Captchalogue;");
+        $itemquery = mysqli_query($connection, "SELECT * FROM `captchalogue`;");
         $itemnames = [];
         while ($itemrow = mysqli_fetch_assoc($itemquery)) {
             $itemnames[$itemrow['id']] = $itemrow['name'];

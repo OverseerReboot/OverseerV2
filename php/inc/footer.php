@@ -8,7 +8,7 @@ if (!empty($_SESSION['inv']) && !empty($_SESSION['imeta'])) {
     $newmeta = "";
 }
 if ($newinv != $charrow['inventory'] || $newmeta != $charrow['metadata']) { //inventory was changed on this page, update it in the database
-    mysqli_query($connection, "UPDATE Characters SET inventory = '$newinv', metadata = '$newmeta' WHERE ID = $cid");
+    mysqli_query($connection, "UPDATE `characters` SET inventory = '$newinv', metadata = '$newmeta' WHERE ID = $cid");
 }
 
 checkNotifications($charrow);

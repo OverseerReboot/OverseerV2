@@ -169,7 +169,7 @@ function showCaptcha(): void
 				Select class:<select name="class">
 					<option value="Null">Select...</option>
 				<?php
-                $class_result = mysqli_query($connection, "SELECT Class, passivefactor, activefactor FROM Class_modifiers;");
+                $class_result = mysqli_query($connection, "SELECT Class, passivefactor, activefactor FROM `class`_modifiers;");
     while ($class_row = mysqli_fetch_array($class_result)) {
         if ($class_row[0] == 'Default') {
             continue;
@@ -188,7 +188,7 @@ function showCaptcha(): void
 				Select aspect:<select name="aspect">
 					<option value="Null">Select...</option>
 				<?php
-    $aspect_result = mysqli_query($connection, "SELECT Aspect FROM Aspect_modifiers;");
+    $aspect_result = mysqli_query($connection, "SELECT Aspect FROM `aspect`_modifiers;");
     while ($aspect_row = mysqli_fetch_array($aspect_result)) {
         echo '<option value="'.$aspect_row[0].'">';
         echo $aspect_row[0];
@@ -215,7 +215,7 @@ function showCaptcha(): void
 				<?php
     $chars = explode("|", $accrow['characters']);
     $i = 0;
-    $charquery = "SELECT `id`,`name`,`session`,`symbol`,`colour` FROM Characters WHERE ";
+    $charquery = "SELECT `id`,`name`,`session`,`symbol`,`colour` FROM `characters` WHERE ";
     $foundone = false;
     while (!empty($chars[$i])) {
         $foundone = true;

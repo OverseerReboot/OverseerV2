@@ -22,7 +22,7 @@ if ($abilityresult != false) {
 if ($message == "") {
     $message = "No new abilities available.<br />";
 }
-mysqli_query($connection, "UPDATE `characters` SET `abilities` = '$abilities' WHERE `characters`.`id` = $charrow[ID] LIMIT 1;");
+mysqli_query($connection, "UPDATE `characters` SET `abilities` = '$abilities' WHERE `characters`.`id` = $charrow[id] LIMIT 1;");
 echo $message;
 strifeInit($charrow);
 require_once "footer.php";

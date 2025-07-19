@@ -26,7 +26,7 @@ $accrow = $accquery->fetch();
 unset($accquery);
 
 // Grab the character's line
-$charquery = $db->prepare("SELECT ID,name,owner,session,server,client FROM Characters WHERE ID = :charid");
+$charquery = $db->prepare("SELECT ID,name,owner,session,server,client FROM `characters` WHERE ID = :charid");
 $charquery->bindParam(':charid', $_GET['c']);
 $charquery->execute();
 if ($charquery->rowcount() != 1) {
@@ -48,19 +48,19 @@ if (!isset($_GET['confirm'])) {
 }
 
 // Delete the character's line
-$chardelete = $db->prepare("DELETE FROM Characters WHERE ID = :charid");
+$chardelete = $db->prepare("DELETE FROM `characters` WHERE ID = :charid");
 $chardelete->bindParam(':charid', $_GET['c']);
 $chardelete->execute();
 unset($chardelete);
 
 // Delete the character's strifers
-$strifedelete = $db->prepare("DELETE FROM Strifers WHERE owner = :charid");
+$strifedelete = $db->prepare("DELETE FROM `strifers` WHERE owner = :charid");
 $strifedelete->bindParam(':charid', $_GET['c']);
 $strifedelete->execute();
 unset($strifedelete);
 
 // Get the session's data, modify it to remove the user, and put it back
-$sessionquery = $db->prepare("SELECT ID,members FROM Sessions WHERE ID = :sessionid");
+$sessionquery = $db->prepare("SELECT ID,members FROM `sessions` WHERE ID = :sessionid");
 $sessionquery->bindParam(':sessionid', $charrow['session']);
 $sessionquery->execute();
 if ($sessionquery->rowcount() != 1) {
@@ -71,7 +71,7 @@ unset($sessionquery);
 $sessmembers = explode('|', $sessionrow['members']);
 unset($sessmembers[array_search($charrow['id'], $sessmembers)]);
 $sessionrow['members'] = implode('|', $sessmembers);
-$sessionquery = $db->prepare("UPDATE Sessions SET members = :members WHERE ID = :sessionid");
+$sessionquery = $db->prepare("UPDATE `sessions` SET members = :members WHERE ID = :sessionid");
 $sessionquery->bindParam(':sessionid', $charrow['session']);
 $sessionquery->bindParam(':members', $sessionrow['members']);
 $sessionquery->execute();
@@ -88,14 +88,14 @@ $userquery->execute();
 unset($userquery);
 
 if (($charrow['server'] != 0) && ($charrow['server'] != $charrow['id'])) {
-    $serverreset = $db->prepare("UPDATE Characters SET client = 0 WHERE ID = :serverid");
+    $serverreset = $db->prepare("UPDATE `characters` SET client = 0 WHERE ID = :serverid");
     $serverreset->bindParam(':serverid', $charrow['server']);
     $serverreset->execute();
     unset($serverreset);
 }
 
 if (($charrow['client'] != 0) && ($charrow['client'] != $charrow['id'])) {
-    $clientreset = $db->prepare("UPDATE Characters SET server = 0 WHERE ID = :clientid");
+    $clientreset = $db->prepare("UPDATE `characters` SET server = 0 WHERE ID = :clientid");
     $clientreset->bindParam(':clientid', $charrow['client']);
     $clientreset->execute();
     unset($clientreset);

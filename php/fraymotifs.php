@@ -49,7 +49,7 @@ if (empty($_SESSION['username'])) {
             $charrow['fraymotifs'] .= $_POST['motifbuy'] . "|";
             $charrow['boondollars'] -= $cost;
             echo "You have successfully purchased $charrow[aspect]/" . $_POST['motifbuy'] . ": $motifname<br>";
-            mysqli_query($connection, "UPDATE `characters` SET `fraymotifs` = '$charrow[fraymotifs]', `boondollars` = $charrow[boondollars] WHERE `characters`.`id` = $charrow[ID] LIMIT 1;");
+            mysqli_query($connection, "UPDATE `characters` SET `fraymotifs` = '$charrow[fraymotifs]', `boondollars` = $charrow[boondollars] WHERE `characters`.`id` = $charrow[id] LIMIT 1;");
         } else {
             echo "You cannot afford that fraymotif! It is unknown at this time whether that was because a teammate convinced you to hand over some of your money.<br>";
         }

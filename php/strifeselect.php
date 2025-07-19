@@ -45,7 +45,7 @@ if (!empty($_POST['land'])) {
     echo '<input type="hidden" name="land" value="' . $_POST['land'] . '">';
     echo '<input type="submit" value="Go looking for these enemies!" /></form><br />';
     if ($_POST['land'] == "battlefield") {
-        $sessionresult = mysqli_query($connection, "SELECT battlefield_power FROM Sessions WHERE Sessions.ID = " . $charrow['session'] . " LIMIT 1;");
+        $sessionresult = mysqli_query($connection, "SELECT battlefield_power FROM `sessions` WHERE Sessions.ID = " . $charrow['session'] . " LIMIT 1;");
         $sessionrow = mysqli_fetch_array($sessionresult);
         echo "Dersite Army power remaining: " . $sessionrow['battlefield_power'] . "<br />";
         echo "Warning! The Black King hasn't been implemented yet so the above doesn't matter right now!<br>";

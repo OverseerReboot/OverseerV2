@@ -31,13 +31,13 @@ if (empty($_SESSION['username'])) {
             if (strpos($charrow['equips'], "main:1") !== false) { //Player has a weapon equipped
                 $deck = explode("|", $charrow['strifedeck']);
                 $mainwep = $deck[0];
-                $wepresult = mysqli_query($connection, "SELECT `name` FROM Captchalogue WHERE ID = " . $mainwep);
+                $wepresult = mysqli_query($connection, "SELECT `name` FROM `captchalogue` WHERE ID = " . $mainwep);
                 $weprow = mysqli_fetch_array($wepresult);
                 $wname = $weprow['name'];
                 echo "Brandishing your trusty $wname, you manage to pop the lid off after some effort! Almost immediately, a glowing ball of jumbled lines and colors flies out of the now open shaft. It hovers near you, as if waiting for you to do something.<br />";
-                mysqli_query($connection, "INSERT INTO Strifers (name, owner, side, teamwork, control, description, power, maxpower, health, maxhealth) VALUES ('Sprite', $cid, 0, 100, 1, 'An unprototyped Kernelsprite.', 0, 0, 1, 1)");
+                mysqli_query($connection, "INSERT INTO `strifers` (name, owner, side, teamwork, control, description, power, maxpower, health, maxhealth) VALUES ('Sprite', $cid, 0, 100, 1, 'An unprototyped Kernelsprite.', 0, 0, 1, 1)");
                 $newid = mysqli_insert_id($connection);
-                mysqli_query($connection, "UPDATE Characters SET sprite = $newid WHERE ID = $cid");
+                mysqli_query($connection, "UPDATE `characters` SET sprite = $newid WHERE ID = $cid");
                 $charrow['sprite'] = $newid;
                 //Additional cruxtruder opening effects can go here such as the entry timer
             } else {
@@ -141,7 +141,7 @@ if (empty($_SESSION['username'])) {
                     $alchcode = "00000000";
                 }
                 echo "The alchemiter scans the code on the totem and begins to process it.<br />";
-                $itemresult = mysqli_query($connection, "SELECT * FROM Captchalogue WHERE code = '$alchcode' AND (session = 0 OR session = " . $charrow['session'] . ")");
+                $itemresult = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE code = '$alchcode' AND (session = 0 OR session = " . $charrow['session'] . ")");
                 //Above: Search for the item. Note that items that were created by other sessions and not yet approved are treated as nonexistent.
                 if ($itemrow = mysqli_fetch_array($itemresult)) {
                     echo "The alchemiter requests: ";
@@ -175,7 +175,7 @@ if (empty($_SESSION['username'])) {
                         $success = storeItem($charrow, $itemrow['id'], $_POST['alchnum']);
                         if ($success) { //user has room for all the newly-created items
                             echo "You successfully create " . $itemrow['name'] . " x " . strval($_POST['alchnum']) . "!<br />";
-                            mysqli_query($connection, "UPDATE Characters SET grists = '" . $charrow['grists'] . "' WHERE ID = $cid"); //Pay.
+                            mysqli_query($connection, "UPDATE `characters` SET grists = '" . $charrow['grists'] . "' WHERE ID = $cid"); //Pay.
                         } else {
                             echo "Alchemy failed: not enough space in storage.<br />";
                         }
@@ -202,7 +202,7 @@ if (empty($_SESSION['username'])) {
             if (strpos($charrow['equips'], "main:1") !== false) { //player has a weapon equipped
                 $deck = explode("|", $charrow['strifedeck']);
                 $mainwep = $deck[0];
-                $wepresult = mysqli_query($connection, "SELECT `name` FROM Captchalogue WHERE ID = " . $mainwep);
+                $wepresult = mysqli_query($connection, "SELECT `name` FROM `captchalogue` WHERE ID = " . $mainwep);
                 $weprow = mysqli_fetch_array($wepresult);
                 $wname = $weprow['name'];
                 echo '<form action="sburbdevices.php" method="post"><input type="hidden" name="cruxopen" value="yes" /><input type="submit" value="Open the lid with your '.$wname.'" /></form>';

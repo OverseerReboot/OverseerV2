@@ -57,7 +57,7 @@ if (empty($_SESSION['character'])) {
             } elseif (empty($_POST['grist_type'])) {
                 echo "You cannot wire a blank grist type!<br />";
             } else {
-                $wireresult = mysqli_query($connection, "SELECT * FROM Characters WHERE `characters`.`name` = '" . mysqli_real_escape_string($connection, $_POST['target']) . "'");
+                $wireresult = mysqli_query($connection, "SELECT * FROM `characters` WHERE `characters`.`name` = '" . mysqli_real_escape_string($connection, $_POST['target']) . "'");
                 $targetfound = false;
                 $poor = false;
                 $type = $_POST['grist_type'];

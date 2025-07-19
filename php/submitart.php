@@ -12,7 +12,7 @@ if ($_SESSION['username'] == "") {
     echo 'Use the following base when sumbitting your image: <br/>';
     echo '<img src="images/art/emptycard.png" /><br/><br/><br/>';
 
-    $subresult = mysqli_query($connection, "SELECT * FROM `art_submissions` WHERE submitter = '$charrow[ID]';");
+    $subresult = mysqli_query($connection, "SELECT * FROM `art_submissions` WHERE submitter = '$charrow[id]';");
     $numresults = mysqli_num_rows($subresult);
     if ($numresults >= 20) {
         echo 'You have submitted enough art for now! Wait until some of it is approved or rejected.<br/>';
@@ -56,7 +56,7 @@ if ($_SESSION['username'] == "") {
                             $content = mysqli_real_escape_string($connection, $content);
                             fclose($fp);
 
-                            mysqli_query($connection, "INSERT INTO `art_submissions` (submitter, code, data) VALUES ('$charrow[ID]', '$_POST[code]', '$content');");
+                            mysqli_query($connection, "INSERT INTO `art_submissions` (submitter, code, data) VALUES ('$charrow[id]', '$_POST[code]', '$content');");
                             echo 'Upload was successful.<br/>';
                         }
                     }

@@ -31,7 +31,7 @@ if ($profiler) {
     }
     echo "Moon: " . $profiler['dreamer'] . "<br>";
 
-    $ownsession = mysqli_query($connection, "SELECT name FROM Sessions WHERE `id` = $profiler[session];");
+    $ownsession = mysqli_query($connection, "SELECT name FROM `sessions` WHERE `id` = $profiler[session];");
     $sessiont = mysqli_fetch_array($ownsession);
     $session = str_replace("''", "'", $sessiont['name']);
     echo 'Symbol: <img id="imgchar" style="display:inline" src="' . $profiler['symbol'] . '"><br />';
@@ -47,7 +47,7 @@ if ($profiler) {
         //echo "Grists available on this land: " . implode(', ', $profiler[grist_type) . '<br>';
         echo "Consorts: " . $profiler['consort'] . "<br><br>";
     }
-    $psession = mysqli_query($connection, "SELECT name FROM Sessions WHERE `id` =" . $profiler['session'] . ";");
+    $psession = mysqli_query($connection, "SELECT name FROM `sessions` WHERE `id` =" . $profiler['session'] . ";");
     $psessionarray = mysqli_fetch_array($psession);
     echo 'Session: <a href="/sessioninfo.php?session=' . $psessionarray['name'] . '">' . $psessionarray['name'] . "</a><br>";
     if (isset($server)) {

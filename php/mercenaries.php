@@ -9,7 +9,7 @@ if (empty($_SESSION['username'])) {
     echo "Can't hire consorts until you enter!<br>";
 } else {
     if (!empty($_GET['info'])) {
-        $consresult = mysqli_query($connection, "SELECT * FROM Consorts WHERE id = '".mysqli_real_escape_string($connection, $_GET['info'])."' LIMIT 1;");
+        $consresult = mysqli_query($connection, "SELECT * FROM `consorts` WHERE id = '".mysqli_real_escape_string($connection, $_GET['info'])."' LIMIT 1;");
         if (mysqli_num_rows($consresult) == 0) {
             echo 'There is no such consort!<br/><br/>';
         } else {
@@ -23,13 +23,13 @@ if (empty($_SESSION['username'])) {
                     if (strlen($newname) > 30) {
                         echo 'That name is too long.<br/><br/>';
                     } else {
-                        mysqli_query($connection, "UPDATE Consorts SET name = '".mysqli_real_escape_string($connection, $newname)."' WHERE id = '".$_GET['info']."' LIMIT 1;");
+                        mysqli_query($connection, "UPDATE `consorts` SET name = '".mysqli_real_escape_string($connection, $newname)."' WHERE id = '".$_GET['info']."' LIMIT 1;");
                     }
                 } else {
                     echo '<b>'.$consrow['name'].'</b><br/>';
                     echo '<form action="" method="GET">	Rename this mercenary: <input type="text" name="name" /><input type="hidden" name="info" value="'.$_GET['info'].'" /> <input type="submit" value="Name!" /></form>';
                     if (!empty($consrow['equipped'])) {
-                        $itemresult = mysqli_query($connection, "SELECT name FROM Captchalogue WHERE ID = '".$consrow['equipped']."' LIMIT 1;");
+                        $itemresult = mysqli_query($connection, "SELECT name FROM `captchalogue` WHERE ID = '".$consrow['equipped']."' LIMIT 1;");
                         $itemrow = mysqli_fetch_array($itemresult);
                         echo 'Equipped: '.$itemrow['name'].'<br/>';
                     }
@@ -128,7 +128,7 @@ if (empty($_SESSION['username'])) {
         $consortNickname = $row['name'];
         if (!empty($consortStatus)) {
             if (!empty($row['equipped'])) {
-                $itemresult = mysqli_query($connection, "SELECT name FROM Captchalogue WHERE ID = '".$row['equipped']."' LIMIT 1;");
+                $itemresult = mysqli_query($connection, "SELECT name FROM `captchalogue` WHERE ID = '".$row['equipped']."' LIMIT 1;");
                 $itemrow = mysqli_fetch_array($itemresult);
                 echo '<a href="?info='.$consortID.'">'.$consortNickname.'</a> ('.$itemrow['name'].') is '.$consortStatus.'.<br>';
             } else {

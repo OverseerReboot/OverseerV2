@@ -46,7 +46,7 @@ if (empty($_SESSION['username'])) {
         if (!empty($_POST['client'])) { //User is registering a client player
             $playerfound = false;
             $registered = "";
-            $sessionmates = mysqli_query($connection, "SELECT * FROM Characters WHERE `characters`.`id` = " . $_POST['client']);
+            $sessionmates = mysqli_query($connection, "SELECT * FROM `characters` WHERE `characters`.`id` = " . $_POST['client']);
             while ($row = mysqli_fetch_array($sessionmates)) {
                 if ($row['session'] == $charrow['session']) { //Make sure the client is actually in the correct session!
                     if ($row['id'] == $_POST['client'] && ($row['server'] == 0 || $row['server'] == $cid)) { //Ensure they don't already have a server player
@@ -99,7 +99,7 @@ if (empty($_SESSION['username'])) {
                 echo "There are no players in your session to whom you can connect! Maybe you should pester some friends?<br />";
             }
         } else { //Player has a client registered
-            $clientresult = mysqli_query($connection, "SELECT * FROM Characters WHERE `id` = '" . $charrow['client'] . "'");
+            $clientresult = mysqli_query($connection, "SELECT * FROM `characters` WHERE `id` = '" . $charrow['client'] . "'");
             $clientrow = mysqli_fetch_array($clientresult);
             $build = howMuchGrist($clientrow['grists'], "Build_Grist");
             $landgrists = explode("|", $clientrow['grist_type']);
@@ -192,7 +192,7 @@ if (empty($_SESSION['username'])) {
                             if ($canafford) {
                                 $success = storeItem($clientrow, $drow['id'], 1, $extras);
                                 if ($success) {
-                                    mysqli_query($connection, "UPDATE Characters SET grists = '$newgrist' WHERE ID = '$clientrow[ID]' LIMIT 1;");
+                                    mysqli_query($connection, "UPDATE `characters` SET grists = '$newgrist' WHERE ID = '$clientrow[id]' LIMIT 1;");
                                     notifyCharacterOnce($charrow, $clientrow['id'], $charrow['name'] . " has deployed a " . $drow['name'] . " in your house!");
                                     if ($clientrow['inmedium'] == 0 && $drow['id'] == 11) {
                                         echo "Pre-punched Card successfully deployed!<br />";
@@ -295,7 +295,7 @@ if (empty($_SESSION['username'])) {
                 //compuRefresh($clientrow);
             }
 
-            $clientresult = mysqli_query($connection, "SELECT * FROM Characters WHERE `characters`.`id` = " . $charrow['client']);
+            $clientresult = mysqli_query($connection, "SELECT * FROM `characters` WHERE `characters`.`id` = " . $charrow['client']);
             $clientrow = mysqli_fetch_array($clientresult);
             //refresh clientrow so that things like grist and storage are up-to-date. yeah it's inefficient but I'm lazy so
 
@@ -308,7 +308,7 @@ if (empty($_SESSION['username'])) {
             echo "Highest gate reached by your client's dwelling: ";
             $gates = 0;
             $i = 1;
-            $gateresult = mysqli_query($connection, "SELECT * FROM Gates");
+            $gateresult = mysqli_query($connection, "SELECT * FROM `gates`");
             $gaterow = mysqli_fetch_array($gateresult); //Gates only has one row.
             while ($i <= 7) {
                 $gatestr = "gate" . strval($i);

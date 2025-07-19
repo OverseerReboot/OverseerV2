@@ -97,7 +97,7 @@ if ($_SESSION['username'] != $sessionRow['creator']) {
         }
     }
 
-    mysqli_query($connection, "DELETE FROM Sessions WHERE `id` = '$session'");
+    mysqli_query($connection, "DELETE FROM `sessions` WHERE `id` = '$session'");
 } elseif (isset($_POST['delete1'])) {
     echo "<span style='color:red;'>" . "Are you SURE you want to delete your entire session and doom every single member? This can't be undone.". "</span><br><br>";
     echo '<form id="deleteS" action="sessionadmin.php" method="post">
@@ -108,7 +108,7 @@ if ($_SESSION['username'] != $sessionRow['creator']) {
     if (isset($_POST['changepw2'])) {
         if ($_POST['changepw2'] == $_POST['changepw']) {
             $password = password_hash($_POST['changepw'], PASSWORD_BCRYPT);
-            mysqli_query($connection, "UPDATE Sessions SET password='" . $password . "' WHERE ID=" . $charrow['session'] . " LIMIT 1;");
+            mysqli_query($connection, "UPDATE `sessions` SET password='" . $password . "' WHERE ID=" . $charrow['session'] . " LIMIT 1;");
             echo "Password changed successfully!<br>";
         } else {
             echo "The two passwords are different!<br>";

@@ -683,7 +683,7 @@ function phatLoot(& $charrow, $qrow, & $landrow, $gate = 1, $itemcost = 0): int|
         }
     } else {
         if ($itemcost <= 0) {
-            $gaterow = mysqli_query($connection, "SELECT * FROM Gates;");
+            $gaterow = mysqli_query($connection, "SELECT * FROM `gates`;");
             $gaterow = mysqli_fetch_row($connection, $gaterow);
             $itemcost = rand(1, $gaterow[$gate]);
         }

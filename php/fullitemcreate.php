@@ -155,7 +155,7 @@ if ($_SESSION['username'] != "") {
             if ($power == '') {
                 $power = 0;
             }
-            $query = "INSERT INTO Feedback (`user`,`name`,`code`,`recipe`,`power`,`description`,`comments`,`lastupdated`,`bonuses`,`grists`,`abstratus`,`wearable`,`size`,`consumable`,`catalogue`,`lootonly`,`refrance`) VALUES ('$username','$name','$code','$recipe',$power,'$description','$comments',$ctime,'$bonus','$gristcosts','$abs','$wear','$size',$consume,$base,$loot,$ref);";
+            $query = "INSERT INTO `feedback` (`user`,`name`,`code`,`recipe`,`power`,`description`,`comments`,`lastupdated`,`bonuses`,`grists`,`abstratus`,`wearable`,`size`,`consumable`,`catalogue`,`lootonly`,`refrance`) VALUES ('$username','$name','$code','$recipe',$power,'$description','$comments',$ctime,'$bonus','$gristcosts','$abs','$wear','$size',$consume,$base,$loot,$ref);";
             if ($accrow['modlevel'] >= 10) {
                 echo $query . "<br />";
             }

@@ -74,7 +74,7 @@ if (empty($charrow)) {
             $i++;
         }
         $charrow['aspectpatterns'] = $newlist;
-        mysqli_query($connection, "UPDATE `characters` SET `aspectpatterns` = '" . $charrow['aspectpatterns'] . "' WHERE `id` = $charrow[ID] LIMIT 1;");
+        mysqli_query($connection, "UPDATE `characters` SET `aspectpatterns` = '" . $charrow['aspectpatterns'] . "' WHERE `id` = $charrow[id] LIMIT 1;");
         echo "Pattern deleted.</br>";
     } elseif (!empty($_POST['usepattern'])) { //usepattern is used to signal, erm, a pattern being used.
         //We can check some failure conditions here that apply regardless of target. Failure conditions:
@@ -106,7 +106,7 @@ if (empty($charrow)) {
             if (!empty($_POST['savepattern'])) {
                 $_POST['name'] = mysqli_real_escape_string($connection, $_POST['name']); //Escape the name
                 $charrow['aspectpatterns'] .= "name:" . $_POST['name'] . "," . $savestr . "|";
-                mysqli_query($connection, "UPDATE `characters` SET `aspectpatterns` = '" . $charrow['aspectpatterns'] . "' WHERE `id` = $charrow[ID] LIMIT 1;");
+                mysqli_query($connection, "UPDATE `characters` SET `aspectpatterns` = '" . $charrow['aspectpatterns'] . "' WHERE `id` = $charrow[id] LIMIT 1;");
             }
         }
         $cost = 100 - floor(pow(($values['aspectvial'] * ($aspectrow['Aspect_vial'] / 100) * ($classrow['Aspect_vial'] / 100)), (1 / 2)) * 10);
@@ -286,7 +286,7 @@ if (empty($charrow)) {
                     $striferow['bonuses'] = $striferow['bonuses'] . "POWER:0:$powerup|";
                 }
                 $playerhealth = $striferow['health'] + $heal;
-                mysqli_query($connection, "UPDATE `strifers` SET `bonuses` = '$striferow[bonuses]', `health` = $playerhealth WHERE `strifers`.`id` = $striferow[ID] LIMIT 1;");
+                mysqli_query($connection, "UPDATE `strifers` SET `bonuses` = '$striferow[bonuses]', `health` = $playerhealth WHERE `strifers`.`id` = $striferow[id] LIMIT 1;");
             }
             incrementStat($charrow, 'aspect');
             //Powerdown is the same regardless of target, so do it afterwards
@@ -302,13 +302,13 @@ if (empty($charrow)) {
                 $targetpower = 0;
             }
             //Below: Query to update the target's strife row
-            mysqli_query($connection, "UPDATE `strifers` SET `bonuses` = '$targetrow[bonuses]', `health` = $targethealth, `power` = $targetpower WHERE `strifers`.`id` = $targetrow[ID] LIMIT 1;");
+            mysqli_query($connection, "UPDATE `strifers` SET `bonuses` = '$targetrow[bonuses]', `health` = $targethealth, `power` = $targetpower WHERE `strifers`.`id` = $targetrow[id] LIMIT 1;");
             //Pay for the pattern
             $newenergy = $striferow['energy'] - $cost;
             if ($newenergy < 0) {
                 $newenergy = 0;
             } //This should never happen, but the check is included here for safety
-            mysqli_query($connection, "UPDATE `strifers` SET `energy` = $newenergy WHERE `strifers`.`id` = $striferow[ID] LIMIT 1;");
+            mysqli_query($connection, "UPDATE `strifers` SET `energy` = $newenergy WHERE `strifers`.`id` = $striferow[id] LIMIT 1;");
             echo "You invoke your Aspect in the " . $_POST['name'] . " pattern, targeting $targetrow[name]!</br>";
         } else {
             echo $fail . "</br>";
@@ -331,7 +331,7 @@ if (empty($charrow)) {
         $targetresult = mysqli_query($connection, "SELECT * FROM `strifers` WHERE `strifers`.`strifeid` = $striferow[strifeID];");
     }
     while ($targetrow = mysqli_fetch_array($targetresult)) {
-        echo "<option value='$targetrow[ID]'>$targetrow[name]</option>";
+        echo "<option value='$targetrow[id]'>$targetrow[name]</option>";
     }
     echo "</select></br>";
     echo '<input type="checkbox" name="savepattern" value="Yes"> Save this pattern for future usage in addition to using it now<br />';
@@ -373,7 +373,7 @@ if (empty($charrow)) {
             $targetresult = mysqli_query($connection, "SELECT * FROM `strifers` WHERE `strifers`.`strifeid` = $striferow[strifeID];");
         }
         while ($targetrow = mysqli_fetch_array($targetresult)) {
-            echo "<option value='$targetrow[ID]'>$targetrow[name]</option>";
+            echo "<option value='$targetrow[id]'>$targetrow[name]</option>";
         }
         echo "</select>";
         echo '<input type="checkbox" name="deletepattern" value="Yes"> Delete this pattern instead of using it</br>';

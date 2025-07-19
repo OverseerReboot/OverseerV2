@@ -12,11 +12,11 @@ echo 'Session to retrieve stats from: <input id="session" name="session" type="t
 
 if (!empty($_GET['session'])) {
     $sessionesc = mysqli_real_escape_string($connection, str_replace("'", "''", $_GET['session']));
-    $ownsession = mysqli_query($connection, "SELECT * FROM Sessions WHERE `name` ='" . $sessionesc . "';");
+    $ownsession = mysqli_query($connection, "SELECT * FROM `sessions` WHERE `name` ='" . $sessionesc . "';");
     $sessiont = mysqli_fetch_array($ownsession);
     echo "Showing stats in session " . $_GET['session'] . ":</br>";
 } else {
-    $ownsession = mysqli_query($connection, "SELECT * FROM Sessions WHERE `id` = $charrow[session];");
+    $ownsession = mysqli_query($connection, "SELECT * FROM `sessions` WHERE `id` = $charrow[session];");
     $sessiont = mysqli_fetch_array($ownsession);
     echo "Showing stats in session " . $sessiont['name'] . ":</br>";
 }

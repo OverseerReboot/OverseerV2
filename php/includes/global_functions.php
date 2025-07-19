@@ -188,7 +188,7 @@ function toggleStat($char, $stat): void
 function writeStat($char, $string): void
 {
     global $connection;
-    $query = "UPDATE Characters SET stats='$string' WHERE ID = '$char[ID]'";
+    $query = "UPDATE `characters` SET stats='$string' WHERE ID = '$char[id]'";
     mysqli_query($connection, $query);
 }
 
@@ -270,7 +270,7 @@ function getAchievement($char, $achievement): bool
 function writeAchievement($char, $string): void
 {
     global $connection;
-    $query = "UPDATE Characters SET achievements='$string' WHERE ID = '$char[ID]'";
+    $query = "UPDATE `characters` SET achievements='$string' WHERE ID = '$char[id]'";
     mysqli_query($connection, $query);
 }
 
@@ -337,7 +337,7 @@ function notifyCharacter($charid, $message): void
     //make sure to only use this where it can't be spammed
     global $connection;
     $fixedstring = str_replace("|", "", $message);
-    $query = "UPDATE Characters SET notifications=concat(notifications, '$fixedstring|') WHERE ID = '$charid'";
+    $query = "UPDATE `characters` SET notifications=concat(notifications, '$fixedstring|') WHERE ID = '$charid'";
     mysqli_query($connection, $query);
 }
 
@@ -348,9 +348,9 @@ function appendNotificationsOnceChar($char, $charid, $string): void
 {
     global $connection;
     $fixedstring = str_replace("|", "", $string);
-    $query = "UPDATE Characters SET notifications=concat(notifications, '$fixedstring|') WHERE ID = '$charid'";
+    $query = "UPDATE `characters` SET notifications=concat(notifications, '$fixedstring|') WHERE ID = '$charid'";
     mysqli_query($connection, $query);
-    $query2 = "UPDATE Characters SET notif_history=concat(notif_history, '$fixedstring|') WHERE ID = '$char[ID]'";
+    $query2 = "UPDATE `characters` SET notif_history=concat(notif_history, '$fixedstring|') WHERE ID = '$char[id]'";
     mysqli_query($connection, $query2);
 }
 
@@ -360,15 +360,15 @@ function appendNotificationsOnceChar($char, $charid, $string): void
 function appendNotifications($char, $string): void
 {
     global $connection;
-    $members = mysqli_query($connection, "SELECT members FROM Sessions WHERE ID = '$char[session]'");
+    $members = mysqli_query($connection, "SELECT members FROM `sessions` WHERE ID = '$char[session]'");
     $membersarray = mysqli_fetch_array($members);
     $sesids = rtrim($membersarray['members'], "|"); //removes the last slash, 1|2|3| => 1|2|3
     $sesidsarray = explode("|", $sesids); // [1,2,3]
     $sess = implode(",", $sesidsarray); // 1,2,3
     $fixedstring = str_replace("|", "", $string);
-    $query = "UPDATE Characters SET notifications=concat(notifications, '$fixedstring|') WHERE ID IN ($sess) AND ID = '$char[ID]'";
+    $query = "UPDATE `characters` SET notifications=concat(notifications, '$fixedstring|') WHERE ID IN ($sess) AND ID = '$char[id]'";
     mysqli_query($connection, $query);
-    $query2 = "UPDATE Characters SET notif_history=concat(notif_history,'$fixedstring|') WHERE ID = '$char[ID]'";
+    $query2 = "UPDATE `characters` SET notif_history=concat(notif_history,'$fixedstring|') WHERE ID = '$char[id]'";
     mysqli_query($connection, $query2);
 }
 
@@ -378,7 +378,7 @@ function appendNotifications($char, $string): void
 function writeNotifications($char, $string): void
 {
     global $connection;
-    $query = "UPDATE `characters` SET notifications='$string' WHERE ID = '$char[ID]'";
+    $query = "UPDATE `characters` SET notifications='$string' WHERE ID = '$char[id]'";
     mysqli_query($connection, $query);
 }
 
@@ -573,7 +573,7 @@ function profileStringSoft($charid)
 function rowProfileString($row): string
 {
     if ($row) {
-        return "<a href='profile.php?ID=$row[ID]'><span style='color:#$row[colour]'>$row[name]</span></a>";
+        return "<a href='profile.php?ID=$row[id]'><span style='color:#$row[colour]'>$row[name]</span></a>";
     } else {
         return "[ERROR RETRIEVING PLAYER ID]";
     }
@@ -586,7 +586,7 @@ function rowProfileString($row): string
 function rowProfileStringSoft($row): string
 {
     if ($row) {
-        return "<a style='text-decoration:none' href='profile.php?ID=$row[ID]'><span style='color:#$row[colour]'>$row[name]</span></a>";
+        return "<a style='text-decoration:none' href='profile.php?ID=$row[id]'><span style='color:#$row[colour]'>$row[name]</span></a>";
     } else {
         return "[ERROR RETRIEVING PLAYER ID]";
     }
@@ -789,7 +789,7 @@ function gainRungs($charrow, $rungs): string|false
             }
         }
         mysqli_query($connection, "UPDATE `characters` SET `echeladder` = $newrung, `abilities` = '$abilities', `boondollars` = $boondollars
-		WHERE `characters`.`id` = $charrow[ID] LIMIT 1;");
+		WHERE `characters`.`id` = $charrow[id] LIMIT 1;");
         strifeInit($charrow);
         return $message;
     }

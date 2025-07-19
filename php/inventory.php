@@ -46,7 +46,7 @@ if (empty($_SESSION['character'])) {
         if ((int)$meta[0] % 2 == 1) { //item is available
             $i = $_SESSION['inv'][$item];
             if (empty($irow[$i]['name'])) {
-                $eresult = mysqli_query($connection, "SELECT * FROM Captchalogue WHERE ID = " . $i); //first load it up
+                $eresult = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE ID = " . $i); //first load it up
                 $irow[$i] = mysqli_fetch_array($eresult);
             }
             if ($_POST['invaction'] == "use") { //player wants to consume this item
@@ -65,7 +65,7 @@ if (empty($_SESSION['character'])) {
                             $_POST['target'] = $charrow['id'];
                         }
                         if ($_POST['target'] != $charrow['id']) { //Fetch the target's rows and do some verification
-                            $targetcharresult = mysqli_query($connection, "SELECT * FROM Characters WHERE Characters.ID = ". mysqli_real_escape_string($connection, $_POST['target']) ." LIMIT 1;");
+                            $targetcharresult = mysqli_query($connection, "SELECT * FROM `characters` WHERE Characters.ID = ". mysqli_real_escape_string($connection, $_POST['target']) ." LIMIT 1;");
                             $targetcharrow = mysqli_fetch_array($targetcharresult);
                             if ($targetcharrow['dreamingstatus'] != "Awake") {
                                 echo "That player is currently asleep!<br />";
@@ -160,7 +160,7 @@ if (empty($_SESSION['character'])) {
             } elseif ($_POST['invaction'] == "read") { //player wants to read this item
                 $read = specialArray($irow[$i]['effects'], "READ");
                 if ($read[0] == "READ") {
-                    $readresult = mysqli_query($connection, "SELECT * FROM Reading WHERE ID = " . strval($read[1]));
+                    $readresult = mysqli_query($connection, "SELECT * FROM `reading` WHERE ID = " . strval($read[1]));
                     $reading = mysqli_fetch_array($readresult);
                     echo "You read your " . $irow[$i]['name'] . "...<br /><br />";
                     echo $reading['text'] . "<br />";
@@ -250,7 +250,7 @@ if (empty($_SESSION['character'])) {
                             $updatestore .= implode(":", $args) . "|";
                         }
                         if (empty($irow[$args[0]]['name'])) {
-                            $eresult = mysqli_query($connection, "SELECT * FROM Captchalogue WHERE ID = " . $args[0]);
+                            $eresult = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE ID = " . $args[0]);
                             $irow[$args[0]] = mysqli_fetch_array($eresult);
                         }
                         $charrow['storedspace'] -= itemSize($irow[$args[0]]['size']);
@@ -271,7 +271,7 @@ if (empty($_SESSION['character'])) {
                 $charrow['storedspace'] = 0;
             } //Paranoia: if the storage is empty and the game thinks something is taking up space, reset it to 0
             $charrow['storeditems'] = $updatestore;
-            mysqli_query($connection, "UPDATE Characters SET storeditems = '$updatestore', storedspace = " . strval($charrow['storedspace']) . " WHERE ID = $cid");
+            mysqli_query($connection, "UPDATE `characters` SET storeditems = '$updatestore', storedspace = " . strval($charrow['storedspace']) . " WHERE ID = $cid");
         } else {
             echo "You don't have that item in storage!<br />";
         }
@@ -293,7 +293,7 @@ if (empty($_SESSION['character'])) {
         $newequip = $_SESSION['inv'][$i];
         if (!empty($newequip)) {
             if (empty($irow[$newequip]['name'])) {
-                $eresult = mysqli_query($connection, "SELECT * FROM Captchalogue WHERE ID = " . $newequip);
+                $eresult = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE ID = " . $newequip);
                 $irow[$newequip] = mysqli_fetch_array($eresult);
             }
             $meta = explode(":", $_SESSION['imeta'][$i]);
@@ -316,7 +316,7 @@ if (empty($_SESSION['character'])) {
         $targetresult = mysqli_query($connection, "SELECT * FROM `strifers` WHERE `strifers`.`strifeid` = $striferow[strifeID];");
     }
     while ($targetrow = mysqli_fetch_array($targetresult)) {
-        echo "<option value='$targetrow[ID]'>$targetrow[name]</option>";
+        echo "<option value='$targetrow[id]'>$targetrow[name]</option>";
     }
     echo "</select>";
     echo "<input type='submit' value='Go' /></form>";
@@ -329,7 +329,7 @@ if (empty($_SESSION['character'])) {
         foreach ($_SESSION['inv'] as $i => $item) {
             if ($item != "") {
                 if (empty($irow[$item]['name'])) {
-                    $eresult = mysqli_query($connection, "SELECT * FROM Captchalogue WHERE ID = " . $item);
+                    $eresult = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE ID = " . $item);
                     $irow[$item] = mysqli_fetch_array($eresult);
                 }
                 $meta = explode(":", $_SESSION['imeta'][$i]);
@@ -362,7 +362,7 @@ if (empty($_SESSION['character'])) {
             $newequip = $_SESSION['inv'][$i];
             if (!empty($newequip)) {
                 if (empty($irow[$newequip]['name'])) {
-                    $eresult = mysqli_query($connection, "SELECT * FROM Captchalogue WHERE ID = " . $newequip);
+                    $eresult = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE ID = " . $newequip);
                     $irow[$newequip] = mysqli_fetch_array($eresult);
                 }
                 renderItem($irow[$newequip]);
@@ -389,7 +389,7 @@ if (empty($_SESSION['character'])) {
         $targetresult = mysqli_query($connection, "SELECT * FROM `strifers` WHERE `strifers`.`strifeid` = $striferow[strifeID];");
     }
     while ($targetrow = mysqli_fetch_array($targetresult)) {
-        echo "<option value='$targetrow[ID]'>$targetrow[name]</option>";
+        echo "<option value='$targetrow[id]'>$targetrow[name]</option>";
     }
     echo "</select>";
     echo "<input type='submit' value='Go' /></form>";
@@ -409,7 +409,7 @@ if (empty($_SESSION['character'])) {
             $args = explode(":", $arg);
             $newequip = $args[0];
             if (empty($irow[$newequip]['name'])) {
-                $eresult = mysqli_query($connection, "SELECT * FROM Captchalogue WHERE ID = " . $newequip);
+                $eresult = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE ID = " . $newequip);
                 $irow[$newequip] = mysqli_fetch_array($eresult);
             }
             if ($irow[$newequip]['id'] == intval($args[0])) {

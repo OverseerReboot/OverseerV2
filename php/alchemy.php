@@ -13,7 +13,7 @@ if ($_SESSION['username'] != "") {
         }
         $_POST['alchcode'] = mysqli_real_escape_string($connection, $_POST['alchcode']);
         echo "The alchemiter scans the code and begins to process it.<br />";
-        $itemresult = mysqli_query($connection, "SELECT * FROM Captchalogue WHERE code = '" . $_POST['alchcode'] . "' AND (session = 0 OR session = " . $charrow['session'] . ")");
+        $itemresult = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE code = '" . $_POST['alchcode'] . "' AND (session = 0 OR session = " . $charrow['session'] . ")");
         //Above: Search for the item. Note that items that were created by other sessions and not yet approved are treated as nonexistent.
         if ($itemrow = mysqli_fetch_assoc($itemresult)) {
             echo "You attempt to make a " . $itemrow['name'] . ".<br />";
@@ -51,7 +51,7 @@ if ($_SESSION['username'] != "") {
                 if ($success) { //user has room for all the newly-created items
                     echo "You successfully create " . $itemrow['name'] . " x " . strval($_POST['alchnum']) . "!<br />";
                     incrementStat($charrow, 'alchemy');
-                    mysqli_query($connection, "UPDATE Characters SET grists = '" . $newgrists . "' WHERE ID = $cid"); //Pay.
+                    mysqli_query($connection, "UPDATE `characters` SET grists = '" . $newgrists . "' WHERE ID = $cid"); //Pay.
                 } else {
                     echo "Alchemy failed: not enough space in storage.<br />";
                 }
@@ -59,7 +59,7 @@ if ($_SESSION['username'] != "") {
                 echo "Alchemy failed: your grist stores are insufficient.<br />";
             }
         } else {
-            $itemResult = mysqli_query($connection, "SELECT * FROM Captchalogue WHERE code = '" . $_POST['alchcode'] . "';");
+            $itemResult = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE code = '" . $_POST['alchcode'] . "';");
             $itemRow = mysqli_fetch_array($itemResult);
             if ($itemRow['session'] != 0) {
                 echo 'This item is created by another session and is awaiting approval!<br>';
@@ -85,7 +85,7 @@ if ($_SESSION['username'] != "") {
             if ($combine != "") {
                 echo "The two codes combine into: $combine<br />Scanning code...<br />";
                 $itemfound = false;
-                $itemresult = mysqli_query($connection, "SELECT * FROM Captchalogue WHERE code = '$combine'");
+                $itemresult = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE code = '$combine'");
                 while ($itemrow = mysqli_fetch_array($itemresult, MYSQLI_ASSOC)) {
                     echo "Item found!<br />";
                     if ($itemrow['session'] != 0) {

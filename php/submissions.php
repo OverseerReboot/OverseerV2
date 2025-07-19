@@ -201,13 +201,13 @@ if (empty($_SESSION['username'])) {
                                               $newenc = 100;
                                               echo "The submitter was gifted $reward encounters, topping them off at 100.<br />";
                                           }
-                                          mysqli_query($connection, "UPDATE Players SET `encounters` = $newenc WHERE `players`.`username` = '" . $feedrow['user'] . "'");
+                                          mysqli_query($connection, "UPDATE `players` SET `encounters` = $newenc WHERE `players`.`username` = '" . $feedrow['user'] . "'");
                                           $newmsgstring .= "</br>You were also granted $reward encounter(s) for your creativity!";
                                       }
                                       } else echo "Your mod level is not yet high enough to grant encounters (need level 3).<br />";
                                   }
-                                  mysqli_query($connection, "UPDATE Messages SET `$msgfield` = '$newmsgstring' WHERE `messages`.`username` = '" . $feedrow['user'] . "'");
-                                  mysqli_query($connection, "UPDATE Players SET `newmessage` = `newmessage` + 1 WHERE `players`.`username` = '" . $feedrow['user'] . "'");
+                                  mysqli_query($connection, "UPDATE `messages` SET `$msgfield` = '$newmsgstring' WHERE `messages`.`username` = '" . $feedrow['user'] . "'");
+                                  mysqli_query($connection, "UPDATE `players` SET `newmessage` = `newmessage` + 1 WHERE `players`.`username` = '" . $feedrow['user'] . "'");
                             }
                         }
                         */

@@ -29,7 +29,7 @@ if (empty($_SESSION['username'])) {
     }
     $chars = explode("|", $accrow['characters']);
     $i = 0;
-    $charquery = "SELECT `id`,`name`,`session` FROM Characters WHERE ";
+    $charquery = "SELECT `id`,`name`,`session` FROM `characters` WHERE ";
     $foundone = false;
     while (!empty($chars[$i])) {
         $foundone = true;

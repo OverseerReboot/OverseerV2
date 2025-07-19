@@ -132,7 +132,7 @@ if ($legit) {
                 mysqli_query($connection, "UPDATE `strifers` SET `strifeid` = $newID, `side` = $playerside WHERE `strifers`.`owner` = " . $charrow['id'] . " AND `strifers`.`aspect` = '';"); //Add allies
             }
             if (strpos($savedcommand, "DONOTSAVE") === false) {
-                mysqli_query($connection, "UPDATE Characters SET oldenemydata = '$savedcommand' WHERE Characters.ID = $charrow[ID] LIMIT 1;");
+                mysqli_query($connection, "UPDATE `characters` SET oldenemydata = '$savedcommand' WHERE Characters.ID = $charrow[id] LIMIT 1;");
             }
             require_once "strifedisplay.php";
         } else {

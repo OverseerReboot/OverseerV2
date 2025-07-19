@@ -58,7 +58,7 @@ if (empty($_SESSION['username'])) {
             $row = mysqli_fetch_array($abresult);
             if (strpos($row['allabstrati'], $_POST['newabs']) !== false) {
                 $charrow['abstratus'] .= "|" . $_POST['newabs']; //add the abstratus to the character's abstrati
-                mysqli_query($connection, "UPDATE Characters SET abstratus = '" . $charrow['abstratus'] . "' WHERE ID = $cid");
+                mysqli_query($connection, "UPDATE `characters` SET abstratus = '" . $charrow['abstratus'] . "' WHERE ID = $cid");
                 echo "You allocate " . $_POST['newabs'] . " to your strife portfolio, enabling you to equip weapons that contain that specibus.<br />";
             } else {
                 echo "Error: that abstratus cannot be assigned.<br />";
@@ -73,7 +73,7 @@ if (empty($_SESSION['username'])) {
         $meta = explode(":", $_SESSION['imeta'][$i]);
         $canequip = false;
         if ($meta[0] % 2 == 1) { //odd-numbered first arg, item is available
-            $eresult = mysqli_query($connection, "SELECT * FROM Captchalogue WHERE ID = " . $_SESSION['inv'][$i]);
+            $eresult = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE ID = " . $_SESSION['inv'][$i]);
             $erow[$_SESSION['inv'][$i]] = mysqli_fetch_array($eresult);
             if (!empty($erow[$_SESSION['inv'][$i]]['abstratus']) && $erow[$_SESSION['inv'][$i]]['abstratus'] != "notaweapon") { //item is a weapon
                 $j = 0;
@@ -89,7 +89,7 @@ if (empty($_SESSION['username'])) {
                     $abstaken = substr_count($charrow['abstratus'], "|"); //count how many abstrati the player has
                     if ($abstaken < $charrow['abslots']) {
                         $charrow['abstratus'] .= "|" . $itemabses[0]; //auto-assign the weapon's abstratus
-                        mysqli_query($connection, "UPDATE Characters SET abstratus = '" . $charrow['abstratus'] . "' WHERE ID = $cid");
+                        mysqli_query($connection, "UPDATE `characters` SET abstratus = '" . $charrow['abstratus'] . "' WHERE ID = $cid");
                         echo "Your strife portfolio detects that you are trying to equip a weapon of a new abstratus type and \"helpfully\" auto-assigns it for you.<br />";
                         $canequip = true;
                     } else {
@@ -112,7 +112,7 @@ if (empty($_SESSION['username'])) {
             echo "Your " . $erow[$_SESSION['inv'][$i]]['name'] . " was added to your strife deck.<br />";
             array_splice($_SESSION['inv'], $i, 1);
             array_splice($_SESSION['imeta'], $i, 1);
-            mysqli_query($connection, "UPDATE Characters SET strifedeck = '" . $charrow['strifedeck'] . "', invslots = " . $charrow['invslots'] . " WHERE ID = $cid");
+            mysqli_query($connection, "UPDATE `characters` SET strifedeck = '" . $charrow['strifedeck'] . "', invslots = " . $charrow['invslots'] . " WHERE ID = $cid");
         }
     }
 
@@ -124,7 +124,7 @@ if (empty($_SESSION['username'])) {
             $deck[0] = $newequip;
             $wequips = str_replace("main:0|", "main:1|", $wequips); //tell the main slot that the first item is equipped now, if it hasn't been already
             if (empty($erow[$newequip]['name'])) {
-                $eresult = mysqli_query($connection, "SELECT * FROM Captchalogue WHERE ID = " . $newequip);
+                $eresult = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE ID = " . $newequip);
                 $erow[$newequip] = mysqli_fetch_array($eresult);
             }
             if (itemSize($erow[$newequip]['size']) == itemSize("large")) { //weapon is two-handed
@@ -160,7 +160,7 @@ if (empty($_SESSION['username'])) {
             $newequip = $deck[$_POST['deckitem']];
             //echo 'trying to equip in offhandslot, deckitem = ' . $deck[$_POST['deckitem']] . '<br>';
             if (empty($erow[$newequip]['name'])) {
-                $eresult = mysqli_query($connection, "SELECT * FROM Captchalogue WHERE ID = " . $newequip);
+                $eresult = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE ID = " . $newequip);
                 $erow[$newequip] = mysqli_fetch_array($eresult);
             }
 
@@ -199,7 +199,7 @@ if (empty($_SESSION['username'])) {
                 $charrow['invslots'] += 1; //the card that holds this item is returned to your inventory
                 $success = addItem($charrow, $deck[$_POST['deckitem']]); //should always work since we just added the inv slot
                 if ($success) {
-                    mysqli_query($connection, "UPDATE Characters SET invslots = " . $charrow['invslots'] . " WHERE ID = $cid"); //Just to make sure
+                    mysqli_query($connection, "UPDATE `characters` SET invslots = " . $charrow['invslots'] . " WHERE ID = $cid"); //Just to make sure
                     array_splice($deck, $_POST['deckitem'], 1); //blank this slot so that it doesn't get imploded
                     echo "You take the weapon out of your strife deck, returning it to your sylladex.<br />";
                     //echo "wequips currently " . $wequips . '<br>';
@@ -235,7 +235,7 @@ if (empty($_SESSION['username'])) {
             $charrow['strifedeck'] = $newdeck;
             $charrow['equips'] = $wequips;
             //echo 'updating strifedeck to newdeck= ' . $newdeck . '<br>';
-            mysqli_query($connection, "UPDATE Characters SET invslots = $charrow[invslots], strifedeck = '$newdeck', equips = '$wequips' WHERE ID = $cid"); //commit the change
+            mysqli_query($connection, "UPDATE `characters` SET invslots = $charrow[invslots], strifedeck = '$newdeck', equips = '$wequips' WHERE ID = $cid"); //commit the change
             strifeInit($charrow);
             $initted = true;
         }
@@ -246,7 +246,7 @@ if (empty($_SESSION['username'])) {
         $meta = explode(":", $_SESSION['imeta'][$i]);
         $canequip = false;
         if ($meta[0] % 2 == 1) { //odd-numbered first arg, item is available
-            $eresult = mysqli_query($connection, "SELECT * FROM Captchalogue WHERE ID = " . $_SESSION['inv'][$i]);
+            $eresult = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE ID = " . $_SESSION['inv'][$i]);
             $erow[$_SESSION['inv'][$i]] = mysqli_fetch_array($eresult);
             if (!empty($erow[$_SESSION['inv'][$i]]['wearable']) && $erow[$_SESSION['inv'][$i]]['abstratus'] != "none") { //item is a weapon
                 $itemabses = explode(", ", $erow[$_SESSION['inv'][$i]]['wearable']);
@@ -268,7 +268,7 @@ if (empty($_SESSION['username'])) {
                     echo "You equip your " . $erow[$_SESSION['inv'][$i]]['name'] . ".<br />";
                     array_splice($_SESSION['inv'], $i, 1);
                     array_splice($_SESSION['imeta'], $i, 1);
-                    mysqli_query($connection, "UPDATE Characters SET invslots = " . $charrow['invslots'] . " WHERE ID = $cid");
+                    mysqli_query($connection, "UPDATE `characters` SET invslots = " . $charrow['invslots'] . " WHERE ID = $cid");
                 } else {
                     echo "Error: you are already wearing something in one or more slots used by that wearable.<br />";
                 }
@@ -330,7 +330,7 @@ if (empty($_SESSION['username'])) {
                     $charrow['invslots'] += 1; //the card that holds this item is returned to your inventory
                     $success = addItem($charrow, $_POST['unequipid']); //should always work since we just added the inv slot
                     if ($success) {
-                        mysqli_query($connection, "UPDATE Characters SET invslots = " . $charrow['invslots'] . " WHERE ID = $cid"); //Just to make sure
+                        mysqli_query($connection, "UPDATE `characters` SET invslots = " . $charrow['invslots'] . " WHERE ID = $cid"); //Just to make sure
                         unset($equip[$i]); //blank this slot so that it doesn't get imploded
                         echo "You take off the item in your " . $_POST['unequip'] . " slot, returning it to your sylladex.<br />";
                         $thisequip[1] = 0; //don't display it
@@ -347,7 +347,7 @@ if (empty($_SESSION['username'])) {
         if ($thisequip[1] != 0) { //there's something here that wasn't just unequipped
             $eqecho .= "<form action='portfolio.php' method='post'>";
             if (empty($erow[$thisequip[1]]['name'])) {
-                $eresult = mysqli_query($connection, "SELECT * FROM Captchalogue WHERE ID = " . $thisequip[1]);
+                $eresult = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE ID = " . $thisequip[1]);
                 $erow[$thisequip[1]] = mysqli_fetch_array($eresult);
             }
             if (stripos($thisequip[0], 'acc') !== false) {
@@ -384,7 +384,7 @@ if (empty($_SESSION['username'])) {
     }
     $equipstr = implode("|", $equip); //implode the string so that any changes will be updated below
     if ($charrow['equips'] != $equipstr) { //equips were updated
-        mysqli_query($connection, "UPDATE Characters SET invslots = $charrow[invslots], equips = '$equipstr' WHERE ID = $cid");
+        mysqli_query($connection, "UPDATE `characters` SET invslots = $charrow[invslots], equips = '$equipstr' WHERE ID = $cid");
         if (!$initted) {
             strifeInit($charrow);
         } //call strifeinit if we haven't already
@@ -426,7 +426,7 @@ if (empty($_SESSION['username'])) {
     //game will think the deck is completely empty. This is a workaround for that.
     while (!empty($deck[$i])) {
         if (empty($erow[$deck[$i]]['name'])) {
-            $eresult = mysqli_query($connection, "SELECT * FROM Captchalogue WHERE ID = " . $deck[$i]);
+            $eresult = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE ID = " . $deck[$i]);
             $erow[$deck[$i]] = mysqli_fetch_array($eresult);
         }
         // context menu
@@ -456,7 +456,7 @@ if (empty($_SESSION['username'])) {
         $meta = explode(":", $_SESSION['imeta'][$i]);
         if ((int)$meta[0] % 2 == 1) { //odd-numbered first arg, item is available
             if (empty($erow[$_SESSION['inv'][$i]]['name'])) {
-                $eresult = mysqli_query($connection, "SELECT * FROM Captchalogue WHERE ID = '" . $_SESSION['inv'][$i] . "';");
+                $eresult = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE ID = '" . $_SESSION['inv'][$i] . "';");
                 $erow[$_SESSION['inv'][$i]] = mysqli_fetch_array($eresult);
             }
             // context menu

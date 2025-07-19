@@ -138,9 +138,9 @@ if (empty($_SESSION['character'])) {
 } else {
     $ready = false;
     if (!empty($_POST['servergen'])) { //Dungeon is being constructed for house advancement purposes
-        $gateresult = mysqli_query($connection, "SELECT * FROM Gates");
+        $gateresult = mysqli_query($connection, "SELECT * FROM `gates`");
         $gaterow = mysqli_fetch_array($gateresult);
-        $clientresult = mysqli_query($connection, "SELECT * FROM Characters WHERE `id` = '" . $charrow['client'] . "'");
+        $clientresult = mysqli_query($connection, "SELECT * FROM `characters` WHERE `id` = '" . $charrow['client'] . "'");
         $clientrow = mysqli_fetch_array($clientresult);
         if ($gaterow['gate' . $_POST['gate']] <= $clientrow['house_build']) {
             $gate = $_POST['gate'];
@@ -363,7 +363,7 @@ if (empty($_SESSION['character'])) {
         if (empty($_POST['servergen'])) {
             $charrow['dungeon'] = $dungeonid;
             $charrow = spendFatigue(15, $charrow);
-            mysqli_query($connection, "UPDATE Characters SET dungeon = $dungeonid, dungeonrow = 0, dungeoncol = 0 WHERE Characters.ID = " . $charrow['id'] . " LIMIT 1;");
+            mysqli_query($connection, "UPDATE `characters` SET dungeon = $dungeonid, dungeonrow = 0, dungeoncol = 0 WHERE Characters.ID = " . $charrow['id'] . " LIMIT 1;");
             echo "Dungeon generated!<br />";
             include 'dungeons.php';
         } else {

@@ -107,7 +107,7 @@ if (empty($_SESSION['character'])) {
             $sessresult = mysqli_query($connection, "SELECT `exchange` FROM `sessions` WHERE `id` = " . $charrow['session'] . " LIMIT 1;");
             $session = mysqli_fetch_assoc($sessresult);
             $exchangeloc = $session['exchange'];
-            $gateresult = mysqli_query($connection, "SELECT * FROM Gates"); //we'll need this to determine the level of the shops
+            $gateresult = mysqli_query($connection, "SELECT * FROM `gates`"); //we'll need this to determine the level of the shops
             $gaterow = mysqli_fetch_row($gateresult); //Gates only has one row.
             $gate = 7;
             while ($gate > 0) {

@@ -65,7 +65,7 @@ if (empty($_SESSION['username'])) {
                                     } //If the bonus is GREATER than 0, add it to the new bonus string
                                     $i++;
                                 }
-                                mysqli_query($connection, "UPDATE `strifers` SET `status` = '$newstatus', `bonuses` = '$newbonuses' WHERE `strifers`.`id` = $targetstriferow[ID] LIMIT 1;");
+                                mysqli_query($connection, "UPDATE `strifers` SET `status` = '$newstatus', `bonuses` = '$newbonuses' WHERE `strifers`.`id` = $targetstriferow[id] LIMIT 1;");
                                 $success = true;
                             } else {
                                 echo "You must be able to reach $targetrow[name] to use Esauna on them!<br />";
@@ -92,18 +92,18 @@ if (empty($_SESSION['username'])) {
                         $allyresult = mysqli_query($connection, "SELECT * FROM `strifers` WHERE `strifers`.`id` IN $findstr;");
                         $megaquery = "UPDATE `strifers` SET `brief_luck` = CASE `id` "; //Build a megaquery to update luck of all beneficiaries
                         while ($allyrow = mysqli_fetch_array($allyresult)) { //Found one, add a case for them
-                            $megaquery .= "WHEN $allyrow[ID] THEN " . strval($allyrow['brief_luck'] + $luckbonus) . " ";
+                            $megaquery .= "WHEN $allyrow[id] THEN " . strval($allyrow['brief_luck'] + $luckbonus) . " ";
                         }
                         $megaquery .= "END WHERE `strifers`.`id` IN $findstr;"; //Cap off the query and execute it!
                         mysqli_query($connection, $megaquery);
                         break;
                     default:
-                        echo "Ability ID $abilityrow[ID] unrecognized. This is probably a bug, please submit a report!<br />";
+                        echo "Ability ID $abilityrow[id] unrecognized. This is probably a bug, please submit a report!<br />";
                         break;
                 }
                 if ($success) { //This flag sets if the ability did what it was supposed to
                     $newenergy = $striferow['energy'] - $abilityrow['Aspect_Cost'];
-                    mysqli_query($connection, "UPDATE `strifers` SET `energy` = $newenergy WHERE `strifers`.`id` = $striferow[ID] LIMIT 1;"); //Debit the energy for the ability
+                    mysqli_query($connection, "UPDATE `strifers` SET `energy` = $newenergy WHERE `strifers`.`id` = $striferow[id] LIMIT 1;"); //Debit the energy for the ability
                 }
             } else {
                 echo "You do not have enough Aspect Vial remaining to use that ability!<br />";
@@ -116,7 +116,7 @@ if (empty($_SESSION['username'])) {
     $abilities = substr(str_replace("|", ", ", $charrow['abilities']), 0, -2); //Replace "|" with ", ", knock off the last ", "
     if ($abilities) {
         echo $abilities;
-        $abilityresult = mysqli_query($connection, "SELECT * FROM Abilities WHERE ID IN ($abilities);");
+        $abilityresult = mysqli_query($connection, "SELECT * FROM `abilities` WHERE ID IN ($abilities);");
         while ($abilityrow = mysqli_fetch_array($abilityresult)) { //Ability the player possesses: Print it!
             echo "Name: $abilityrow[Name]<br />";
             echo "Description: $abilityrow[Description]<br />";

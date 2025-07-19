@@ -11,6 +11,6 @@ if (empty($_SESSION['character'])) {
     //	echo "You are not at the dungeon entrance! You can't exit it right now.<br />";
 } else {
     echo "You exit the dungeon.<br />";
-    mysqli_query($connection, "UPDATE Characters SET dungeon = 0 WHERE Characters.ID = " . $charrow['id'] . " LIMIT 1;");
+    mysqli_query($connection, "UPDATE `characters` SET dungeon = 0 WHERE Characters.ID = " . $charrow['id'] . " LIMIT 1;");
 }
 require_once "footer.php";

@@ -38,7 +38,7 @@ if ($striferow['strifeID'] == 0 || empty($striferow['strifeID'])) { //This user 
         if ($charrow['down'] != 1 && $charrow['dungeon'] == 0) { //Player is not KOed and not in a dungeon
             if ($charrow['inmedium'] == 1) { //Player is in the medium
                 $connected = chainArray($charrow); //Get an array of connected Lands
-                $chumroll = mysqli_query($connection, "SELECT * FROM Characters WHERE session = '$charrow[session]';");
+                $chumroll = mysqli_query($connection, "SELECT * FROM `characters` WHERE session = '$charrow[session]';");
                 while ($chumrow = mysqli_fetch_array($chumroll)) {
                     if ($connected[$chumrow['id']] || $chumrow['id'] == $charrow['id']) { //Can always fight your own underlings, even with no building done
                         $chums[] = $chumrow;
@@ -150,7 +150,7 @@ if ($striferow['strifeID'] == 0 || empty($striferow['strifeID'])) { //This user 
         if ($row['owner'] == $charrow['id']) { //Strifer is part of the fleeing player's entourage
             $abscondquery .= $row['id'] . ", ";
         } elseif ($row['aspect'] != "" && !$newleader) { //We found another player character. They're the leader now.
-            mysqli_query($connection, "UPDATE `strifers` SET `leader` = 1 WHERE `strifers`.`id` = $row[ID] LIMIT 1;");
+            mysqli_query($connection, "UPDATE `strifers` SET `leader` = 1 WHERE `strifers`.`id` = $row[id] LIMIT 1;");
         }
     }
     $abscondquery = substr($abscondquery, 0, -2) . ")"; //Remove the final trailing ", " and end the query
@@ -160,7 +160,7 @@ if ($striferow['strifeID'] == 0 || empty($striferow['strifeID'])) { //This user 
         echo "You are forced back into the room you just left! <a id='advance' href='dungeons.php'>Return to dungeon ==></a><br />";
         $olddungeonrow = $charrow['olddungeonrow'];
         $olddungeoncol = $charrow['olddungeoncol'];
-        mysqli_query($connection, "UPDATE Characters set dungeonrow = $olddungeonrow, dungeoncol = $olddungeoncol WHERE Characters.ID = " . $charrow['id'] . " LIMIT 1;");
+        mysqli_query($connection, "UPDATE `characters` set dungeonrow = $olddungeonrow, dungeoncol = $olddungeoncol WHERE Characters.ID = " . $charrow['id'] . " LIMIT 1;");
     }
 } else {
     if (!empty($strifers)) { //We came from striferesolve. We can just reuse the results from there!
@@ -213,7 +213,7 @@ if ($striferow['strifeID'] == 0 || empty($striferow['strifeID'])) { //This user 
                 if (!empty($_POST[$passivestr]) && $strifers[$i]['control'] == 1 && $strifers[$i]['owner'] == $charrow['id']) {
                     $strifers[$i]['lastpassive'] = $_POST[$passivestr];
                 }
-                mysqli_query($connection, "UPDATE Strifers SET lastactive = '" . $strifers[$i]['lastactive'] . "', lastpassive = '" . $strifers[$i]['lastpassive'] . "' WHERE Strifers.ID = " . $strifers[$i]['id'] . " LIMIT 1;");
+                mysqli_query($connection, "UPDATE `strifers` SET lastactive = '" . $strifers[$i]['lastactive'] . "', lastpassive = '" . $strifers[$i]['lastpassive'] . "' WHERE Strifers.ID = " . $strifers[$i]['id'] . " LIMIT 1;");
                 $i++;
             }
         }

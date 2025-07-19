@@ -390,7 +390,7 @@ class Character
 
             // Create the prepared statement object.
             $updatechar = $this->_dbhandle->prepare(
-                'UPDATE Characters SET ' . implode(',', $querypairs) .
+                'UPDATE `characters` SET ' . implode(',', $querypairs) .
                 ' WHERE ID=:charid'
             );
 

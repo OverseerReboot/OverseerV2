@@ -32,7 +32,7 @@ if (empty($_SESSION['username'])) {
                     }
                     if ($success) {
                         $captchas -= 1;
-                        mysqli_query($connection, "UPDATE Characters SET captchalogues = " . strval($charrow['captchalogues'] + 1) . " WHERE ID = $cid");
+                        mysqli_query($connection, "UPDATE `characters` SET captchalogues = " . strval($charrow['captchalogues'] + 1) . " WHERE ID = $cid");
                     }
                 } else {
                     echo "Error: that item is not a base item!<br />";

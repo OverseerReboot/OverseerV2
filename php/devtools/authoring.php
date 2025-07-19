@@ -7,7 +7,7 @@ if ($accrow['modlevel'] < 1) {
 } else {
     if (!empty($_POST['text'])) {
         $code = $_POST['code'];
-        $result = mysqli_query($connection, "SELECT * FROM Captchalogue WHERE code = '$code'");
+        $result = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE code = '$code'");
         $row = mysqli_fetch_array($result);
         if (empty($row['name'])) {
             echo "Item not found. whaaaaaat<br />";
@@ -15,10 +15,10 @@ if ($accrow['modlevel'] < 1) {
             echo "This item already has text associated with it. (editing text TBA)<br />";
         } else {
             $text = mysqli_real_escape_string($connection, $_POST['text']);
-            mysqli_query($connection, "INSERT INTO Reading (`text`) VALUES ('$text')");
+            mysqli_query($connection, "INSERT INTO `reading` (`text`) VALUES ('$text')");
             $new = mysqli_insert_id($connection);
             $eff = mysqli_real_escape_string($connection, $row['effects'] . "READ:$new|");
-            mysqli_query($connection, "UPDATE Captchalogue SET effects = '$eff' WHERE code = '$code'");
+            mysqli_query($connection, "UPDATE `captchalogue` SET effects = '$eff' WHERE code = '$code'");
             echo "Published text with ID $new for item " . $row['name'] . "!<br />";
         }
     }

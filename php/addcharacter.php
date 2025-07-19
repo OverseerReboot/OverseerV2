@@ -65,7 +65,7 @@ if ($_POST['dreamer'] == "" || $_POST['dreamer'] == "Null") {
 }
 
 // Load the session, since we'll need that to check if the password matches and to check for name collisions.
-$sessionquery = $db->prepare("SELECT ID,name,password,members FROM Sessions WHERE name = :sessionname");
+$sessionquery = $db->prepare("SELECT ID,name,password,members FROM `sessions` WHERE name = :sessionname");
 $sessionquery->bindParam(':sessionname', $_POST['session']);
 $sessionquery->execute();
 if ($sessionquery->rowcount() != 1) {
@@ -84,7 +84,7 @@ if (!password_verify($_POST['sessionpw'], $sessionrow['password'])) {
 }
 
 // Check that the character's name isn't already being used in this session.
-$checkquery = $db->prepare("SELECT name FROM Characters WHERE name = :charname AND session = :sessionid");
+$checkquery = $db->prepare("SELECT name FROM `characters` WHERE name = :charname AND session = :sessionid");
 $checkquery->bindParam(':charname', $_POST['charname']);
 $checkquery->bindParam(':sessionid', $sessionrow['id']);
 $checkquery->execute();
@@ -124,7 +124,7 @@ $achievements = array('created');
 
 
 
-$insertchar = $db->prepare("INSERT INTO Characters (name, owner, session, class, aspect, dreamer, symbol, grists, stats, fatiguetimer, invslots) VALUES (:charname, :userid, :session, :class, :aspect, :dreamer, :symbol, :grists, :stats, :time, 25);");
+$insertchar = $db->prepare("INSERT INTO `characters` (name, owner, session, class, aspect, dreamer, symbol, grists, stats, fatiguetimer, invslots) VALUES (:charname, :userid, :session, :class, :aspect, :dreamer, :symbol, :grists, :stats, :time, 25);");
 $insertchar->bindParam(':charname', $_POST['charname']);
 $insertchar->bindParam(':userid', $_SESSION['userid']);
 $insertchar->bindParam(':session', $sessionrow['id']);
@@ -151,7 +151,7 @@ $addtoaccount->bindParam(':userid', $accrow['id']);
 $addtoaccount->execute();
 unset($addtoaccount);
 
-$addstrifer = $db->prepare("INSERT INTO Strifers (name, owner, leader, teamwork, control, health, maxhealth, description) VALUES (:charname, :charid, 1, 100, 1, 10, 10, :description)");
+$addstrifer = $db->prepare("INSERT INTO `strifers` (name, owner, leader, teamwork, control, health, maxhealth, description) VALUES (:charname, :charid, 1, 100, 1, 10, 10, :description)");
 $addstrifer->bindParam(':charname', $_POST['charname']);
 $addstrifer->bindParam(':charid', $newcharid);
 $addstrifer->bindValue(':description', $_POST['charname']."'s waking self");
@@ -162,7 +162,7 @@ $addstrifer->execute();
 $dreamrowid = $db->lastInsertId();
 unset($addstrifer);
 
-$updatestrifers = $db->prepare("UPDATE Characters SET wakeself = :wakeid, dreamself = :dreamid WHERE ID = :charid LIMIT 1");
+$updatestrifers = $db->prepare("UPDATE `characters` SET wakeself = :wakeid, dreamself = :dreamid WHERE ID = :charid LIMIT 1");
 $updatestrifers->bindParam(':wakeid', $wakerowid);
 $updatestrifers->bindParam(':dreamid', $dreamrowid);
 $updatestrifers->bindParam(':charid', $newcharid);

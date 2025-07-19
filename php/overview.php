@@ -9,7 +9,7 @@ require $_SERVER['DOCUMENT_ROOT'] . '/inc/header.php';
 <script type="text/javascript" src="/js/jquery.tooltipster.min.js"></script>
 <?php
 
-$query = "UPDATE Characters SET lasttick=" . time() . " WHERE ID=" . $me->id;
+$query = "UPDATE `characters` SET lasttick=" . time() . " WHERE ID=" . $me->id;
 $queryex = mysqli_query($connection, $query);
 
 // Server player is required on this page, load them now.
@@ -81,7 +81,7 @@ if (!empty($_POST['newimage'])) {
 // Player wants to set a new custom player image
 if (isset($_POST['symbol'])) {
 
-    $ownsession = mysqli_query($connection, "SELECT name FROM Sessions WHERE `id` = $charrow[session];");
+    $ownsession = mysqli_query($connection, "SELECT name FROM `sessions` WHERE `id` = $charrow[session];");
     $sessiont = mysqli_fetch_array($ownsession);
     $session = str_replace("''", "'", $sessiont['name']);
 
@@ -144,7 +144,7 @@ Moon: <?php echo $me->dreamer; ?><br>
 
 <br>
 <?php
-$ownsession = mysqli_query($connection, "SELECT name FROM Sessions WHERE `id` = $charrow[session];");
+$ownsession = mysqli_query($connection, "SELECT name FROM `sessions` WHERE `id` = $charrow[session];");
 $sessiont = mysqli_fetch_array($ownsession);
 $session = str_replace("''", "'", $sessiont['name']);
 echo 'Symbol: <img style="display:inline" src="' . $me->symbol . '"><br />';

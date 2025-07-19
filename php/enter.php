@@ -13,7 +13,7 @@ require_once "includes/additem.php";
             $i++;
         }
     }
-    $gristresult = mysqli_query($connection, "SELECT * FROM Grists WHERE tier > 0 AND tier < 10 ORDER BY tier DESC"); //pull all land-available grists
+    $gristresult = mysqli_query($connection, "SELECT * FROM `grists` WHERE tier > 0 AND tier < 10 ORDER BY tier DESC"); //pull all land-available grists
     $j = 1;
     while ($j <= 9) {
         $grists[$j] = []; //initialize grist choice list arrays
@@ -60,10 +60,10 @@ if (empty($_SESSION['character'])) {
                 }
                 while ($i <= ($offset + 1) * 9) {
                     if ($i <= 9) {
-                        $gristresult = mysqli_query($connection, "SELECT * FROM Grists WHERE `name` = '" . $_POST['tier' . strval($i)] . "'");
+                        $gristresult = mysqli_query($connection, "SELECT * FROM `grists` WHERE `name` = '" . $_POST['tier' . strval($i)] . "'");
                         $tier = $i;
                     } else {
-                        $gristresult = mysqli_query($connection, "SELECT * FROM Grists WHERE `name` = '" . $_POST['tierb' . strval($i - 9)] . "'");
+                        $gristresult = mysqli_query($connection, "SELECT * FROM `grists` WHERE `name` = '" . $_POST['tierb' . strval($i - 9)] . "'");
                         $tier = $i - 9;
                     }
                     $row = mysqli_fetch_array($gristresult);
@@ -114,7 +114,7 @@ if (empty($_SESSION['character'])) {
                 }
             }*/ else {
                 echo "Entering with grist preset " . $thischoice . "...<br />";
-                $presetresult = mysqli_query($connection, "SELECT * FROM Presets WHERE name = '" . $thischoice . "'");
+                $presetresult = mysqli_query($connection, "SELECT * FROM `presets` WHERE name = '" . $thischoice . "'");
                 $row = mysqli_fetch_array($presetresult);
                 if (empty($row['name'])) {
                     echo "Error entering Medium: No grist preset exists with that name.<br />";
@@ -160,7 +160,7 @@ if (empty($_SESSION['character'])) {
             $land2 = mysqli_real_escape_string($connection, $_POST['land2']);
             $griststr = substr($griststr, 0, -1);
             $consorts = mysqli_real_escape_string($connection, $_POST['consorts']);
-            mysqli_query($connection, "UPDATE Characters SET inmedium = 1, land1 = '$land1', land2 = '$land2', grist_type = '$griststr', consort = '$consorts' WHERE ID = $cid"); //uncomment when done debugging
+            mysqli_query($connection, "UPDATE `characters` SET inmedium = 1, land1 = '$land1', land2 = '$land2', grist_type = '$griststr', consort = '$consorts' WHERE ID = $cid"); //uncomment when done debugging
             echo "A blinding white light engulfs you as you break your Cruxite Artifact.<br />
 			When you come to, you realize the outside world has changed. You, as well as your entire dwelling, have been transported to the Land of " . $_POST['land1'] . " and " . $_POST['land2'] . ".<br />";
             if (empty($charrow['proto_obj1'])) { //player entered without prototyping, whoops
@@ -185,7 +185,7 @@ if (empty($_SESSION['character'])) {
         echo "<form action='enter.php' method='post'>Land name: The Land of <input type='text' name='land1' /> and <input type='text' name='land2' /><br />";
         echo "Consort color/species: <input type='text' name='consorts' /><br />"; //we don't have a colors table yet so consorts can be manually named for now
         $psoptions = "<option value='manual'>Choose manually using the below fields</option>"/*<option value='random'>Choose randomly</option>*/;
-        $presetresult = mysqli_query($connection, "SELECT * FROM Presets");
+        $presetresult = mysqli_query($connection, "SELECT * FROM `presets`");
         while ($prow = mysqli_fetch_array($presetresult)) {
             $psoptions .= "<option value='" . $prow['name'] . "'>" . $prow['name'] . " - ";
             $gstr = explode("|", $prow['grists']);
@@ -201,7 +201,7 @@ if (empty($_SESSION['character'])) {
         }
         echo "Primary grists: <select name='preset'>" . $psoptions . "</select><br />Secondary grists: <select name='preset2'>" . $psoptions;
         echo "</select><br />Exact grists (applicable only if you have \"choose manually\" selected):<br />";
-        $gristresult = mysqli_query($connection, "SELECT * FROM Grists WHERE tier > 0 AND tier < 10 ORDER BY tier DESC"); //pull all land-available grists
+        $gristresult = mysqli_query($connection, "SELECT * FROM `grists` WHERE tier > 0 AND tier < 10 ORDER BY tier DESC"); //pull all land-available grists
         //We order by tier descending so that higher tiers show up first on the lists for higher tier slots, as they are recommended choices for those slots
         $j = 1;
         while ($j <= 9) {

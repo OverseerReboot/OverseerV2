@@ -36,7 +36,7 @@ if (!empty($_SESSION['username'])) {
         }
         $time = time();
         if ($charrow['fatiguetimer'] == 0) { //Fatigue timer uninitialized. Should not happen.
-            mysqli_query($connection, "UPDATE `characters` SET `fatiguetimer` = $time WHERE `characters`.`id` = $charrow[ID] LIMIT 1;");
+            mysqli_query($connection, "UPDATE `characters` SET `fatiguetimer` = $time WHERE `characters`.`id` = $charrow[id] LIMIT 1;");
             $charrow['fatiguetimer'] = $time;
         } else {
             $recovery = floor(($time - $charrow['fatiguetimer']) / $fatiguetimer); //Recover 3 points every $fatiguetimer seconds
@@ -45,7 +45,7 @@ if (!empty($_SESSION['username'])) {
                 $charrow['fatiguetimer'] += $recoverytime;
                 $charrow['wakefatigue'] = max(($charrow['wakefatigue'] - ($recovery * 10)), 0);
                 $charrow['dreamfatigue'] = max(($charrow['dreamfatigue'] - ($recovery * 10)), 0);
-                mysqli_query($connection, "UPDATE `characters` SET `fatiguetimer` = $charrow[fatiguetimer], `wakefatigue` = $charrow[wakefatigue], `dreamfatigue` = $charrow[dreamfatigue] WHERE `characters`.`id` = $charrow[ID] LIMIT 1;");
+                mysqli_query($connection, "UPDATE `characters` SET `fatiguetimer` = $charrow[fatiguetimer], `wakefatigue` = $charrow[wakefatigue], `dreamfatigue` = $charrow[dreamfatigue] WHERE `characters`.`id` = $charrow[id] LIMIT 1;");
             }
         }
     }

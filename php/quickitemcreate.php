@@ -165,8 +165,8 @@ if ($_SESSION['username'] != "") {
     An item can only be created in this way with a recipe in mind - this is so that it can be automatically balanced.<br>
     Current limitations: Effects cannot be directly added, including consumable effects. If you want to create a consumable, please use the full submission form for now.<br><br>";
 
-            $i1result = mysqli_query($connection, "SELECT * FROM Captchalogue WHERE code = '$code1' AND (session = 0 OR session = " . $charrow['session'] . ")");
-            $i2result = mysqli_query($connection, "SELECT * FROM Captchalogue WHERE code = '$code2' AND (session = 0 OR session = " . $charrow['session'] . ")");
+            $i1result = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE code = '$code1' AND (session = 0 OR session = " . $charrow['session'] . ")");
+            $i2result = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE code = '$code2' AND (session = 0 OR session = " . $charrow['session'] . ")");
             while ($i1rowo = mysqli_fetch_array($i1result)) {
                 while ($i2rowo = mysqli_fetch_array($i2result)) {
                     $aok = true; //both items exist
@@ -190,7 +190,7 @@ if ($_SESSION['username'] != "") {
                 }
                 if ($combine != "") {
                     $itemfound = false;
-                    $itemresult = mysqli_query($connection, "SELECT * FROM Captchalogue WHERE code = '$combine'");
+                    $itemresult = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE code = '$combine'");
                     while ($itemrow = mysqli_fetch_array($itemresult)) {
                         echo "Error: This combination already creates an existing item. Try changing the operation or one of the components.<br />";
                         $itemfound = true;
