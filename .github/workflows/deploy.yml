@@ -21,5 +21,5 @@ jobs:
           echo DB_DATABASE="overseer_v2" >> .env
           echo OVERSEER_ROOT="/php/" >> .env
           echo OVERSEER_PHP_SESSIONS_ROOT="/.session/" >> .env
-          echo SITE_HOSTNAME=http://localhost:8000 >> .env
+          echo SITE_HOSTNAME=http://v2.overseerreboot.xyz >> .env
           docker compose --profile prod up -d --build
