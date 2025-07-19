@@ -37,6 +37,8 @@ services:
       - .env
     depends_on:
       - database
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
   
   php-dev:
     <<: *php
