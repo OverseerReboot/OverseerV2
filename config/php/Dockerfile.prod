@@ -15,7 +15,7 @@ COPY ./config/apache/ports-prod.conf /etc/apache2/ports.conf
 COPY ./config/php/prod-php.ini /usr/local/etc/php/php.ini
 
 # Ensure that we're listening in on the correct server name / port
-RUN echo "ServerName localhost:80" >> /etc/apache2/apache2.conf
+RUN echo "ServerName localhost:9000" >> /etc/apache2/apache2.conf
 
 # Copy project files
 COPY ./php/ /var/www/html/
