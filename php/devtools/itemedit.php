@@ -66,7 +66,7 @@ if ($accrow['modlevel'] < 4) {
 
     if (!empty($_POST['publishlog'])) {
         if ($accrow['modlevel'] >= 6) {
-            $sysresult = mysqli_query($connection, "SELECT `addlog` FROM `System` WHERE 1");
+            $sysresult = mysqli_query($connection, "SELECT `addlog` FROM `system` WHERE 1");
             $sysrow = mysqli_fetch_array($sysresult);
             if ($sysrow['addlog'] != "") {
                 if (!empty($_POST['publishtitle'])) {
@@ -83,9 +83,9 @@ if ($accrow['modlevel'] < 4) {
                     $leadintext = "This is an automatically generated addlog of items that were created using the on-site Item Editor. The person posting this is too lazy to actually include a message, so enjoy these items:";
                 }
                 $bodytext = mysqli_real_escape_string($connection, $leadintext . "<br />" . $sysrow['addlog']);
-                mysqli_query($connection, "INSERT INTO `News` (`date`, `title`, `postedby`, `news`) VALUES ('$datetext', '$titletext', '$nametext', '$bodytext')");
+                mysqli_query($connection, "INSERT INTO `news` (`date`, `title`, `postedby`, `news`) VALUES ('$datetext', '$titletext', '$nametext', '$bodytext')");
                 echo $bodytext; //in case it fails to post
-                mysqli_query($connection, "UPDATE `System` SET `addlog` = '' WHERE 1");
+                mysqli_query($connection, "UPDATE `system` SET `addlog` = '' WHERE 1");
                 echo "<br />News has been posted, and the addlog has been cleared.<br />";
             } else {
                 echo "ERROR: Addlog is empty. Someone might have beaten you to it!<br />";
@@ -183,19 +183,19 @@ if ($accrow['modlevel'] < 4) {
             $blocked = true;
         }
         if (!$blocked) {
-            $fieldresult = mysqli_query($connection, "SELECT * FROM `Captchalogue` LIMIT 1;");
+            $fieldresult = mysqli_query($connection, "SELECT * FROM `captchalogue` LIMIT 1;");
             while ($field = mysqli_fetch_field($fieldresult)) {
                 $fname = $field->name;
                 if ($fname == 'code') {
                     $founditem = false;
                     $editcode = $_POST['code'];
-                    $editresult = mysqli_query($connection, "SELECT * FROM `Captchalogue` WHERE `Captchalogue`.`code` = '$editcode' LIMIT 1;");
+                    $editresult = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE `captchalogue`.`code` = '$editcode' LIMIT 1;");
                     while ($row = mysqli_fetch_array($editresult)) {
                         $founditem = true;
                         $erow = $row;
                     }
                     if (!$founditem) {
-                        $updatequery = "INSERT INTO `Captchalogue` VALUES (NULL, '$editcode'";
+                        $updatequery = "INSERT INTO `captchalogue` VALUES (NULL, '$editcode'";
                     } else {
                         if ($_POST['populate'] == "no") {
                             echo 'An item with this code already exists! ';
@@ -207,7 +207,7 @@ if ($accrow['modlevel'] < 4) {
                             $blocked = true;
                             break;
                         } else {
-                            $updatequery = "UPDATE `Captchalogue` SET ";
+                            $updatequery = "UPDATE `captchalogue` SET ";
                         }
                     }
                 } elseif ($fname != 'ID') {
@@ -259,42 +259,42 @@ if ($accrow['modlevel'] < 4) {
                 $updatequery .= ");";
             } else {
                 $updatequery = substr($updatequery, 0, -2);
-                $updatequery .= " WHERE `Captchalogue`.`code` = '$editcode';";
+                $updatequery .= " WHERE `captchalogue`.`code` = '$editcode';";
             }
             echo $updatequery . "<br />";
             mysqli_query($connection, $updatequery);
             //now test to see if it worked
             if ($_POST['populate'] == "no") {
                 $victory = false;
-                $testresult = mysqli_query($connection, "SELECT `code` FROM `Captchalogue` WHERE `Captchalogue`.`code` = '$editcode'");
+                $testresult = mysqli_query($connection, "SELECT `code` FROM `captchalogue` WHERE `captchalogue`.`code` = '$editcode'");
                 $testrow = mysqli_fetch_array($testresult);
                 if ($testrow['code'] == $editcode) {
                     $victory = true;
-                    $sysresult = mysqli_query($connection, "SELECT `addlog` FROM `System` WHERE 1");
+                    $sysresult = mysqli_query($connection, "SELECT `addlog` FROM `system` WHERE 1");
                     $sysrow = mysqli_fetch_array($sysresult);
                     $sysrow['addlog'] .= "<br />" . $accrow['username'] . " - Added " . $_POST['name'];
                     if (!empty($_POST['devcomments'])) {
                         $sysrow['addlog'] .= " (" . $_POST['devcomments'] . ")";
                     }
-                    mysqli_query($connection, "UPDATE `System` SET `addlog` = '" . mysqli_real_escape_string($connection, $sysrow['addlog']) . "' WHERE 1");
+                    mysqli_query($connection, "UPDATE `system` SET `addlog` = '" . mysqli_real_escape_string($connection, $sysrow['addlog']) . "' WHERE 1");
                     echo "Addlog updated.<br />";
                 } else {
                     echo "Oops, something is wrong! The query didn't go through, and the item wasn't created. If all else fails, send that query to Blah!<br />";
                 }
             } else {
                 $victory = true;
-                $sysresult = mysqli_query($connection, "SELECT `addlog` FROM `System` WHERE 1");
+                $sysresult = mysqli_query($connection, "SELECT `addlog` FROM `system` WHERE 1");
                 $sysrow = mysqli_fetch_array($sysresult);
                 $sysrow['addlog'] .= "<br />" . $accrow['username'] . " - Edited " . $_POST['name'];
                 if (!empty($_POST['devcomments'])) {
                     $sysrow['addlog'] .= " (" . $_POST['devcomments'] . ")";
                 }
-                mysqli_query($connection, "UPDATE `System` SET `addlog` = '" . mysqli_real_escape_string($connection, $sysrow['addlog']) . "' WHERE 1");
+                mysqli_query($connection, "UPDATE `system` SET `addlog` = '" . mysqli_real_escape_string($connection, $sysrow['addlog']) . "' WHERE 1");
                 echo "Addlog updated.<br />";
             }
             if ($victory) {
                 if ($_POST['processing'] != 0) {
-                    mysqli_query($connection, "DELETE FROM `Feedback` WHERE `Feedback`.`ID` = " . strval($_POST['processing']) . " LIMIT 1;");
+                    mysqli_query($connection, "DELETE FROM `feedback` WHERE `feedback`.`id` = " . strval($_POST['processing']) . " LIMIT 1;");
                     echo "Submission cleared. There's no turning back now, so be sure to copy the above query somewhere safe if you suspect that the item didn't add properly.<br />";
                 }
                 if ($_POST['consumable'] == 1) {
@@ -305,7 +305,7 @@ if ($accrow['modlevel'] < 4) {
     }
 
     if (!empty($_GET['dobase'])) {
-        $lookupresult = mysqli_query($connection, "SELECT `code`,`name` FROM `Captchalogue` WHERE `base` = 1 AND `refrance` = 0 AND `old` = 1 LIMIT 1;");
+        $lookupresult = mysqli_query($connection, "SELECT `code`,`name` FROM `captchalogue` WHERE `base` = 1 AND `refrance` = 0 AND `old` = 1 LIMIT 1;");
         while ($srow = mysqli_fetch_array($lookupresult)) {
             $_GET['editcode'] = $srow['code'];
         }
@@ -313,7 +313,7 @@ if ($accrow['modlevel'] < 4) {
 
     if (!empty($_GET['editname'])) {
         $sname = mysqli_real_escape_string($connection, $_GET['editname']);
-        $lookupresult = mysqli_query($connection, "SELECT `code`,`name` FROM `Captchalogue` WHERE `name` = '$sname' LIMIT 1;");
+        $lookupresult = mysqli_query($connection, "SELECT `code`,`name` FROM `captchalogue` WHERE `name` = '$sname' LIMIT 1;");
         while ($srow = mysqli_fetch_array($lookupresult)) {
             $_GET['editcode'] = $srow['code'];
         }
@@ -333,7 +333,7 @@ if ($accrow['modlevel'] < 4) {
 
     $processing = 0;
     if (!empty($_GET['sub']) && !$victory) {
-        $feedresult = mysqli_query($connection, "SELECT * FROM `Feedback` WHERE `Feedback`.`ID` = '" . strval($_GET['sub']) . "'");
+        $feedresult = mysqli_query($connection, "SELECT * FROM `feedback` WHERE `feedback`.`id` = '" . strval($_GET['sub']) . "'");
         $feedrow = mysqli_fetch_array($feedresult);
         if ($feedrow['greenlight'] == 1) {
             //logDebugMessage($accrow['username'] . " - began working on the submission " . $feedrow['name']);
@@ -443,7 +443,7 @@ if ($accrow['modlevel'] < 4) {
     //print_r($suggrist);
     //if (!$processing) $founditem = false;
     if ($populate) {
-        $editresult = mysqli_query($connection, "SELECT * FROM `Captchalogue` WHERE `Captchalogue`.`code` = '$editcode' LIMIT 1;");
+        $editresult = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE `captchalogue`.`code` = '$editcode' LIMIT 1;");
         while ($row = mysqli_fetch_array($editresult)) {
             $founditem = true;
             echo $row['name'] . " loaded<br />";
@@ -468,7 +468,7 @@ if ($accrow['modlevel'] < 4) {
         echo '<input type="hidden" name="populate" value="no">';
     }
     echo '<input type="hidden" name="processing" value="' . strval($processing) . '">';
-    $fieldresult = mysqli_query($connection, "SELECT * FROM `Captchalogue` LIMIT 1;");
+    $fieldresult = mysqli_query($connection, "SELECT * FROM `captchalogue` LIMIT 1;");
     while ($field = mysqli_fetch_field($fieldresult)) {
         echo '<tr><td align="right">';
         $fname = $field->name;
@@ -545,7 +545,7 @@ if ($accrow['modlevel'] < 4) {
     echo 'Dev comments about the item: If you changed the item significantly, such as changing a component or switching the operation, say so here. Or just whatever you want to add to its entry in the addlog.<br /><textarea name="devcomments" rows="6" cols="40" form="itemeditor"></textarea><br />';
     echo '<input type="submit" value="Edit/Create"></form><br />';
     if ($accrow['modlevel'] >= 6) {
-        $sysresult = mysqli_query($connection, "SELECT `addlog` FROM `System` WHERE 1");
+        $sysresult = mysqli_query($connection, "SELECT `addlog` FROM `system` WHERE 1");
         $sysrow = mysqli_fetch_array($sysresult);
         if (empty($sysrow['addlog'])) {
             $sysrow['addlog'] = " Empty!";

@@ -30,7 +30,7 @@ if ($charrow['dreamingstatus'] == "Awake") {
 } else {
     $sid = $charrow['dreamself']; //Implement method for recognizing Godtiers and change dreamself id accordingly please
 }
-$striferesult = mysqli_query($connection, "SELECT * FROM `Strifers` WHERE `Strifers`.`ID` = $sid LIMIT 1;");
+$striferesult = mysqli_query($connection, "SELECT * FROM `strifers` WHERE `strifers`.`id` = $sid LIMIT 1;");
 $striferow = mysqli_fetch_array($striferesult);
 if ($striferow['strifeID'] == 0 || empty($striferow['strifeID'])) { //This user is not actually strifing!
     echo "You are not currently engaged in strife!<br />";
@@ -39,7 +39,7 @@ if ($striferow['strifeID'] == 0 || empty($striferow['strifeID'])) { //This user 
 } else {
     $output = "A whole mess of strifing takes place.<br />"; //This is the output string for this combat round
     $n = 0; //n for "number of strifers"
-    $striferesult = mysqli_query($connection, "SELECT * FROM `Strifers` WHERE `Strifers`.`strifeID` = $striferow[strifeID];"); //Grab all strifers
+    $striferesult = mysqli_query($connection, "SELECT * FROM `strifers` WHERE `strifers`.`strifeid` = $striferow[strifeID];"); //Grab all strifers
     while ($row = mysqli_fetch_array($striferesult)) {
         $n++; //NOTE - This means the first strifer will be entry 1 in the array, NOT entry 0
         $strifers[$n] = $row; //Store each strifer in a successive index

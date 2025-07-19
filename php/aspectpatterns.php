@@ -38,10 +38,10 @@ if (empty($charrow)) {
         $_SESSION['classrow']['name'] = "";
     }
     if ($_SESSION['aspectrow']['name'] != $charrow['aspect'] || $_SESSION['classrow']['name'] != $charrow['class']) {
-        $aspectresult = mysqli_query($connection, "SELECT * FROM `Aspect_modifiers` WHERE `Aspect_modifiers`.`Aspect` = '$charrow[aspect]';");
+        $aspectresult = mysqli_query($connection, "SELECT * FROM `aspect_modifiers` WHERE `aspect_modifiers`.`aspect` = '$charrow[aspect]';");
         $aspectrow = mysqli_fetch_array($aspectresult);
         $_SESSION['aspectrow'] = $aspectrow;
-        $classresult = mysqli_query($connection, "SELECT * FROM `Class_modifiers` WHERE `Class_modifiers`.`Class` = '$charrow[class]';");
+        $classresult = mysqli_query($connection, "SELECT * FROM `class_modifiers` WHERE `class_modifiers`.`class` = '$charrow[class]';");
         $classrow = mysqli_fetch_array($classresult);
         $_SESSION['classrow'] = $classrow;
     } else {
@@ -56,7 +56,7 @@ if (empty($charrow)) {
     } else { //Grab their dream row
         $sid = $charrow['dreamself'];
     }
-    $striferesult = mysqli_query($connection, "SELECT * FROM `Strifers` WHERE `Strifers`.`ID` = $sid LIMIT 1;");
+    $striferesult = mysqli_query($connection, "SELECT * FROM `strifers` WHERE `strifers`.`id` = $sid LIMIT 1;");
     $striferow = mysqli_fetch_array($striferesult);
     //Calculate aspectpower i.e. relative power of aspect manipulation for this character.
     $aspectpower = floor($charrow['echeladder'] * (pow(($classrow['godtierfactor'] / 100), $charrow['godtier'])));
@@ -74,7 +74,7 @@ if (empty($charrow)) {
             $i++;
         }
         $charrow['aspectpatterns'] = $newlist;
-        mysqli_query($connection, "UPDATE `Characters` SET `aspectpatterns` = '" . $charrow['aspectpatterns'] . "' WHERE `ID` = $charrow[ID] LIMIT 1;");
+        mysqli_query($connection, "UPDATE `characters` SET `aspectpatterns` = '" . $charrow['aspectpatterns'] . "' WHERE `id` = $charrow[ID] LIMIT 1;");
         echo "Pattern deleted.</br>";
     } elseif (!empty($_POST['usepattern'])) { //usepattern is used to signal, erm, a pattern being used.
         //We can check some failure conditions here that apply regardless of target. Failure conditions:
@@ -106,7 +106,7 @@ if (empty($charrow)) {
             if (!empty($_POST['savepattern'])) {
                 $_POST['name'] = mysqli_real_escape_string($connection, $_POST['name']); //Escape the name
                 $charrow['aspectpatterns'] .= "name:" . $_POST['name'] . "," . $savestr . "|";
-                mysqli_query($connection, "UPDATE `Characters` SET `aspectpatterns` = '" . $charrow['aspectpatterns'] . "' WHERE `ID` = $charrow[ID] LIMIT 1;");
+                mysqli_query($connection, "UPDATE `characters` SET `aspectpatterns` = '" . $charrow['aspectpatterns'] . "' WHERE `id` = $charrow[ID] LIMIT 1;");
             }
         }
         $cost = 100 - floor(pow(($values['aspectvial'] * ($aspectrow['Aspect_vial'] / 100) * ($classrow['Aspect_vial'] / 100)), (1 / 2)) * 10);
@@ -125,7 +125,7 @@ if (empty($charrow)) {
             if ($striferow['strifeID'] != 0) { //User is strifing
                 //Target will be a specified strife row. Failure conditions:
                 //Target is not in the same strife as user. That is pretty much it.
-                $targetresult = mysqli_query($connection, "SELECT * FROM `Strifers` WHERE `Strifers`.`ID` = $_POST[target] LIMIT 1;");
+                $targetresult = mysqli_query($connection, "SELECT * FROM `strifers` WHERE `strifers`.`id` = $_POST[target] LIMIT 1;");
                 $targetrow = mysqli_fetch_array($targetresult);
                 if ($targetrow['strifeID'] != $striferow['strifeID']) {
                     $fail = "You are currently strifing and cannot target outside your current strife.";
@@ -143,7 +143,7 @@ if (empty($charrow)) {
                 //Target cannot currently be assisted
                 //Target is not currently in the same location (Prospit/Derse/Waking world)
                 //User lacks a consumable action
-                $targetresult = mysqli_query($connection, "SELECT * FROM `Characters` WHERE `Characters`.`ID` = $_POST[target] LIMIT 1;");
+                $targetresult = mysqli_query($connection, "SELECT * FROM `characters` WHERE `characters`.`id` = $_POST[target] LIMIT 1;");
                 $targetrow = mysqli_fetch_array($targetresult);
                 if ($targetrow['session'] != $charrow['session']) {
                     $fail = "You cannot use your abilities on players not in your session.";
@@ -157,7 +157,7 @@ if (empty($charrow)) {
                     } else { //Grab their dream row
                         $tid = $targetrow['dreamself'];
                     }
-                    $targetresult = mysqli_query($connection, "SELECT * FROM `Strifers` WHERE `Strifers`.`ID` = " . $tid . " LIMIT 1;");
+                    $targetresult = mysqli_query($connection, "SELECT * FROM `strifers` WHERE `strifers`.`id` = " . $tid . " LIMIT 1;");
                     $targetrow = mysqli_fetch_array($targetresult);
                     if ($targetrow['noassist'] == 1) {
                         $fail = "The player you have targeted is currently unable to receive assistance!";
@@ -286,7 +286,7 @@ if (empty($charrow)) {
                     $striferow['bonuses'] = $striferow['bonuses'] . "POWER:0:$powerup|";
                 }
                 $playerhealth = $striferow['health'] + $heal;
-                mysqli_query($connection, "UPDATE `Strifers` SET `bonuses` = '$striferow[bonuses]', `health` = $playerhealth WHERE `Strifers`.`ID` = $striferow[ID] LIMIT 1;");
+                mysqli_query($connection, "UPDATE `strifers` SET `bonuses` = '$striferow[bonuses]', `health` = $playerhealth WHERE `strifers`.`id` = $striferow[ID] LIMIT 1;");
             }
             incrementStat($charrow, 'aspect');
             //Powerdown is the same regardless of target, so do it afterwards
@@ -302,13 +302,13 @@ if (empty($charrow)) {
                 $targetpower = 0;
             }
             //Below: Query to update the target's strife row
-            mysqli_query($connection, "UPDATE `Strifers` SET `bonuses` = '$targetrow[bonuses]', `health` = $targethealth, `power` = $targetpower WHERE `Strifers`.`ID` = $targetrow[ID] LIMIT 1;");
+            mysqli_query($connection, "UPDATE `strifers` SET `bonuses` = '$targetrow[bonuses]', `health` = $targethealth, `power` = $targetpower WHERE `strifers`.`id` = $targetrow[ID] LIMIT 1;");
             //Pay for the pattern
             $newenergy = $striferow['energy'] - $cost;
             if ($newenergy < 0) {
                 $newenergy = 0;
             } //This should never happen, but the check is included here for safety
-            mysqli_query($connection, "UPDATE `Strifers` SET `energy` = $newenergy WHERE `Strifers`.`ID` = $striferow[ID] LIMIT 1;");
+            mysqli_query($connection, "UPDATE `strifers` SET `energy` = $newenergy WHERE `strifers`.`id` = $striferow[ID] LIMIT 1;");
             echo "You invoke your Aspect in the " . $_POST['name'] . " pattern, targeting $targetrow[name]!</br>";
         } else {
             echo $fail . "</br>";
@@ -326,9 +326,9 @@ if (empty($charrow)) {
     echo "<input type='hidden' name='usepattern' value='gogogo'>";
     echo "Select a target: <select name='target'>";
     if ($striferow['strifeID'] == 0) {
-        $targetresult = mysqli_query($connection, "SELECT * FROM `Characters` WHERE `Characters`.`session` = $charrow[session];");
+        $targetresult = mysqli_query($connection, "SELECT * FROM `characters` WHERE `characters`.`session` = $charrow[session];");
     } else {
-        $targetresult = mysqli_query($connection, "SELECT * FROM `Strifers` WHERE `Strifers`.`strifeID` = $striferow[strifeID];");
+        $targetresult = mysqli_query($connection, "SELECT * FROM `strifers` WHERE `strifers`.`strifeid` = $striferow[strifeID];");
     }
     while ($targetrow = mysqli_fetch_array($targetresult)) {
         echo "<option value='$targetrow[ID]'>$targetrow[name]</option>";
@@ -368,9 +368,9 @@ if (empty($charrow)) {
         echo "<input type='hidden' name='usepattern' value='gogogo'>";
         echo "Select a target: <select name='target'>";
         if ($striferow['strifeID'] == 0) {
-            $targetresult = mysqli_query($connection, "SELECT * FROM `Characters` WHERE `Characters`.`session` = $charrow[session];");
+            $targetresult = mysqli_query($connection, "SELECT * FROM `characters` WHERE `characters`.`session` = $charrow[session];");
         } else {
-            $targetresult = mysqli_query($connection, "SELECT * FROM `Strifers` WHERE `Strifers`.`strifeID` = $striferow[strifeID];");
+            $targetresult = mysqli_query($connection, "SELECT * FROM `strifers` WHERE `strifers`.`strifeid` = $striferow[strifeID];");
         }
         while ($targetrow = mysqli_fetch_array($targetresult)) {
             echo "<option value='$targetrow[ID]'>$targetrow[name]</option>";

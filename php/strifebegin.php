@@ -21,7 +21,7 @@ if (!empty($_POST['land'])) { //Waking strife. Check that the Land is legal.
     } else {
         $connected = chainArray($charrow);
         if ($connected[$_POST['land']] || $_POST['land'] == $charrow['ID']) {
-            $landresult = mysqli_query($connection, "SELECT `grist_type` FROM `Characters` WHERE `Characters`.`ID` = '$_POST[land]' LIMIT 1;");
+            $landresult = mysqli_query($connection, "SELECT `grist_type` FROM `characters` WHERE `characters`.`id` = '$_POST[land]' LIMIT 1;");
             $landrow = mysqli_fetch_array($landresult);
             $gristarray = explode('|', $landrow['grist_type']); //Items 0 through 8 are the grists for tiers 1 through 9 here.
             //Note that items 9 through 17 are the bonus grists for those tiers!
@@ -116,20 +116,20 @@ if ($legit) {
             $fatiguestr = 'dreamfatigue';
         }
         //Retrieve the next ID from masterID and use it
-        mysqli_multi_query($connection, "UPDATE `System` SET masterID = masterID + 1; SELECT masterID from `System` WHERE 1;");
+        mysqli_multi_query($connection, "UPDATE `system` SET masterID = masterID + 1; SELECT masterID FROM `system` WHERE 1;");
         mysqli_next_result($connection);
         mysqli_next_result($connection);
         $masterresult = mysqli_store_result($connection); //Store the second result
         $masterrow = mysqli_fetch_array($masterresult);
         $newID = $masterrow['masterID']; //Grab the master ID
-        mysqli_query($connection, "UPDATE `Strifers` SET `strifeID` = $newID WHERE `Strifers`.`ID` = $sid LIMIT 1;"); //To minimize the time this strifer is part of the group getting an ID
+        mysqli_query($connection, "UPDATE `strifers` SET `strifeid` = $newID WHERE `strifers`.`id` = $sid LIMIT 1;"); //To minimize the time this strifer is part of the group getting an ID
         $enemies = generateEnemies($enemyarray, $newID, $connection, $appearson, 1, $charrow['session'], $_POST['land'], $tierlist);
         if ($enemies) {
             $charrow = spendFatigue(10, $charrow); //Dumb magic number: strifes cost 10 fatigue
             $playerside = 0;
-            mysqli_query($connection, "UPDATE `Strifers` SET `strifeID` = $newID, `side` = $playerside, `leader` = 1, `fatigue` = " . $charrow[$fatiguestr] . " WHERE `Strifers`.`ID` = $sid LIMIT 1;"); //Add the player
+            mysqli_query($connection, "UPDATE `strifers` SET `strifeid` = $newID, `side` = $playerside, `leader` = 1, `fatigue` = " . $charrow[$fatiguestr] . " WHERE `strifers`.`id` = $sid LIMIT 1;"); //Add the player
             if ($charrow['dreamingstatus'] == "Awake") { //Allies can't follow you to the moons. Temporary, we might add moon allies later.
-                mysqli_query($connection, "UPDATE `Strifers` SET `strifeID` = $newID, `side` = $playerside WHERE `Strifers`.`owner` = " . $charrow['ID'] . " AND `Strifers`.`Aspect` = '';"); //Add allies
+                mysqli_query($connection, "UPDATE `strifers` SET `strifeid` = $newID, `side` = $playerside WHERE `strifers`.`owner` = " . $charrow['ID'] . " AND `strifers`.`aspect` = '';"); //Add allies
             }
             if (strpos($savedcommand, "DONOTSAVE") === false) {
                 mysqli_query($connection, "UPDATE Characters SET oldenemydata = '$savedcommand' WHERE Characters.ID = $charrow[ID] LIMIT 1;");

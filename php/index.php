@@ -7,7 +7,7 @@ session_start();
 
 if (!empty($_SESSION['username'])) { // If the user is already logged in, get accrow.
     $username = $_SESSION['username'];
-    $accresult = mysqli_query($connection, "SELECT * FROM `Users` WHERE `username` = '" . $_SESSION['username'] . "' LIMIT 1;");
+    $accresult = mysqli_query($connection, "SELECT * FROM `users` WHERE `username` = '" . $_SESSION['username'] . "' LIMIT 1;");
     $accrow = mysqli_fetch_array($accresult);
 }
 function showloginmsg(): void
@@ -215,7 +215,7 @@ function showCaptcha(): void
 				<?php
     $chars = explode("|", $accrow['characters']);
     $i = 0;
-    $charquery = "SELECT `ID`,`name`,`session`,`symbol`,`colour` FROM Characters WHERE ";
+    $charquery = "SELECT `id`,`name`,`session`,`symbol`,`colour` FROM Characters WHERE ";
     $foundone = false;
     while (!empty($chars[$i])) {
         $foundone = true;

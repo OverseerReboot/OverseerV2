@@ -150,11 +150,11 @@ class User
         // Get the user's row to load it into the object.
         if ($userbystring == true) {
             $userquery = $this->_dbhandle->prepare(
-                'SELECT * FROM `Users` WHERE `username` = :userid'
+                'SELECT * FROM `users` WHERE `username` = :userid'
             );
         } else {
             $userquery = $this->_dbhandle->prepare(
-                'SELECT * FROM `Users` WHERE `ID` = :userid'
+                'SELECT * FROM `users` WHERE `id` = :userid'
             );
         }
 
@@ -204,7 +204,7 @@ class User
 
         // Find all characters belonging to the user and load them
         $getcharq = $this->_dbhandle->prepare(
-            'SELECT ID FROM `Characters` WHERE owner=:id'
+            'SELECT ID FROM `characters` WHERE owner=:id'
         );
         $getcharq->bindParam(':id', $this->id);
         $getcharq->execute();

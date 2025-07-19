@@ -4,39 +4,39 @@ $pagetitle = "SESSION ADMIN";
 require_once "header.php";
 
 // Check theyre session admin first
-$sessionQuery = mysqli_query($connection, "SELECT * FROM `Sessions` WHERE `ID` = '".$charrow['session']."';");
+$sessionQuery = mysqli_query($connection, "SELECT * FROM `sessions` WHERE `id` = '".$charrow['session']."';");
 $sessionRow = mysqli_fetch_array($sessionQuery);
 if ($_SESSION['username'] != $sessionRow['creator']) {
     echo "ERROR: You're not the admin.<br><br>";
 } elseif (!empty($_POST['exilechar'])) {
     $exileChar = mysqli_escape_string($connection, $_POST['exilechar']);
-    $exiledQuery = mysqli_query($connection, "SELECT * FROM `Characters` WHERE `ID` = '$exileChar'");
+    $exiledQuery = mysqli_query($connection, "SELECT * FROM `characters` WHERE `id` = '$exileChar'");
     $exiledRow = mysqli_fetch_array($exiledQuery);
     $exiledClient = $exiledRow['client'];
     $exiledServer = $exiledRow['server'];
     $exiledSession = $exiledRow['session'];
     if ($charrow['session'] == $exiledRow['session']) {
         if ($exiledClient != 0) {
-            mysqli_query($connection, "UPDATE `Characters` SET `server` = '0' WHERE `ID` = '$exiledClient';");
+            mysqli_query($connection, "UPDATE `characters` SET `server` = '0' WHERE `id` = '$exiledClient';");
         }
         if ($exiledServer != 0) {
-            mysqli_query($connection, "UPDATE `Characters` SET `client` = '0' WHERE `ID` = '$exiledServer';");
+            mysqli_query($connection, "UPDATE `characters` SET `client` = '0' WHERE `id` = '$exiledServer';");
         }
-        mysqli_query($connection, "UPDATE `Characters` SET `session` = '-1', `client` = '0', `server` = '0' WHERE `ID` = '$exileChar';");
+        mysqli_query($connection, "UPDATE `characters` SET `session` = '-1', `client` = '0', `server` = '0' WHERE `id` = '$exileChar';");
         // Resets server
-        mysqli_query($connection, "UPDATE `Characters` SET `client` = '0' WHERE `client` = '$exileChar';");
+        mysqli_query($connection, "UPDATE `characters` SET `client` = '0' WHERE `client` = '$exileChar';");
         // Resets Client
-        mysqli_query($connection, "UPDATE `Characters` SET `server` = '0' WHERE `server` = '$exileChar';");
+        mysqli_query($connection, "UPDATE `characters` SET `server` = '0' WHERE `server` = '$exileChar';");
 
         //Update session members array
         $oldArray = $sessionRow['members'];
         $newArray = str_replace($exileChar."|", "", $oldArray);
-        mysqli_query($connection, "UPDATE `Sessions` SET `members` = '$newArray' WHERE `ID` = '$exiledSession';");
-        $doomQuery = mysqli_query($connection, "SELECT * FROM `Sessions` WHERE `ID` = '-1';");
+        mysqli_query($connection, "UPDATE `sessions` SET `members` = '$newArray' WHERE `id` = '$exiledSession';");
+        $doomQuery = mysqli_query($connection, "SELECT * FROM `sessions` WHERE `id` = '-1';");
         $doomRow = mysqli_fetch_array($doomQuery);
         // Append to Doomheim member list here
         $doomMembers = $doomRow['members'].$exileChar."|";
-        mysqli_query($connection, "UPDATE `Sessions` SET `members` = '$doomMembers' WHERE `ID` = '-1';");
+        mysqli_query($connection, "UPDATE `sessions` SET `members` = '$doomMembers' WHERE `id` = '-1';");
         echo "Exiled ".$exiledRow['name']."!<br><br>";
         notifyCharacter($exiledRow['ID'], "You have been exiled! Welcome to DoomHeim, the exile session!");
     } else {
@@ -44,14 +44,14 @@ if ($_SESSION['username'] != $sessionRow['creator']) {
     }
 } elseif (isset($_POST['adminchar'])) {
     $adminChar = mysqli_real_escape_string($connection, $_POST['adminchar']);
-    $adminQuery = mysqli_query($connection, "SELECT * FROM `Characters` WHERE `ID` = '".$adminChar."';");
+    $adminQuery = mysqli_query($connection, "SELECT * FROM `characters` WHERE `id` = '".$adminChar."';");
     $adminRow = mysqli_fetch_array($adminQuery);
 
-    $ownerQuery = mysqli_query($connection, "SELECT * FROM `Users` WHERE `ID` = '".$adminRow['owner']."';");
+    $ownerQuery = mysqli_query($connection, "SELECT * FROM `users` WHERE `id` = '".$adminRow['owner']."';");
     $ownerRow = mysqli_fetch_array($ownerQuery);
     $newAdmin = $ownerRow['username'];
 
-    mysqli_query($connection, "UPDATE `Sessions` SET `creator` = '$newAdmin' WHERE `ID` = '".$charrow['session']."';");
+    mysqli_query($connection, "UPDATE `sessions` SET `creator` = '$newAdmin' WHERE `id` = '".$charrow['session']."';");
 
     if ($adminQuery) {
         notifyCharacter($_POST['adminchar'], "You have become the session's admin!");
@@ -61,7 +61,7 @@ if ($_SESSION['username'] != $sessionRow['creator']) {
 
 } elseif (isset($_POST['deleteS'])) {
     $session = $charrow['session'];
-    $session_query = mysqli_query($connection, "SELECT * FROM `Characters` WHERE `session` = '$session'");
+    $session_query = mysqli_query($connection, "SELECT * FROM `characters` WHERE `session` = '$session'");
 
     while ($exileplayer = mysqli_fetch_assoc($session_query)) {
         $exiledRow = $exileplayer;
@@ -71,33 +71,33 @@ if ($_SESSION['username'] != $sessionRow['creator']) {
         $exiledSession = $exiledRow['session'];
         if ($charrow['session'] == $exiledRow['session']) {
             if ($exiledClient != 0) {
-                mysqli_query($connection, "UPDATE `Characters` SET `server` = '0' WHERE `ID` = '$exiledClient';");
+                mysqli_query($connection, "UPDATE `characters` SET `server` = '0' WHERE `id` = '$exiledClient';");
             }
             if ($exiledServer != 0) {
-                mysqli_query($connection, "UPDATE `Characters` SET `client` = '0' WHERE `ID` = '$exiledServer';");
+                mysqli_query($connection, "UPDATE `characters` SET `client` = '0' WHERE `id` = '$exiledServer';");
             }
-            mysqli_query($connection, "UPDATE `Characters` SET `session` = '-1', `client` = '0', `server` = '0' WHERE `ID` = '$exileChar';");
+            mysqli_query($connection, "UPDATE `characters` SET `session` = '-1', `client` = '0', `server` = '0' WHERE `id` = '$exileChar';");
             // Resets server
-            mysqli_query($connection, "UPDATE `Characters` SET `client` = '0' WHERE `client` = '$exileChar';");
+            mysqli_query($connection, "UPDATE `characters` SET `client` = '0' WHERE `client` = '$exileChar';");
             // Resets Client
-            mysqli_query($connection, "UPDATE `Characters` SET `server` = '0' WHERE `server` = '$exileChar';");
+            mysqli_query($connection, "UPDATE `characters` SET `server` = '0' WHERE `server` = '$exileChar';");
 
             //Update session members array
             $oldArray = $sessionRow['members'];
             $newArray = str_replace($exileChar."|", "", $oldArray);
-            mysqli_query($connection, "UPDATE `Sessions` SET `members` = '$newArray' WHERE `ID` = '$exiledSession';");
-            $doomQuery = mysqli_query($connection, "SELECT * FROM `Sessions` WHERE `ID` = '-1';");
+            mysqli_query($connection, "UPDATE `sessions` SET `members` = '$newArray' WHERE `id` = '$exiledSession';");
+            $doomQuery = mysqli_query($connection, "SELECT * FROM `sessions` WHERE `id` = '-1';");
             $doomRow = mysqli_fetch_array($doomQuery);
             // Append to Doomheim member list here
             $doomMembers = $doomRow['members'].$exileChar."|";
-            mysqli_query($connection, "UPDATE `Sessions` SET `members` = '$doomMembers' WHERE `ID` = '-1';");
+            mysqli_query($connection, "UPDATE `sessions` SET `members` = '$doomMembers' WHERE `id` = '-1';");
             echo "Exiled ".$exiledRow['name']."!<br><br>";
             echo "Welcome to the exile session</br>";
             notifyCharacter($exileChar, "You have been sent to DoomHeim as a result of your session being destroyed!");
         }
     }
 
-    mysqli_query($connection, "DELETE FROM Sessions WHERE `ID` = '$session'");
+    mysqli_query($connection, "DELETE FROM Sessions WHERE `id` = '$session'");
 } elseif (isset($_POST['delete1'])) {
     echo "<span style='color:red;'>" . "Are you SURE you want to delete your entire session and doom every single member? This can't be undone.". "</span><br><br>";
     echo '<form id="deleteS" action="sessionadmin.php" method="post">
@@ -124,9 +124,9 @@ if ($_SESSION['username'] != $sessionRow['creator']) {
     $chainClient = mysqli_escape_string($connection, $_POST['chainclient']);
     $chainServer = mysqli_escape_string($connection, $_POST['chainserver']);
     // They're sent as names
-    $clientQuery = mysqli_query($connection, "SELECT * FROM `Characters` WHERE `ID` = '".$chainClient."';");
+    $clientQuery = mysqli_query($connection, "SELECT * FROM `characters` WHERE `id` = '".$chainClient."';");
     $clientRow = mysqli_fetch_array($clientQuery);
-    $serverQuery = mysqli_query($connection, "SELECT * FROM `Characters` WHERE `ID` = '".$chainServer."';");
+    $serverQuery = mysqli_query($connection, "SELECT * FROM `characters` WHERE `id` = '".$chainServer."';");
     $serverRow = mysqli_fetch_array($serverQuery);
     if ($clientRow['session'] != $charrow['session']) {
         echo "The client isn't in your session.<br><br>";
@@ -137,10 +137,10 @@ if ($_SESSION['username'] != $sessionRow['creator']) {
         $serverID = $serverRow['ID'];
         $clientID = $clientRow['ID'];
         // Do we need to collison check? Yes - check nobody else has that client
-        mysqli_query($connection, "UPDATE `Characters` SET `client` = '0' WHERE `client` = '$clientID';");
-        mysqli_query($connection, "UPDATE `Characters` SET `server` = '0' WHERE `server` = '$serverID';");
-        mysqli_query($connection, "UPDATE `Characters` SET `client` = '$clientID' WHERE `ID` = '$serverID';");
-        mysqli_query($connection, "UPDATE `Characters` SET `server` = '$serverID' WHERE `ID` = '$clientID';");
+        mysqli_query($connection, "UPDATE `characters` SET `client` = '0' WHERE `client` = '$clientID';");
+        mysqli_query($connection, "UPDATE `characters` SET `server` = '0' WHERE `server` = '$serverID';");
+        mysqli_query($connection, "UPDATE `characters` SET `client` = '$clientID' WHERE `id` = '$serverID';");
+        mysqli_query($connection, "UPDATE `characters` SET `server` = '$serverID' WHERE `id` = '$clientID';");
         echo 'Successfully set '.$serverRow['name'].' to '.$clientRow['name'].'\'s server.<br><br>';
         notifyCharacter($clientRow['ID'], $serverRow['name'] . " has become your server player!");
     }
@@ -150,7 +150,7 @@ if ($_SESSION['username'] != $sessionRow['creator']) {
 // End of "do shit" block //
 ////////////////////////////
 $charSession = $charrow['session'];
-$namesResult = mysqli_query($connection, "SELECT * FROM `Characters` WHERE `session` = '$charSession';");
+$namesResult = mysqli_query($connection, "SELECT * FROM `characters` WHERE `session` = '$charSession';");
 
 // CHANGEADMIN //
 
@@ -166,7 +166,7 @@ echo '</select> <input type="submit" value="ADMIN"></form><br><br>';
 echo 'Exile a character from the session: <form id="exile" action="sessionadmin.php" method="post">
 	Username: <select name="exilechar">
   <option value="">Select...</option>';
-$namesResult = mysqli_query($connection, "SELECT * FROM `Characters` WHERE `session` = '$charSession';");
+$namesResult = mysqli_query($connection, "SELECT * FROM `characters` WHERE `session` = '$charSession';");
 while ($namesRow = mysqli_fetch_assoc($namesResult)) {
     echo '<option value="'.$namesRow['ID'].'">'.$namesRow['name'].'</option>';
 }
@@ -180,11 +180,11 @@ echo '</select> <input type="submit" value="EXILE"></form><br><br>';
 
 // CHAIN MANAGEMENT //
 echo 'Overview of session chains<br><br>';
-$namesResult = mysqli_query($connection, "SELECT * FROM `Characters` WHERE `session` = '$charSession';");
+$namesResult = mysqli_query($connection, "SELECT * FROM `characters` WHERE `session` = '$charSession';");
 while ($namesRow = mysqli_fetch_assoc($namesResult)) {
     $clientNameID = $namesRow['client'];
     if ($clientNameID != 0) {
-        $clientNameRow = mysqli_query($connection, "SELECT * FROM `Characters` WHERE `ID` = '$clientNameID';");
+        $clientNameRow = mysqli_query($connection, "SELECT * FROM `characters` WHERE `id` = '$clientNameID';");
         $clientNameResult = mysqli_fetch_array($clientNameRow);
         $clientName = $clientNameResult['name'];
         echo $namesRow['name'].' is '.$clientName.'\'s server.<br>';
@@ -192,14 +192,14 @@ while ($namesRow = mysqli_fetch_assoc($namesResult)) {
         echo $namesRow['name'].' doesn\'t have a client set.<br>';
     }
 }
-$namesResult = mysqli_query($connection, "SELECT * FROM `Characters` WHERE `session` = '$charSession';");
+$namesResult = mysqli_query($connection, "SELECT * FROM `characters` WHERE `session` = '$charSession';");
 echo '<br> Set <form id="chain" action="sessionadmin.php" method="post">
 	<select name="chainserver">
 	<option value="">Select Server</option>'; // Start selecting server.
 while ($namesRow = mysqli_fetch_assoc($namesResult)) {
     echo '<option value="'.$namesRow['ID'].'">'.$namesRow['name'].'</option>';
 }
-$namesResult = mysqli_query($connection, "SELECT * FROM `Characters` WHERE `session` = '$charSession';");
+$namesResult = mysqli_query($connection, "SELECT * FROM `characters` WHERE `session` = '$charSession';");
 echo '</select>\'s client to <select name="chainclient">
 	<option value="">Select Client</option>'; // Client
 while ($namesRow = mysqli_fetch_assoc($namesResult)) {

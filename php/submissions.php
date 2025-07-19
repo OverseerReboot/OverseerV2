@@ -8,7 +8,7 @@ function updateSubmission($subid): void
 {
     global $connection;
     $currenttime = time();
-    mysqli_query($connection, "UPDATE `Feedback` SET `lastupdated` = $currenttime WHERE `Feedback`.`ID` = $subid ;");
+    mysqli_query($connection, "UPDATE `feedback` SET `lastupdated` = $currenttime WHERE `feedback`.`id` = $subid ;");
     $feedrow['lastupdated'] = $currenttime;
 }
 
@@ -45,13 +45,13 @@ if (empty($_SESSION['username'])) {
     }
 
     if (!empty($_POST['delete'])) {
-        $feedresult = mysqli_query($connection, "SELECT * FROM `Feedback` WHERE `Feedback`.`ID` = '" . strval($_POST['delete']) . "' ;");
+        $feedresult = mysqli_query($connection, "SELECT * FROM `feedback` WHERE `feedback`.`id` = '" . strval($_POST['delete']) . "' ;");
         $feedrow = mysqli_fetch_array($feedresult);
         if ($feedrow['user'] == $username || $accrow['modlevel'] >= 3) {
             if ($accrow['modlevel'] >= 99) {
                 echo $feedrow['user'] . " - Item suggestion. " . $feedrow['name'] . ": " . $feedrow['description'] . ". Made from: " . $feedrow['recipe'] . " with code " . $feedrow['code'] . " and suggested power level " . strval($feedrow['power']) . ". Additional comments: " . $feedrow['comments'] . " User comments: " . $feedrow['usercomments'] . "; </br>";
             }
-            mysqli_query($connection, "DELETE FROM `Feedback` WHERE `Feedback`.`ID` = '" . strval($_POST['delete']) . "' ;");
+            mysqli_query($connection, "DELETE FROM `feedback` WHERE `feedback`.`id` = '" . strval($_POST['delete']) . "' ;");
             echo 'Submission deleted.</br>';
             //Mod message log not currently implemented
             //$modmsg = $username . " (Level " . strval($accrow['modlevel']) . " Mod) <b>deleted submission</b>";
@@ -62,7 +62,7 @@ if (empty($_SESSION['username'])) {
     }
 
     if (!empty($_POST['moderatethis'])) {
-        $feedresult = mysqli_query($connection, "SELECT * FROM `Feedback` WHERE `Feedback`.`ID` = '" . strval($_POST['moderatethis']) . "' ;");
+        $feedresult = mysqli_query($connection, "SELECT * FROM `feedback` WHERE `feedback`.`id` = '" . strval($_POST['moderatethis']) . "' ;");
         $feedrow = mysqli_fetch_array($feedresult);
         if ($accrow['modlevel'] >= 1) {
             if (!empty($_POST['modaction'])) {
@@ -72,7 +72,7 @@ if (empty($_SESSION['username'])) {
             }
             if ($dostring == "clear") {
                 if ($accrow['modlevel'] >= 2) {
-                    mysqli_query($connection, "UPDATE `Feedback` SET `defunct` = 0, `clarify` = 0, `greenlight` = 0, `suspended` = 0, `halp` = 0 WHERE `Feedback`.`ID` = '" . strval($_POST['moderatethis']) . "' ;");
+                    mysqli_query($connection, "UPDATE `feedback` SET `defunct` = 0, `clarify` = 0, `greenlight` = 0, `suspended` = 0, `halp` = 0 WHERE `feedback`.`id` = '" . strval($_POST['moderatethis']) . "' ;");
                     echo 'All flags cleared.</br>';
                 } else {
                     echo "Your mod level is not yet high enough to clear or overwrite existing flags (need level 2).<br />";
@@ -91,8 +91,8 @@ if (empty($_SESSION['username'])) {
                             $aok = true;
                         }
                         if ($aok == true) {
-                            mysqli_query($connection, "UPDATE `Feedback` SET `defunct` = 0, `clarify` = 0, `greenlight` = 0, `suspended` = 0, `halp` = 0 WHERE `Feedback`.`ID` = '" . strval($_POST['moderatethis']) . "' ;");
-                            mysqli_query($connection, "UPDATE `Feedback` SET `$dostring` = 1 WHERE `Feedback`.`ID` = '" . strval($_POST['moderatethis']) . "' ;");
+                            mysqli_query($connection, "UPDATE `feedback` SET `defunct` = 0, `clarify` = 0, `greenlight` = 0, `suspended` = 0, `halp` = 0 WHERE `feedback`.`id` = '" . strval($_POST['moderatethis']) . "' ;");
+                            mysqli_query($connection, "UPDATE `feedback` SET `$dostring` = 1 WHERE `feedback`.`id` = '" . strval($_POST['moderatethis']) . "' ;");
                             if ($dostring == "greenlight") {
                                 $playersql = mysqli_query($connection, "SELECT * FROM Users WHERE username ='" . $feedrow['user'] . "';"); //should give me the user row
                                 $playerarray = mysqli_fetch_array($playersql);
@@ -122,17 +122,17 @@ if (empty($_SESSION['username'])) {
 
     //first thing's first, view the submission if the player clicked on one
     if (!empty($_GET['view'])) {
-        $feedresult = mysqli_query($connection, "SELECT * FROM `Feedback` WHERE `Feedback`.`ID` = '" . mysqli_real_escape_string($connection, strval($_GET['view'])) . "' ;");
+        $feedresult = mysqli_query($connection, "SELECT * FROM `feedback` WHERE `feedback`.`id` = '" . mysqli_real_escape_string($connection, strval($_GET['view'])) . "' ;");
         $feedrow = mysqli_fetch_array($feedresult);
         if ($feedrow['ID'] == $_GET['view']) {
             if (!empty($_POST['vote'])) {
                 if ($feedrow['user'] != $username) {
                     if (strrpos($feedrow['likers'], $username) === false) {
-                        mysqli_query($connection, "UPDATE `Feedback` SET `likes` = '" . strval($feedrow['likes'] + 1) . "' WHERE `Feedback`.`ID` = '" . mysqli_real_escape_string($connection, strval($_GET['view'])) . "' ;");
+                        mysqli_query($connection, "UPDATE `feedback` SET `likes` = '" . strval($feedrow['likes'] + 1) . "' WHERE `feedback`.`id` = '" . mysqli_real_escape_string($connection, strval($_GET['view'])) . "' ;");
                         $feedrow['likes']++;
                         echo "Your vote has been cast.</br>";
                         $newlikerlist = $feedrow['likers'] . $username . "|";
-                        mysqli_query($connection, "UPDATE `Feedback` SET `likers` = '" . $newlikerlist . "' WHERE `Feedback`.`ID` = '" . mysqli_real_escape_string($connection, strval($_GET['view'])) . "' ;");
+                        mysqli_query($connection, "UPDATE `feedback` SET `likers` = '" . $newlikerlist . "' WHERE `feedback`.`id` = '" . mysqli_real_escape_string($connection, strval($_GET['view'])) . "' ;");
                     } else {
                         echo "You have already cast a vote for this submission.</br>";
                     }
@@ -167,7 +167,7 @@ if (empty($_SESSION['username'])) {
                         }
                         $realbody = "<" . $rainbows . ">" . $realbody . "</" . $rainbows . ">";
                         /* // JD: I don't feel like dealing with this, Messages doesn't exist anymore. There's a notifications field in characters, but not users :P
-                          $msgresult = mysqli_query($connection, "SELECT * FROM `Messages` WHERE `Messages`.`username` = '" . $feedrow['user'] . "' LIMIT 1;");
+                          $msgresult = mysqli_query($connection, "SELECT * FROM `messages` WHERE `messages`.`username` = '" . $feedrow['user'] . "' LIMIT 1;");
                         $msgrow = mysqli_fetch_array($msgresult);
                         if ($msgrow['feedbacknotice'] == 1) {
                             $check = 0;
@@ -193,7 +193,7 @@ if (empty($_SESSION['username'])) {
                                       if ($accrow['modlevel'] >= 3) {
                                       $reward = intval($_POST['greenenc']);
                                       if ($reward > 0) {
-                                          $subresult = mysqli_query($connection, "SELECT `username`,`encounters` FROM `Players` WHERE `Players`.`username` = '" . $feedrow['user'] . "'");
+                                          $subresult = mysqli_query($connection, "SELECT `username`,`encounters` FROM `players` WHERE `players`.`username` = '" . $feedrow['user'] . "'");
                                           $subrow = mysqli_fetch_array($subresult);
                                           if ($subrow['encounters'] + $reward < 100) {
                                               echo "The submitter was gifted $reward encounters.<br />";
@@ -201,13 +201,13 @@ if (empty($_SESSION['username'])) {
                                               $newenc = 100;
                                               echo "The submitter was gifted $reward encounters, topping them off at 100.<br />";
                                           }
-                                          mysqli_query($connection, "UPDATE Players SET `encounters` = $newenc WHERE `Players`.`username` = '" . $feedrow['user'] . "'");
+                                          mysqli_query($connection, "UPDATE Players SET `encounters` = $newenc WHERE `players`.`username` = '" . $feedrow['user'] . "'");
                                           $newmsgstring .= "</br>You were also granted $reward encounter(s) for your creativity!";
                                       }
                                       } else echo "Your mod level is not yet high enough to grant encounters (need level 3).<br />";
                                   }
-                                  mysqli_query($connection, "UPDATE Messages SET `$msgfield` = '$newmsgstring' WHERE `Messages`.`username` = '" . $feedrow['user'] . "'");
-                                  mysqli_query($connection, "UPDATE Players SET `newmessage` = `newmessage` + 1 WHERE `Players`.`username` = '" . $feedrow['user'] . "'");
+                                  mysqli_query($connection, "UPDATE Messages SET `$msgfield` = '$newmsgstring' WHERE `messages`.`username` = '" . $feedrow['user'] . "'");
+                                  mysqli_query($connection, "UPDATE Players SET `newmessage` = `newmessage` + 1 WHERE `players`.`username` = '" . $feedrow['user'] . "'");
                             }
                         }
                         */
@@ -223,12 +223,12 @@ if (empty($_SESSION['username'])) {
                     $newcomments = $feedrow['usercomments'] . $username . $exstring . $realbody . "|";
                     $newncomments = mysqli_real_escape_string($connection, $newcomments);
                     //echo $newcomments . "</br>";
-                    mysqli_query($connection, "UPDATE `Feedback` SET `usercomments` = '" . $newncomments . "' WHERE `Feedback`.`ID` = '" . strval($_GET['view']) . "' ;");
+                    mysqli_query($connection, "UPDATE `feedback` SET `usercomments` = '" . $newncomments . "' WHERE `feedback`.`id` = '" . strval($_GET['view']) . "' ;");
                     $feedrow['usercomments'] = $newcomments;
                     echo "Your comment has been posted.</br>";
                     updateSubmission($_GET['view']);
                     if ($feedrow['clarify'] == 1 && !empty($_POST['clearedup'])) {
-                        mysqli_query($connection, "UPDATE `Feedback` SET `clarify` = 0 WHERE `Feedback`.`ID` = '" . strval($_GET['view']) . "' ;");
+                        mysqli_query($connection, "UPDATE `feedback` SET `clarify` = 0 WHERE `feedback`.`id` = '" . strval($_GET['view']) . "' ;");
                         echo 'Yellow flag unset. A mod will get back to this submission shortly.</br>';
                     }
                 } else {
@@ -405,43 +405,43 @@ if (empty($_SESSION['username'])) {
     echo '<randomized>orange</randomized>: the submission came from the Randomizer.</br>';
     echo '<halp>white</halp>: I need an adult!</br>';
     //let's generate that message table~
-    //$feedresult = mysqli_query($connection, "SELECT `ID`,`name`,`likes`,`usercomments`,`defunct`,`clarify`,`greenlight` FROM `Feedback` WHERE `Feedback`.`type` = 'item' AND `Feedback`.`user` = '" . $username . "' ORDER BY `Feedback`.`ID` ASC ;");
+    //$feedresult = mysqli_query($connection, "SELECT `id`,`name`,`likes`,`usercomments`,`defunct`,`clarify`,`greenlight` FROM `feedback` WHERE `feedback`.`type` = 'item' AND `feedback`.`user` = '" . $username . "' ORDER BY `feedback`.`id` ASC ;");
 
     if ($sort == "name") {
-        $sortstring = "ORDER BY `Feedback`.`name` $order ";
+        $sortstring = "ORDER BY `feedback`.`name` $order ";
     } elseif ($sort == "like") {
-        $sortstring = "ORDER BY `Feedback`.`likes` $order ";
+        $sortstring = "ORDER BY `feedback`.`likes` $order ";
     } elseif ($sort == "comm") {
-        $sortstring = "ORDER BY `Feedback`.`usercomments` $order ";
+        $sortstring = "ORDER BY `feedback`.`usercomments` $order ";
     } elseif ($sort == "time") {
-        $sortstring = "ORDER BY `Feedback`.`lastupdated` $order ";
+        $sortstring = "ORDER BY `feedback`.`lastupdated` $order ";
     } else {
-        $sortstring = "ORDER BY `Feedback`.`ID` $order ";
+        $sortstring = "ORDER BY `feedback`.`id` $order ";
     }
 
     if ($mode == "yours") {
-        $modestring = "AND `Feedback`.`user` = '" . $username . "' ";
+        $modestring = "AND `feedback`.`user` = '" . $username . "' ";
     } elseif ($mode == "red") {
-        $modestring = "AND `Feedback`.`defunct` = 1 ";
+        $modestring = "AND `feedback`.`defunct` = 1 ";
     } elseif ($mode == "yellow") {
-        $modestring = "AND `Feedback`.`clarify` = 1 ";
+        $modestring = "AND `feedback`.`clarify` = 1 ";
     } elseif ($mode == "green") {
-        $modestring = "AND `Feedback`.`greenlight` = 1 ";
+        $modestring = "AND `feedback`.`greenlight` = 1 ";
     } elseif ($mode == "blue") {
-        $modestring = "AND `Feedback`.`urgent` = 1 ";
+        $modestring = "AND `feedback`.`urgent` = 1 ";
     } elseif ($mode == "gray") {
-        $modestring = "AND `Feedback`.`suspended` = 1 ";
+        $modestring = "AND `feedback`.`suspended` = 1 ";
     } elseif ($mode == "orange") {
-        $modestring = "AND `Feedback`.`randomized` = 1 ";
+        $modestring = "AND `feedback`.`randomized` = 1 ";
     } elseif ($mode == "white") {
-        $modestring = "AND `Feedback`.`halp` = 1 ";
+        $modestring = "AND `feedback`.`halp` = 1 ";
     } elseif ($mode == "black") {
-        $modestring = "AND `Feedback`.`defunct` = 0 AND `Feedback`.`clarify` = 0 AND `Feedback`.`greenlight` = 0 AND `Feedback`.`suspended` = 0 ";
+        $modestring = "AND `feedback`.`defunct` = 0 AND `feedback`.`clarify` = 0 AND `feedback`.`greenlight` = 0 AND `feedback`.`suspended` = 0 ";
     } elseif ($mode == "aotw") {
-        $aotwresult = mysqli_query($connection, "SELECT `abstratusoftheweek` FROM `System` WHERE 1");
+        $aotwresult = mysqli_query($connection, "SELECT `abstratusoftheweek` FROM `system` WHERE 1");
         $aotwrow = mysqli_fetch_array($aotwresult);
         $aotwstring = $aotwrow['abstratusoftheweek'];
-        $modestring = "AND `Feedback`.`comments` LIKE '%" . $aotwstring . "%' ";
+        $modestring = "AND `feedback`.`comments` LIKE '%" . $aotwstring . "%' ";
     } else {
         $modestring = "";
     }
@@ -452,13 +452,13 @@ if (empty($_SESSION['username'])) {
         if (empty($_GET['sfield'])) {
             $sfield = 'name';
         }
-        $modestring .= "AND `Feedback`.`$sfield` LIKE '%" . $_GET['search'] . "%' ";
+        $modestring .= "AND `feedback`.`$sfield` LIKE '%" . $_GET['search'] . "%' ";
     }
 
     $startpoint = strval(($page - 1) * 20);
     //add ,`likes`,`usercomments`,`defunct`,`clarify`,`greenlight` before dev build is pushed
-    //echo "SELECT `ID`,`name`,`likes`,`usercomments` FROM `Feedback` WHERE `Feedback`.`type` = 'item' " . $modestring . $sortstring . "LIMIT " . $startpoint . ",20 ;</br>";
-    $feedresult = mysqli_query($connection, "SELECT `ID`,`name`,`likes`,`usercomments`,`defunct`,`clarify`,`greenlight`,`urgent`,`suspended`,`randomized`,`halp`,`lastupdated` FROM `Feedback` WHERE 1 " . $modestring . $sortstring . "LIMIT " . $startpoint . ",20 ;");
+    //echo "SELECT `id`,`name`,`likes`,`usercomments` FROM `feedback` WHERE `feedback`.`type` = 'item' " . $modestring . $sortstring . "LIMIT " . $startpoint . ",20 ;</br>";
+    $feedresult = mysqli_query($connection, "SELECT `id`,`name`,`likes`,`usercomments`,`defunct`,`clarify`,`greenlight`,`urgent`,`suspended`,`randomized`,`halp`,`lastupdated` FROM `feedback` WHERE 1 " . $modestring . $sortstring . "LIMIT " . $startpoint . ",20 ;");
     echo '<table border="1" bordercolor="#CCCCCC" style="background-color:#EEEEEE" width="100%" cellpadding="3" cellspacing="3">';
     echo '<tr><td>ID</td><td>Item Name</td><td>Rating</td><td>Comments</td></tr>';
     $results = false;
@@ -488,7 +488,7 @@ if (empty($_SESSION['username'])) {
         echo '<tr><td colspan="4">No submissions found. Either this is an invalid page number, or nothing matches those parameters.</td></tr>';
     }
     echo '</table></br>';
-    $countresult = mysqli_query($connection, "SELECT `ID` FROM `Feedback` WHERE 1 " . $modestring . $sortstring);
+    $countresult = mysqli_query($connection, "SELECT `id` FROM `feedback` WHERE 1 " . $modestring . $sortstring);
     $pcount = 20;
     $ptotal = 0;
     $alltotal = 0;

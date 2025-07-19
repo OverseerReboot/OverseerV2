@@ -10,7 +10,7 @@ if (empty($_SESSION['username'])) {
     if (!empty($_GET['c'])) {
         if (strpos($accrow['characters'], strval($_GET['c']) . "|") !== false) {
             $_SESSION['character'] = $_GET['c'];
-            $charresult = mysqli_query($connection, "SELECT * FROM `Characters` WHERE `ID` = " . $_SESSION['character'] . " LIMIT 1;");
+            $charresult = mysqli_query($connection, "SELECT * FROM `characters` WHERE `id` = " . $_SESSION['character'] . " LIMIT 1;");
             $charrow = mysqli_fetch_array($charresult);
             header('Location: /overview.php');
             if ($accrow['lastchar'] != $_SESSION['character']) {

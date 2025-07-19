@@ -19,7 +19,7 @@ pub async fn character_colour_post(
     let colour = form.colour.replace("#", "");
 
     sqlx::query!(
-        "UPDATE Characters SET colour = ? WHERE id = ?",
+        "UPDATE characters SET colour = ? WHERE id = ?",
         colour,
         character.id,
     )

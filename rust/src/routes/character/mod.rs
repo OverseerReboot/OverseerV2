@@ -38,7 +38,7 @@ pub struct Character {
 impl Character {
     pub async fn load(id: i64, db: &MySqlPool) -> Result<Option<Character>> {
         let sql = some_or_return_ok!(sqlx::query!(
-            r#"SELECT id, name, aspect, class, wakeself, dreamself, dreamingstatus, echeladder, boondollars, symbol, colour, dreamer, land1, land2, grist_type, consort, house_build, achievements, gatescleared FROM Characters WHERE id = ?"#,
+            r#"SELECT id, name, aspect, class, wakeself, dreamself, dreamingstatus, echeladder, boondollars, symbol, colour, dreamer, land1, land2, grist_type, consort, house_build, achievements, gatescleared FROM characters WHERE id = ?"#,
             id
         )
         .fetch_optional(db)
@@ -158,7 +158,7 @@ impl Strifer {
     pub async fn load(id: i64, db: &MySqlPool) -> Result<Option<Strifer>> {
         sqlx::query_as!(
 			Strifer,
-			r#"SELECT power, health, maxhealth as max_health, energy, maxenergy as max_energy, description, echeladder FROM Strifers WHERE id = ?"#,
+			r#"SELECT power, health, maxhealth as max_health, energy, maxenergy as max_energy, description, echeladder FROM strifers WHERE id = ?"#,
 			id
 		)
 		.fetch_optional(db)

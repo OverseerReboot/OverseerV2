@@ -6,8 +6,8 @@ $class = $charrow['class'];
 $aspect = $charrow['aspect'];
 $abilities = $charrow['abilities'];
 $currentrung = $charrow['echeladder'];
-$abilityresult = mysqli_query($connection, "SELECT `ID`,`Name` FROM `Abilities` WHERE
-`Abilities`.`Class` IN ('$class', 'All') AND `Abilities`.`Aspect` IN ('$aspect', 'All') AND `Abilities`.`Rungreq` BETWEEN 1 AND $currentrung;");
+$abilityresult = mysqli_query($connection, "SELECT `id`,`name` FROM `abilities` WHERE
+`abilities`.`class` IN ('$class', 'All') AND `abilities`.`aspect` IN ('$aspect', 'All') AND `abilities`.`rungreq` BETWEEN 1 AND $currentrung;");
 //NOTE - No need to check for god tiers here. They'll be listed as requiring a rung of "1025" and have a god tier requirement instead.
 if ($abilityresult != false) {
     while ($row = mysqli_fetch_array($abilityresult)) {
@@ -22,7 +22,7 @@ if ($abilityresult != false) {
 if ($message == "") {
     $message = "No new abilities available.<br />";
 }
-mysqli_query($connection, "UPDATE `Characters` SET `abilities` = '$abilities' WHERE `Characters`.`ID` = $charrow[ID] LIMIT 1;");
+mysqli_query($connection, "UPDATE `characters` SET `abilities` = '$abilities' WHERE `characters`.`id` = $charrow[ID] LIMIT 1;");
 echo $message;
 strifeInit($charrow);
 require_once "footer.php";

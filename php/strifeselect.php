@@ -6,16 +6,16 @@ require_once "header.php";
 if (!empty($_POST['land'])) {
     $maxenemies = 12;
     if ($_POST['land'] == "battlefield") {
-        $enemyresult = mysqli_query($connection, "SELECT `basename`, `basepower` FROM `Enemy_Types` WHERE `Enemy_Types`.`appearson` = 'Battlefield'");
+        $enemyresult = mysqli_query($connection, "SELECT `basename`, `basepower` FROM `enemy_types` WHERE `enemy_types`.`appearson` = 'Battlefield'");
     } else {
-        $enemyresult = mysqli_query($connection, "SELECT `basename`, `basepower` FROM `Enemy_Types` WHERE `Enemy_Types`.`appearson` = 'Lands'");
+        $enemyresult = mysqli_query($connection, "SELECT `basename`, `basepower` FROM `enemy_types` WHERE `enemy_types`.`appearson` = 'Lands'");
     }
     $n = 0;
     while ($row = mysqli_fetch_array($enemyresult)) {
         $enemyarray[$n] = $row;
         $n++;
     }
-    $landresult = mysqli_query($connection, "SELECT `grist_type` FROM `Characters` WHERE `Characters`.`ID` = '". mysqli_real_escape_string($connection, $_POST['land']) ."' LIMIT 1;");
+    $landresult = mysqli_query($connection, "SELECT `grist_type` FROM `characters` WHERE `characters`.`id` = '". mysqli_real_escape_string($connection, $_POST['land']) ."' LIMIT 1;");
     $landrow = mysqli_fetch_array($landresult);
     $gristarray = explode('|', $landrow['grist_type']); //Items 0 through 8 are the grists for tiers 1 through 9 here
     $i = 1;

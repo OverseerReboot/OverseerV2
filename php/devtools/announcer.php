@@ -9,17 +9,17 @@ if ($accrow['modlevel'] < 99) {
     echo "You're not supposed to be here.";
 } else {
     if (isset($_POST['clear'])) {
-        mysqli_query($connection, "UPDATE `System` SET announcements='';");
+        mysqli_query($connection, "UPDATE `system` SET announcements='';");
         echo "Announcements column cleared. <br>";
     }
 
     if (isset($_POST['delete'])) {
-        $announce = mysqli_query($connection, "SELECT * FROM `System`;");
+        $announce = mysqli_query($connection, "SELECT * FROM `system`;");
         $announcements = mysqli_fetch_array($announce);
         $exploded = explode("|", urldecode($announcements['announcements']));
         unset($exploded[$_POST['delete']]);
         $imploded = implode("|", array_values($exploded));
-        mysqli_query($connection, "UPDATE `System` SET announcements='".urlencode($imploded) . "';");
+        mysqli_query($connection, "UPDATE `system` SET announcements='".urlencode($imploded) . "';");
 
     }
 
@@ -29,7 +29,7 @@ if ($accrow['modlevel'] < 99) {
         if (strtotime("now") <= $dateone && strtotime("now") < $datetwo) {
             echo "Announcement Submitted" . ": <br>" . $_POST['announcement'] . "<br>From: " . $_POST['start'] . "<br>To: " . $_POST['end'] . "<br><br>";
             $escapedannounce = urlencode(mysqli_escape_string($connection, str_replace("@", "", $_POST['announcement'])) .'@' . $dateone .'@' . $datetwo . '|');
-            mysqli_query($connection, "UPDATE `System` SET announcements=concat(announcements, '". $escapedannounce . "');");
+            mysqli_query($connection, "UPDATE `system` SET announcements=concat(announcements, '". $escapedannounce . "');");
         } else {
             echo "Invalid date.<br>";
             echo date("F j, Y, g:i a", $dateone) . " " . date("F j, Y, g:i a", strtotime("now")) . " " . date("F j, Y, g:i a", $datetwo) . " <br>";
@@ -43,7 +43,7 @@ if ($accrow['modlevel'] < 99) {
         }
     }
     echo '<form action="" method="POST" id="clear"><input type="hidden" name="clear" value="clear"><input type="submit" value="Clear All Announcements"/></form><br>';
-    $announce = mysqli_query($connection, "SELECT * FROM `System`;");
+    $announce = mysqli_query($connection, "SELECT * FROM `system`;");
     $announcements = mysqli_fetch_array($announce);
     $exploded = explode("|", urldecode($announcements['announcements']));
     if ($exploded[0] != '') {

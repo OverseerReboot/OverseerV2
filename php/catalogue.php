@@ -14,7 +14,7 @@ if (empty($_SESSION['username'])) {
 
     if (!empty($_POST['item'])) {
         if ($captchas > 0) {
-            $itemresult = mysqli_query($connection, "SELECT * FROM `Captchalogue` WHERE `ID` = " . mysqli_real_escape_string($connection, $_POST['item']));
+            $itemresult = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE `id` = " . mysqli_real_escape_string($connection, $_POST['item']));
             while ($irow = mysqli_fetch_array($itemresult)) {
                 if ($irow['base'] == 1) {
                     $iname = $irow['name'];
@@ -47,7 +47,7 @@ if (empty($_SESSION['username'])) {
     echo "Select an item to captchalogue. Captchas remaining: $captchas<br />";
     echo "All items:<br>";
     echo "<form action='catalogue.php' method='post'><select name='item'>";
-    $baseresult = mysqli_query($connection, "SELECT `ID`,`name` FROM `Captchalogue` WHERE `base` = 1 ORDER BY name ASC");
+    $baseresult = mysqli_query($connection, "SELECT `id`,`name` FROM `captchalogue` WHERE `base` = 1 ORDER BY name ASC");
     while ($row = mysqli_fetch_array($baseresult)) {
         echo "<option value='" . $row['ID'] . "'>" . $row['name'] . "</option>";
     }
@@ -55,7 +55,7 @@ if (empty($_SESSION['username'])) {
 
     echo "<br>Weapons ordered by abstratus:<br>";
     echo "<form action='catalogue.php' method='post'><select name='item'>";
-    $baseresult = mysqli_query($connection, "SELECT `ID`,`name`,`abstratus` FROM `Captchalogue` WHERE `base` = 1 AND abstratus IS NOT NULL AND abstratus!='notaweapon' ORDER BY abstratus ASC, name ASC");
+    $baseresult = mysqli_query($connection, "SELECT `id`,`name`,`abstratus` FROM `captchalogue` WHERE `base` = 1 AND abstratus IS NOT NULL AND abstratus!='notaweapon' ORDER BY abstratus ASC, name ASC");
     while ($row = mysqli_fetch_array($baseresult)) {
         echo "<option value='" . $row['ID'] . "'>" . $row['name'] . " - " . $row['abstratus'] ."</option>";
     }
@@ -63,7 +63,7 @@ if (empty($_SESSION['username'])) {
 
     echo "<br>Wearables ordered by type:<br>";
     echo "<form action='catalogue.php' method='post'><select name='item'>";
-    $baseresult = mysqli_query($connection, "SELECT `ID`,`name`, `wearable` FROM `Captchalogue` WHERE `base` = 1 AND wearable IS NOT NULL AND wearable!='' AND wearable!='none'
+    $baseresult = mysqli_query($connection, "SELECT `id`,`name`, `wearable` FROM `captchalogue` WHERE `base` = 1 AND wearable IS NOT NULL AND wearable!='' AND wearable!='none'
 		ORDER BY wearable like '%accessory%', wearable like '%body%', wearable like '%face', wearable like '%head%', name ASC");
     while ($row = mysqli_fetch_array($baseresult)) {
         echo "<option value='" . $row['ID'] . "'>" . $row['name'] . " - " . $row['wearable'] ."</option>";
@@ -72,7 +72,7 @@ if (empty($_SESSION['username'])) {
 
     echo "<br>Reference items:<br>";
     echo "<form action='catalogue.php' method='post'><select name='item'>";
-    $baseresult = mysqli_query($connection, "SELECT `ID`,`name` FROM `Captchalogue` WHERE `base` = 1 AND `refrance` = 1 ORDER BY name ASC");
+    $baseresult = mysqli_query($connection, "SELECT `id`,`name` FROM `captchalogue` WHERE `base` = 1 AND `refrance` = 1 ORDER BY name ASC");
     while ($row = mysqli_fetch_array($baseresult)) {
         echo "<option value='" . $row['ID'] . "'>" . $row['name'] ."</option>";
     }

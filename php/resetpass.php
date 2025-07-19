@@ -14,7 +14,7 @@ if (!isset($_POST['email']) && !isset($_POST['resetkey']) && !isset($_POST['pass
 } elseif (!empty($_POST['email'])) {
     $email = mysqli_escape_string($connection, $_POST['email']);
     $resetKey = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 32); // Generates a key 32 characters long
-    mysqli_query($connection, "UPDATE `Users` SET `password_recovery` = '$resetKey' WHERE `email` = '$email';");
+    mysqli_query($connection, "UPDATE `users` SET `password_recovery` = '$resetKey' WHERE `email` = '$email';");
     $to      = $email;
     $subject = 'Overseer 2 Password Reset';
     $message = 'Hello, you requested a password reset on Overseer 2. Your key is '.$resetKey.' which should be entered on the page you were shown.';
@@ -31,7 +31,7 @@ if (!isset($_POST['email']) && !isset($_POST['resetkey']) && !isset($_POST['pass
 
 } elseif (isset($_POST['resetkey']) && !isset($_POST['password'])) {
     $resetkey = mysqli_escape_string($_POST['resetkey']);
-    $resetQuery = mysqli_query($connection, "SELECT * FROM `Users` WHERE `password_recovery` = '$resetkey' LIMIT 1;");
+    $resetQuery = mysqli_query($connection, "SELECT * FROM `users` WHERE `password_recovery` = '$resetkey' LIMIT 1;");
     $resetRow = mysqli_fetch_array($resetQuery);
     if ($resetkey == $resetRow['password_recovery']) {
         ?>
@@ -51,7 +51,7 @@ if (!isset($_POST['email']) && !isset($_POST['resetkey']) && !isset($_POST['pass
     $confirmpass = mysqli_escape_string($connection, $_POST['confirmpass']);
     if ($password == $confirmpass && !empty($_POST['resetkey']) && $_POST['resetkey'] != null) {
         $enterpass = password_hash($password, PASSWORD_DEFAULT);
-        mysqli_query($connection, "UPDATE `Users` SET `password` = '$enterpass' WHERE `password_recovery` = '". mysqli_real_escape_string($connection, $_POST['resetkey']) ."' LIMIT 1;");
+        mysqli_query($connection, "UPDATE `users` SET `password` = '$enterpass' WHERE `password_recovery` = '". mysqli_real_escape_string($connection, $_POST['resetkey']) ."' LIMIT 1;");
         echo 'Password updated!';
     } else {
         echo 'Passwords didn\'t match!';

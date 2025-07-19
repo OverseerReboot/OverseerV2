@@ -26,7 +26,7 @@ function addItem(array $charrow, string $id, string $extras = "", bool $shouldej
         if ($taken >= $charrow['invslots']) { //if we're here, it means the modus will eject
             $charrow['inventory'] = ejectItem($charrow);
         }
-        //mysqli_query($connection, "UPDATE `Characters` SET `inventory` = '" . $charrow['inventory'] . "', `metadata` = '" . $charrow['metadata'] . "' WHERE `Characters`.`ID` = " . strval($charrow['ID']));
+        //mysqli_query($connection, "UPDATE `characters` SET `inventory` = '" . $charrow['inventory'] . "', `metadata` = '" . $charrow['metadata'] . "' WHERE `characters`.`id` = " . strval($charrow['ID']));
         if ($shouldrefreshatheneum) {
             refreshAtheneum($charrow, $id, 2);
         }
@@ -54,7 +54,7 @@ function removeItem(int $slot): void
 function storeItem(&$charrow, $id, $amount, $extras = "", $shouldrefreshatheneum = true): bool
 {
     global $connection;
-    $sresult = mysqli_query($connection, "SELECT `size`,`effects` FROM `Captchalogue` WHERE `ID` = $id");
+    $sresult = mysqli_query($connection, "SELECT `size`,`effects` FROM `captchalogue` WHERE `id` = $id");
     $srow = mysqli_fetch_array($sresult);
     $size = itemSize($srow['size']) * $amount;
     if ($size + $charrow['storedspace'] > 1000 + $charrow['house_build']) {
@@ -97,7 +97,7 @@ function storeItem(&$charrow, $id, $amount, $extras = "", $shouldrefreshatheneum
         $newstorage .= strval($id) . ":$amount:" . $extras . "|";
     }
     $newstorage = mysqli_real_escape_string($connection, $newstorage);
-    mysqli_query($connection, "UPDATE `Characters` SET `storeditems` = '$newstorage', `storedspace` = " . strval($charrow['storedspace'] + $size) . " WHERE `ID` = " . strval($charrow['ID']));
+    mysqli_query($connection, "UPDATE `characters` SET `storeditems` = '$newstorage', `storedspace` = " . strval($charrow['storedspace'] + $size) . " WHERE `id` = " . strval($charrow['ID']));
     $charrow['storeditems'] = $newstorage;
     $charrow['storedspace'] += $size;
     if ($shouldrefreshatheneum) {
@@ -228,7 +228,7 @@ function renderGristCosts($gristsfield): void //shows grist costs for an item
 
 function itemName($itemID, $connection): float|int|string|null
 {
-    $itemresult = mysqli_query($connection, "SELECT `name` FROM `Captchalogue` WHERE `Captchalogue`.`ID` = $itemID LIMIT 1;");
+    $itemresult = mysqli_query($connection, "SELECT `name` FROM `captchalogue` WHERE `captchalogue`.`id` = $itemID LIMIT 1;");
     $itemrow = mysqli_fetch_array($itemresult);
     return $itemrow['name'];
 }
@@ -249,7 +249,7 @@ function refreshAtheneum($charrow, $itemID, $obtained, $component1 = "", $compon
         logDebugMessage("When adding to atheneum recipe was invalid: " . $recipe);
         $recipe = "";
     }
-    $atheneumresult = mysqli_query($connection, "SELECT `atheneum` FROM `Sessions` WHERE `Sessions`.`ID` = " . $charrow['session'] . " LIMIT 1;");
+    $atheneumresult = mysqli_query($connection, "SELECT `atheneum` FROM `sessions` WHERE `sessions`.`id` = " . $charrow['session'] . " LIMIT 1;");
     $contents = mysqli_fetch_array($atheneumresult);
     if (strpos($contents['atheneum'], "|" . $itemID . ":") !== false) {   //find if item is already in atheneum
         $currententry = null;
@@ -303,6 +303,6 @@ function refreshAtheneum($charrow, $itemID, $obtained, $component1 = "", $compon
         $newcontents = $contents['atheneum'] . "|" . $itemID . ":" . $obtained . ":" . $component1 . $recipe .  $component2;
     }
     if ($newcontents != $contents['atheneum']) {
-        mysqli_query($connection, "UPDATE `Sessions` SET `atheneum` = '$newcontents' WHERE `Sessions`.`ID` = " . $charrow['session'] . " LIMIT 1;");
+        mysqli_query($connection, "UPDATE `sessions` SET `atheneum` = '$newcontents' WHERE `sessions`.`id` = " . $charrow['session'] . " LIMIT 1;");
     }
 }

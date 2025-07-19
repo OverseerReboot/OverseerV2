@@ -159,7 +159,7 @@ class Character
     {
         // Get the character's row to load it into the object.
         $charquery = $this->_dbhandle->prepare(
-            'SELECT * FROM `Characters` WHERE `ID` = :charid'
+            'SELECT * FROM `characters` WHERE `id` = :charid'
         );
         $charquery->bindParam(':charid', $characterID);
         $charquery->execute();

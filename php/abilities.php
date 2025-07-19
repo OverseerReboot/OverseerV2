@@ -10,7 +10,7 @@ if (empty($_SESSION['username'])) {
         $tofind = "|" . $_POST['abilityused'] . "|";
         $usedescape = mysqli_real_escape_string($connection, $_POST['abilityused']);
         if (strpos($charrow['abilities'], $tofind) !== false) { //Player has this ability
-            $abilityresult = mysqli_query($connection, "SELECT * FROM `Abilities` WHERE `Abilities`.`ID` = $usedescape LIMIT 1;");
+            $abilityresult = mysqli_query($connection, "SELECT * FROM `abilities` WHERE `abilities`.`id` = $usedescape LIMIT 1;");
             $abilityrow = mysqli_fetch_array($abilityresult);
             if ($striferow['energy'] >= $abilityrow['Aspect_Cost']) { //Player has the Aspect Vial necessary to use this ability
                 $reach = true;
@@ -18,7 +18,7 @@ if (empty($_SESSION['username'])) {
                 $success = false;
                 if (!empty($_POST['target'])) {
                     $targetescape = mysqli_real_escape_string($connection, $_POST['target']);
-                    $targetresult = mysqli_query($connection, "SELECT * FROM `Characters` WHERE `Characters`.`name` = $targetescape AND `Characters`.`session` = $charrow[session] LIMIT 1;");
+                    $targetresult = mysqli_query($connection, "SELECT * FROM `characters` WHERE `characters`.`name` = $targetescape AND `characters`.`session` = $charrow[session] LIMIT 1;");
                     if ($targetrow = mysqli_fetch_array($targetresult)) { //Target was found
                         if ($targetrow['dreamingstatus'] != $charrow['dreamingstatus']) {
                             $reach = false;
@@ -29,7 +29,7 @@ if (empty($_SESSION['username'])) {
                         if ($targetrow['dreamingstatus'] != "Awake") {
                             $rowID = $targetrow['dreamself'];
                         }
-                        $targetstriferesult = mysqli_query($connection, "SELECT * FROM `Strifers` WHERE `Strifers`.`ID` = $rowID LIMIT 1;");
+                        $targetstriferesult = mysqli_query($connection, "SELECT * FROM `strifers` WHERE `strifers`.`id` = $rowID LIMIT 1;");
                         $targetstriferow = mysqli_fetch_array($targetstriferesult);
                     } else {
                         echo "Player $_POST[target] was not found in your session!<br />";
@@ -65,7 +65,7 @@ if (empty($_SESSION['username'])) {
                                     } //If the bonus is GREATER than 0, add it to the new bonus string
                                     $i++;
                                 }
-                                mysqli_query($connection, "UPDATE `Strifers` SET `status` = '$newstatus', `bonuses` = '$newbonuses' WHERE `Strifers`.`ID` = $targetstriferow[ID] LIMIT 1;");
+                                mysqli_query($connection, "UPDATE `strifers` SET `status` = '$newstatus', `bonuses` = '$newbonuses' WHERE `strifers`.`id` = $targetstriferow[ID] LIMIT 1;");
                                 $success = true;
                             } else {
                                 echo "You must be able to reach $targetrow[name] to use Esauna on them!<br />";
@@ -77,7 +77,7 @@ if (empty($_SESSION['username'])) {
                     case 8: //Seek Fortune's Path (ID 8)
                         $luckbonus = 10;
                         $findstr = "(";
-                        $allyresult = mysqli_query($connection, "SELECT * FROM `Characters` WHERE `Characters`.`session` = $charrow[session];");
+                        $allyresult = mysqli_query($connection, "SELECT * FROM `characters` WHERE `characters`.`session` = $charrow[session];");
                         while ($allyrow = mysqli_fetch_array($allyresult)) {
                             if (true && $allyrow['ID'] != $charrow['ID']) { //NOTE - The TRUE condition will be "if the player currently has a computer"
                                 if ($allyrow['wakeself']  != 0) {
@@ -89,12 +89,12 @@ if (empty($_SESSION['username'])) {
                             }
                         }
                         $findstr = substr($findstr, 0, -2) . ")"; //Drop off the last comma, add a bracket
-                        $allyresult = mysqli_query($connection, "SELECT * FROM `Strifers` WHERE `Strifers`.`ID` IN $findstr;");
-                        $megaquery = "UPDATE `Strifers` SET `brief_luck` = CASE `ID` "; //Build a megaquery to update luck of all beneficiaries
+                        $allyresult = mysqli_query($connection, "SELECT * FROM `strifers` WHERE `strifers`.`id` IN $findstr;");
+                        $megaquery = "UPDATE `strifers` SET `brief_luck` = CASE `id` "; //Build a megaquery to update luck of all beneficiaries
                         while ($allyrow = mysqli_fetch_array($allyresult)) { //Found one, add a case for them
                             $megaquery .= "WHEN $allyrow[ID] THEN " . strval($allyrow['brief_luck'] + $luckbonus) . " ";
                         }
-                        $megaquery .= "END WHERE `Strifers`.`ID` IN $findstr;"; //Cap off the query and execute it!
+                        $megaquery .= "END WHERE `strifers`.`id` IN $findstr;"; //Cap off the query and execute it!
                         mysqli_query($connection, $megaquery);
                         break;
                     default:
@@ -103,7 +103,7 @@ if (empty($_SESSION['username'])) {
                 }
                 if ($success) { //This flag sets if the ability did what it was supposed to
                     $newenergy = $striferow['energy'] - $abilityrow['Aspect_Cost'];
-                    mysqli_query($connection, "UPDATE `Strifers` SET `energy` = $newenergy WHERE `Strifers`.`ID` = $striferow[ID] LIMIT 1;"); //Debit the energy for the ability
+                    mysqli_query($connection, "UPDATE `strifers` SET `energy` = $newenergy WHERE `strifers`.`id` = $striferow[ID] LIMIT 1;"); //Debit the energy for the ability
                 }
             } else {
                 echo "You do not have enough Aspect Vial remaining to use that ability!<br />";

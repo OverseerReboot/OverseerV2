@@ -12,7 +12,7 @@ if ($_SESSION['username'] == "") {
     echo 'Use the following base when sumbitting your image: <br/>';
     echo '<img src="images/art/emptycard.png" /><br/><br/><br/>';
 
-    $subresult = mysqli_query($connection, "SELECT * FROM `Art_Submissions` WHERE submitter = '$charrow[ID]';");
+    $subresult = mysqli_query($connection, "SELECT * FROM `art_submissions` WHERE submitter = '$charrow[ID]';");
     $numresults = mysqli_num_rows($subresult);
     if ($numresults >= 20) {
         echo 'You have submitted enough art for now! Wait until some of it is approved or rejected.<br/>';
@@ -24,7 +24,7 @@ if ($_SESSION['username'] == "") {
         echo '<br/><br/>';
 
         if (isset($_POST['code'])) {
-            $iresult = mysqli_query($connection, "SELECT * FROM `Captchalogue` WHERE `code` = '".mysqli_real_escape_string($connection, $_GET['code'])."' LIMIT 1;");
+            $iresult = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE `code` = '".mysqli_real_escape_string($connection, $_GET['code'])."' LIMIT 1;");
             if (mysqli_num_rows($iresult) == 0) {
                 echo 'ERROR: There are no items with that code.<br/>';
             } else {
@@ -56,14 +56,14 @@ if ($_SESSION['username'] == "") {
                             $content = mysqli_real_escape_string($connection, $content);
                             fclose($fp);
 
-                            mysqli_query($connection, "INSERT INTO `Art_Submissions` (submitter, code, data) VALUES ('$charrow[ID]', '$_POST[code]', '$content');");
+                            mysqli_query($connection, "INSERT INTO `art_submissions` (submitter, code, data) VALUES ('$charrow[ID]', '$_POST[code]', '$content');");
                             echo 'Upload was successful.<br/>';
                         }
                     }
                 }
             }
         } elseif (isset($_GET['code'])) {
-            $iresult = mysqli_query($connection, "SELECT * FROM `Captchalogue` WHERE `code` = '".mysqli_real_escape_string($connection, $_GET['code'])."' LIMIT 1;");
+            $iresult = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE `code` = '".mysqli_real_escape_string($connection, $_GET['code'])."' LIMIT 1;");
             if (mysqli_num_rows($iresult) == 0) {
                 echo 'ERROR: There are no items with that code.<br/>';
             } else {

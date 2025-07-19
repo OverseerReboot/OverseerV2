@@ -34,7 +34,7 @@ if (empty($_SESSION['character'])) {
     }
     if (!is_numeric($_GET['land'])) {
         $connected = chainArray($charrow, $connection); //Get an array of connected Lands
-        $chumroll = mysqli_query($connection, "SELECT `ID`, `land1`, `land2` FROM `Characters` WHERE `Characters`.`session` = '$charrow[session]';");
+        $chumroll = mysqli_query($connection, "SELECT `id`, `land1`, `land2` FROM `characters` WHERE `characters`.`session` = '$charrow[session]';");
         $n = 0;
         while ($chumrow = mysqli_fetch_array($chumroll)) {
             if ($connected[$chumrow['ID']]) { //Can always fight your own underlings, even with no building done
@@ -77,7 +77,7 @@ if (empty($_SESSION['character'])) {
             $canaccess = false;
         }
         if ($land > 0) {
-            $landresult = mysqli_query($connection, "SELECT * FROM `Characters` WHERE `ID` = $land LIMIT 1;");
+            $landresult = mysqli_query($connection, "SELECT * FROM `characters` WHERE `id` = $land LIMIT 1;");
             $charland = mysqli_fetch_assoc($landresult);
             $playerland = true;
             $location = "the Land of " . $charland['land1'] . " and " . $charland['land2'];
@@ -104,7 +104,7 @@ if (empty($_SESSION['character'])) {
         }
 
         if ($canaccess) {
-            $sessresult = mysqli_query($connection, "SELECT `exchange` FROM `Sessions` WHERE `ID` = " . $charrow['session'] . " LIMIT 1;");
+            $sessresult = mysqli_query($connection, "SELECT `exchange` FROM `sessions` WHERE `id` = " . $charrow['session'] . " LIMIT 1;");
             $session = mysqli_fetch_assoc($sessresult);
             $exchangeloc = $session['exchange'];
             $gateresult = mysqli_query($connection, "SELECT * FROM Gates"); //we'll need this to determine the level of the shops
@@ -136,7 +136,7 @@ if (empty($_SESSION['character'])) {
         } elseif (false/*$_GET['search'] == 'quest'*/) { //This is currently disabled.
             $charrow['availablequests'] = 99;
             if (!empty($charrow['currentquest']) && $_GET['completequest'] != "cancel") {
-                $questresult = mysqli_query($connection, "SELECT * FROM `Consort_Dialogue` WHERE `ID` = " . strval($charrow['currentquest']) . " LIMIT 1;");
+                $questresult = mysqli_query($connection, "SELECT * FROM `consort_dialogue` WHERE `id` = " . strval($charrow['currentquest']) . " LIMIT 1;");
                 $questrow = mysqli_fetch_assoc($questresult);
                 if (strpos($questrow['context'], "linked") !== false) {
                     $context = substr($questrow['context'], 0, -6);
@@ -155,7 +155,7 @@ if (empty($_SESSION['character'])) {
                         }
                     } elseif ($context == "questitem") {
                         if (in_array($_GET['completequest'], $_SESSION['inv'])) {
-                            $itemresult = mysqli_query($connection, "SELECT * FROM `Captchalogue` WHERE `ID` = " . mysqli_real_escape_string($connection, $_GET['completequest']) . " LIMIT 1;");
+                            $itemresult = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE `id` = " . mysqli_real_escape_string($connection, $_GET['completequest']) . " LIMIT 1;");
                             $itemrow = mysqli_fetch_assoc($itemresult);
                             $truename = str_replace("\\", "", $itemrow['name']);
                             echo "The consort appraises your $truename.<br />";
@@ -207,7 +207,7 @@ if (empty($_SESSION['character'])) {
                         echo '<select name="completequest">';
                         $itemcount = 0;
                         while ($itemcount < count($_SESSION['inv'])) {
-                            $itemrow = mysqli_query($connection, "SELECT `name` FROM `Captchalogue` WHERE `ID` = " . $_SESSION['inv'][$itemcount] . " LIMIT 1;");
+                            $itemrow = mysqli_query($connection, "SELECT `name` FROM `captchalogue` WHERE `id` = " . $_SESSION['inv'][$itemcount] . " LIMIT 1;");
                             $itemresult = mysqli_fetch_assoc($itemrow);
                             $name = $itemresult['name'];
                             echo '<option value="' . $_SESSION['inv'][$itemcount] . '">' . $name . '</option>';
@@ -239,7 +239,7 @@ if (empty($_SESSION['character'])) {
                 echo "<br />";
                 echo $questresult['dialogue'] . "<br />";
                 echo '<a href="?search=quest&land=' . $land . '">Choose this quest!</a> <a href="?search=quest&land=' . $land . '&completequest=cancel">...or search for another</a><br />';
-                mysqli_query($connection, "UPDATE `Characters` SET `currentquest` = " . $questresult['ID'] . ", `questland` = " . $land . " WHERE `ID` = " . $charrow['ID'] . " LIMIT 1;");
+                mysqli_query($connection, "UPDATE `characters` SET `currentquest` = " . $questresult['ID'] . ", `questland` = " . $land . " WHERE `id` = " . $charrow['ID'] . " LIMIT 1;");
             } else {
                 echo "You search $location for a while, but cannot find a single $consort in need of anything! Try waiting a bit.</br>";
             }
@@ -257,7 +257,7 @@ if (empty($_SESSION['character'])) {
                     $thisone = substr($charland['shopstock'], strpos("|" . $charland['shopstock'], "|" . $_POST['shopaction'] . ":"));
                     $thisone = substr($thisone, 0, strpos($thisone, "|"));
                     $thisone = explode(":", $thisone);
-                    $shopitem = mysqli_query($connection, "SELECT `name`, `ID` FROM `Captchalogue` WHERE `ID` = " . $thisone[0] . " LIMIT 1;");
+                    $shopitem = mysqli_query($connection, "SELECT `name`, `id` FROM `captchalogue` WHERE `id` = " . $thisone[0] . " LIMIT 1;");
                     $shopitem = mysqli_fetch_array($shopitem);
                     $shopID = $shopitem['ID'];
                     $shopitem = $shopitem['name'];
@@ -301,8 +301,8 @@ if (empty($_SESSION['character'])) {
                             }
                         }
                         echo "You purchase " . $shopitem . " x1 for " . $shopprice . " Boondollars.</br>";
-                        mysqli_query($connection, "UPDATE `Characters` SET `boondollars` = " . $charrow['boondollars'] . ", `economy` = " . $charrow['economy'] . " WHERE `ID` = '" . $charrow['ID'] . "' LIMIT 1;");
-                        mysqli_query($connection, "UPDATE `Characters` SET `shopstock` = '" . $charland['shopstock'] . "' WHERE `ID` = '" . $charland['ID'] . "' LIMIT 1;");
+                        mysqli_query($connection, "UPDATE `characters` SET `boondollars` = " . $charrow['boondollars'] . ", `economy` = " . $charrow['economy'] . " WHERE `id` = '" . $charrow['ID'] . "' LIMIT 1;");
+                        mysqli_query($connection, "UPDATE `characters` SET `shopstock` = '" . $charland['shopstock'] . "' WHERE `id` = '" . $charland['ID'] . "' LIMIT 1;");
                     } else {
                         echo "You don't have room in your inventory for this item! You'll have to clear some space before you can buy it.<br />";
                     }
@@ -334,7 +334,7 @@ if (empty($_SESSION['character'])) {
                     $shopstring .= $shopitemID[$tsi] . ":" . $shopitemprice[$tsi] . ":" . $shopitemstock[$tsi] . "|";
                     $tsi++;
                 }
-                mysqli_query($connection, "UPDATE `Characters` SET `shopstock` = '" . $shopstring . "', `lastshoptick` = " . time() . " WHERE `ID` = '" . $charland['ID'] . "'");
+                mysqli_query($connection, "UPDATE `characters` SET `shopstock` = '" . $shopstring . "', `lastshoptick` = " . time() . " WHERE `id` = '" . $charland['ID'] . "'");
                 $charland['lastshoptick'] = time();
                 $charland['shopstock'] = $shopstring;
             } else {
@@ -372,14 +372,14 @@ if (empty($_SESSION['character'])) {
 
                 $strifedeck = implode(", ", explode("|", substr($charrow['strifedeck'], 0, -1)));
                 if (!empty($strifedeck)) {
-                    $sditems = mysqli_query($connection, "SELECT MAX(`power`) FROM `Captchalogue` WHERE `ID` IN ($strifedeck);");
+                    $sditems = mysqli_query($connection, "SELECT MAX(`power`) FROM `captchalogue` WHERE `id` IN ($strifedeck);");
                     $sditems = mysqli_fetch_row($sditems);
                     $maxpower = $sditems[0];
                 } else {
                     $maxpower = 0;
                 }
 
-                $shopitems = mysqli_query($connection, "SELECT `ID`, `name`, `power`, `abstratus`, `wearable`, `effects` FROM `Captchalogue` WHERE `ID` IN (" . implode(", ", $shopitemID) . ");");
+                $shopitems = mysqli_query($connection, "SELECT `id`, `name`, `power`, `abstratus`, `wearable`, `effects` FROM `captchalogue` WHERE `id` IN (" . implode(", ", $shopitemID) . ");");
                 echo '<form action="?land=' . $land . '&search=shop" method="post">';
                 $csi = 0; //current shop item. no, not crime scene investigation.
                 while ($thisitem = mysqli_fetch_assoc($shopitems)) {

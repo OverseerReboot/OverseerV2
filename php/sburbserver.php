@@ -46,14 +46,14 @@ if (empty($_SESSION['username'])) {
         if (!empty($_POST['client'])) { //User is registering a client player
             $playerfound = false;
             $registered = "";
-            $sessionmates = mysqli_query($connection, "SELECT * FROM Characters WHERE `Characters`.`ID` = " . $_POST['client']);
+            $sessionmates = mysqli_query($connection, "SELECT * FROM Characters WHERE `characters`.`id` = " . $_POST['client']);
             while ($row = mysqli_fetch_array($sessionmates)) {
                 if ($row['session'] == $charrow['session']) { //Make sure the client is actually in the correct session!
                     if ($row['ID'] == $_POST['client'] && ($row['server'] == 0 || $row['server'] == $cid)) { //Ensure they don't already have a server player
                         $playerfound = true;
                         $client = mysqli_real_escape_string($connection, $_POST['client']);
-                        mysqli_query($connection, "UPDATE `Characters` SET `server` = $cid WHERE `Characters`.`ID` = $client LIMIT 1 ;");
-                        mysqli_query($connection, "UPDATE `Characters` SET `client` = $client WHERE `Characters`.`ID` = $cid LIMIT 1 ;");
+                        mysqli_query($connection, "UPDATE `characters` SET `server` = $cid WHERE `characters`.`id` = $client LIMIT 1 ;");
+                        mysqli_query($connection, "UPDATE `characters` SET `client` = $client WHERE `characters`.`id` = $cid LIMIT 1 ;");
                         notifyCharacter($row['ID'], $charrow['name'] . " has become your server player!");
                         echo "Client registered.<br />";
                         $charrow['client'] = $client;
@@ -76,13 +76,13 @@ if (empty($_SESSION['username'])) {
             $i = 0;
             $idsearch = "";
             while (!empty($clients[$i])) {
-                $idsearch .= "`ID` = " . strval($clients[$i]) . " OR ";
+                $idsearch .= "`id` = " . strval($clients[$i]) . " OR ";
                 $i++;
             }
             $idsearch = substr($idsearch, 0, -4);
             if ($idsearch != "") {
                 $foundone = false;
-                $clientresult = mysqli_query($connection, "SELECT `ID`, `name` FROM `Characters` WHERE `server` = 0 AND ($idsearch)"); //Don't list players who already have a server player
+                $clientresult = mysqli_query($connection, "SELECT `id`, `name` FROM `characters` WHERE `server` = 0 AND ($idsearch)"); //Don't list players who already have a server player
                 while ($clientrow = mysqli_fetch_array($clientresult)) {
                     if (!$foundone) {
                         $foundone = true;
@@ -99,7 +99,7 @@ if (empty($_SESSION['username'])) {
                 echo "There are no players in your session to whom you can connect! Maybe you should pester some friends?<br />";
             }
         } else { //Player has a client registered
-            $clientresult = mysqli_query($connection, "SELECT * FROM Characters WHERE `ID` = '" . $charrow['client'] . "'");
+            $clientresult = mysqli_query($connection, "SELECT * FROM Characters WHERE `id` = '" . $charrow['client'] . "'");
             $clientrow = mysqli_fetch_array($clientresult);
             $build = howMuchGrist($clientrow['grists'], "Build_Grist");
             $landgrists = explode("|", $clientrow['grist_type']);
@@ -109,7 +109,7 @@ if (empty($_SESSION['username'])) {
             }
             if ($clientrow['server'] != $cid) {
                 echo "Something went amiss, and your client player doesn't have you set as their server! We've just attempted to fix this, but if you see this message multiple times, please submit a bug report.<br />";
-                mysqli_query($connection, "UPDATE `Characters` SET `server` = $cid WHERE `Characters`.`ID` = '" . $clientrow['ID'] . "' LIMIT 1;");
+                mysqli_query($connection, "UPDATE `characters` SET `server` = $cid WHERE `characters`.`id` = '" . $clientrow['ID'] . "' LIMIT 1;");
             }
 
             if (!empty($_POST['build'])) { //Working on the client player's house
@@ -118,7 +118,7 @@ if (empty($_SESSION['username'])) {
                         $buildit = intval($_POST['build']);
                         $newtotal = $buildit + $clientrow['house_build'];
                         $newgrist = modifyGrist($clientrow['grists'], "Build_Grist", ($buildit * -1));
-                        mysqli_query($connection, "UPDATE `Characters` SET `house_build` = '$newtotal', `grists` = '$newgrist' WHERE `Characters`.`ID` = '" . $clientrow['ID'] . "' LIMIT 1 ;"); //Debit the grist
+                        mysqli_query($connection, "UPDATE `characters` SET `house_build` = '$newtotal', `grists` = '$newgrist' WHERE `characters`.`id` = '" . $clientrow['ID'] . "' LIMIT 1 ;"); //Debit the grist
                         echo "Build successful!<br />";
                         if ($newtotal >= 24000000) {
                             setAchievement($charrow, 'gate7');
@@ -137,7 +137,7 @@ if (empty($_SESSION['username'])) {
                             $buildit = intval($_POST['build']);
                             $newtotal = $buildit + $clientrow['house_build'];
                             $newgrist = modifyGrist($clientrow['grists'], "Build_Grist", ($buildit * -1));
-                            mysqli_query($connection, "UPDATE `Characters` SET `house_build` = '$newtotal', `grists` = '$newgrist' WHERE `Characters`.`ID` = '" . $clientrow['ID'] . "' LIMIT 1 ;"); //Credit the grist
+                            mysqli_query($connection, "UPDATE `characters` SET `house_build` = '$newtotal', `grists` = '$newgrist' WHERE `characters`.`id` = '" . $clientrow['ID'] . "' LIMIT 1 ;"); //Credit the grist
                             echo "Unbuild successful!<br />";
                             $clientrow['house_build'] = $newtotal;
                             $build -= $buildit;
@@ -149,7 +149,7 @@ if (empty($_SESSION['username'])) {
             }
 
             if (!empty($_POST['deployitem'])) { //Deploying an item into the client player's house
-                $deployresult = mysqli_query($connection, "SELECT * FROM `Captchalogue` WHERE `Captchalogue`.`ID` = '" . mysqli_real_escape_string($connection, $_POST['deployitem']) . "'");
+                $deployresult = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE `captchalogue`.`id` = '" . mysqli_real_escape_string($connection, $_POST['deployitem']) . "'");
                 while ($drow = mysqli_fetch_array($deployresult)) {
                     $deploytag = specialArray($drow['effects'], "DEPLOYABLE");
                     if ($deploytag[0] == "DEPLOYABLE") {
@@ -229,7 +229,7 @@ if (empty($_SESSION['username'])) {
                     while ($i < $totalitems) {
                         $args = explode(":", $boom[$i - 1]);
                         if (!empty($_POST['r-' . $args[0]])) { //This item is being recycled
-                            $iresult = mysqli_query($connection, "SELECT * FROM `Captchalogue` WHERE `Captchalogue`.`ID` = " . $args[0] . " LIMIT 1;");
+                            $iresult = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE `captchalogue`.`id` = " . $args[0] . " LIMIT 1;");
                             $irow = mysqli_fetch_array($iresult);
                             if ($irow['ID'] == $args[0]) {
                                 if ($_POST['q-' . $args[0]] < 1 || empty($_POST['q-' . $args[0]])) {
@@ -287,7 +287,7 @@ if (empty($_SESSION['username'])) {
                         $i++;
                     }
                     if ($updatestore != $clientrow['storeditems']) {
-                        mysqli_query($connection, "UPDATE `Characters` SET `grists` = '$newgrist', `storeditems` = '$updatestore', `storedspace` = " . strval($clientrow['storedspace']) . " WHERE `Characters`.`ID` = " . $clientrow['ID'] . " LIMIT 1;");
+                        mysqli_query($connection, "UPDATE `characters` SET `grists` = '$newgrist', `storeditems` = '$updatestore', `storedspace` = " . strval($clientrow['storedspace']) . " WHERE `characters`.`id` = " . $clientrow['ID'] . " LIMIT 1;");
                     }
                 } else {
                     echo "Your client has nothing to recycle!<br />";
@@ -295,7 +295,7 @@ if (empty($_SESSION['username'])) {
                 //compuRefresh($clientrow);
             }
 
-            $clientresult = mysqli_query($connection, "SELECT * FROM Characters WHERE `Characters`.`ID` = " . $charrow['client']);
+            $clientresult = mysqli_query($connection, "SELECT * FROM Characters WHERE `characters`.`id` = " . $charrow['client']);
             $clientrow = mysqli_fetch_array($clientresult);
             //refresh clientrow so that things like grist and storage are up-to-date. yeah it's inefficient but I'm lazy so
 
@@ -338,7 +338,7 @@ if (empty($_SESSION['username'])) {
 
             echo "&gt;Deploy<br />";
             echo '<form method="post" action="sburbserver.php">Select a machine to deploy:<br /><select name="deployitem">';
-            $deployresult = mysqli_query($connection, "SELECT * FROM `Captchalogue` WHERE `Captchalogue`.`effects` LIKE '%DEPLOYABLE%'");
+            $deployresult = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE `captchalogue`.`effects` LIKE '%DEPLOYABLE%'");
             while ($drow = mysqli_fetch_array($deployresult)) {
                 $deploytag = specialArray($drow['effects'], "DEPLOYABLE"); //should always return an array because of the search query above
                 if ($deploytag[1] == "FREE") {
@@ -366,7 +366,7 @@ if (empty($_SESSION['username'])) {
                 $i = 1;
                 while ($i < $totalitems) {
                     $args = explode(":", $boom[$i - 1]);
-                    $iresult = mysqli_query($connection, "SELECT `ID`,`name` FROM `Captchalogue` WHERE `ID` = " . $args[0] . " LIMIT 1;");
+                    $iresult = mysqli_query($connection, "SELECT `id`,`name` FROM `captchalogue` WHERE `id` = " . $args[0] . " LIMIT 1;");
                     $irow = mysqli_fetch_array($iresult);
                     if ($irow['ID'] == intval($args[0])) {
                         echo '<input type="checkbox" name="r-' . $args[0] . '" value="yes">';

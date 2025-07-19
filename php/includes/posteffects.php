@@ -445,7 +445,7 @@ while ($i <= $n) {
             $strifers[$i]['health'] = $health;
             $strifers[$i]['energy'] = $energy;
             $strifers[$i]['power'] = $power;
-            mysqli_query($connection, "UPDATE `Strifers` SET `health` = $health, `energy` = $energy, `power` = $power WHERE `Strifers`.`ID` = " . $strifers[$i]['ID'] . " LIMIT 1;");
+            mysqli_query($connection, "UPDATE `strifers` SET `health` = $health, `energy` = $energy, `power` = $power WHERE `strifers`.`id` = " . $strifers[$i]['ID'] . " LIMIT 1;");
             $strifers[$i] = endStrife($strifers[$i]);
             //Code to handle allies being KOed goes in here.
         } else { //An enemy has been slain
@@ -530,7 +530,7 @@ while ($i <= $n) {
                                     setAchievement($charrow, 'denizen');
                                     notifySession($charrow, $charrow['name'] . " has defeated their Denizen!");
                                     $lootstr = "You have defeated your Denizen, granting you access to the Battlefield.<br />";
-                                    mysqli_query($connection, "UPDATE `Characters` SET `denizendown` = 1 WHERE `Characters`.`ID` = " . $charrow['ID'] . " LIMIT 1;");
+                                    mysqli_query($connection, "UPDATE `characters` SET `denizendown` = 1 WHERE `characters`.`id` = " . $charrow['ID'] . " LIMIT 1;");
                                     break;
                                 default:
                                     break;
@@ -603,9 +603,9 @@ while ($i <= $n) {
                 }
                 $output .=  $lootstr . "<br />";
                 if ($strifers[$i]['power'] > $charrow['enemiesbeaten']) { //This is the strongest enemy the leader has ever taken out!
-                    mysqli_query($connection, "UPDATE `Characters` SET `enemiesbeaten` = " . $strifers[$i]['power'] . " WHERE `Characters`.`ID` = $charrow[ID] LIMIT 1");
+                    mysqli_query($connection, "UPDATE `characters` SET `enemiesbeaten` = " . $strifers[$i]['power'] . " WHERE `characters`.`id` = $charrow[ID] LIMIT 1");
                 }
-                mysqli_query($connection, "DELETE FROM `Strifers` WHERE `Strifers`.`ID` = " . $strifers[$i]['ID'] . " LIMIT 1;");
+                mysqli_query($connection, "DELETE FROM `strifers` WHERE `strifers`.`id` = " . $strifers[$i]['ID'] . " LIMIT 1;");
                 unset($strifers[$i]); //Remove their row from the database, then zap it out of the current combat array.
             } else { //Since player deaths are picked out above, this should never happen.
             }
@@ -623,9 +623,9 @@ while ($i <= $n) {
     $i++;
 }
 if ($enemyslain) {
-    mysqli_query($connection, "UPDATE `Characters` SET
+    mysqli_query($connection, "UPDATE `characters` SET
 	`grists` = '$charrow[grists]', `inventory` = '$charrow[inventory]', `metadata` = '$charrow[metadata]', `boondollars` = '$charrow[boondollars]'
-	WHERE `Characters`.`ID` = $charrow[ID] LIMIT 1;"); //Update these characteristics if an enemy was slain this turn.
+	WHERE `characters`.`id` = $charrow[ID] LIMIT 1;"); //Update these characteristics if an enemy was slain this turn.
 }
 if ((empty($exists) || count($exists) == 1) && !$unstuck) { //There is only one side left in the strife. Strife is over!
     $j = 1;
@@ -636,7 +636,7 @@ if ((empty($exists) || count($exists) == 1) && !$unstuck) { //There is only one 
                 $strifeID = $strifers[$j]['strifeID'];
             } //Save off strife ID for working with dungeon string.
             if ($strifers[$j]['owner'] == 0 && $strifers[$j]['persist'] == 0) { //No "owner" and not persisted. Strifer will be removed.
-                mysqli_query($connection, "DELETE FROM `Strifers` WHERE `Strifers`.`ID` = " . $strifers[$j]['ID'] . " LIMIT 1;");
+                mysqli_query($connection, "DELETE FROM `strifers` WHERE `strifers`.`id` = " . $strifers[$j]['ID'] . " LIMIT 1;");
             } elseif ($strifers[$j]['persist'] == 0) { //Persisters should hold on to their strife ID so they can be dialed up later
                 $strifers[$j] = endStrife($strifers[$j]);
             }
@@ -651,7 +651,7 @@ if ((empty($exists) || count($exists) == 1) && !$unstuck) { //There is only one 
                 //In here we iterate over all strifers and grant rungs to any who need them.
                 if ($strifers[$j]['side'] == $playerside && $strifers[$j]['echeladder'] != 0) { //A winning strifer who has an Echeladder value
                     if ($strifers[$j]['owner'] != 0) { //Strifer is a player
-                        $allyresult = mysqli_query($connection, "SELECT * FROM `Characters` WHERE `Characters`.`ID` = " . $strifers[$j]['owner'] . " LIMIT 1;");
+                        $allyresult = mysqli_query($connection, "SELECT * FROM `characters` WHERE `characters`.`id` = " . $strifers[$j]['owner'] . " LIMIT 1;");
                         $allyrow = mysqli_fetch_array($allyresult);
                         $output .= gainRungs($allyrow, 1);
                         if ($strifers[$j]['leader'] == 0) {
@@ -665,7 +665,7 @@ if ((empty($exists) || count($exists) == 1) && !$unstuck) { //There is only one 
                     $strifers[$j]['health'] = $health;
                     $strifers[$j]['energy'] = $energy;
                     $strifers[$j]['power'] = $power;
-                    mysqli_query($connection, "UPDATE `Strifers` SET `health` = $health, `energy` = $energy, `power` = $power WHERE `Strifers`.`ID` = " . $strifers[$j]['ID'] . " LIMIT 1;");
+                    mysqli_query($connection, "UPDATE `strifers` SET `health` = $health, `energy` = $energy, `power` = $power WHERE `strifers`.`id` = " . $strifers[$j]['ID'] . " LIMIT 1;");
                 }
             }
             $j++;

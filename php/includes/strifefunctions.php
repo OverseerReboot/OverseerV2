@@ -8,7 +8,7 @@
 function generateEnemies($enemylist, $strifeID, $connection, $appearson, $generateleader, $sessionID = 0, $landID = 0, $tierlist = "", $persist = 0): bool
 {
     $i = 0;
-    $rowfetchquery = "SELECT * FROM `Enemy_Types` WHERE `Enemy_Types`.`basename` IN (";
+    $rowfetchquery = "SELECT * FROM `enemy_types` WHERE `enemy_types`.`basename` IN (";
     while (!empty($enemylist[$i])) {
         $rowfetchquery .= "'" . $enemylist[$i] . "', "; //Build a query containing all the enemy details we will need.
         $i++;
@@ -22,11 +22,11 @@ function generateEnemies($enemylist, $strifeID, $connection, $appearson, $genera
         $enemyrows[$row['basename']] = $row;
     }
     if ($landID != 0 && $landID != 'battlefield') {
-        $landresult = mysqli_query($connection, "SELECT `grist_type` FROM `Characters` WHERE `Characters`.`ID` = $landID LIMIT 1;");
+        $landresult = mysqli_query($connection, "SELECT `grist_type` FROM `characters` WHERE `characters`.`id` = $landID LIMIT 1;");
         $landrow = mysqli_fetch_array($landresult);
         $gristarray = explode("|", $landrow['grist_type']); //Entries 0 through 8 are grist tiers 1 through 9. Entries 9 through 17 are the bonus grists.
     }
-    $enemymaker = "INSERT INTO `Strifers` (`name`, `strifeID`, `side`, `leader`, `teamwork`, `grist`, `description`, `power`, `maxpower`, `health`, `maxhealth`, `energy`, `maxenergy`, `ondeath`, `status`, `bonuses`, `resistances`, `abilities`, `effects`, `persist`) VALUES ";
+    $enemymaker = "INSERT INTO `strifers` (`name`, `strifeid`, `side`, `leader`, `teamwork`, `grist`, `description`, `power`, `maxpower`, `health`, `maxhealth`, `energy`, `maxenergy`, `ondeath`, `status`, `bonuses`, `resistances`, `abilities`, `effects`, `persist`) VALUES ";
     $i = 0;
     while (!empty($enemylist[$i])) {
         $leader = 0;
@@ -98,7 +98,7 @@ function generateEnemies($enemylist, $strifeID, $connection, $appearson, $genera
         }
         $j = 0;
         if ($enemyrow['prototypings'] > 0) { //We have a prototyping. Get shit for the prototyping application loop initialized.
-            $chumroll = mysqli_query($connection, "SELECT `proto_effects` FROM `Characters` WHERE `Characters`.`session` = $sessionID;");
+            $chumroll = mysqli_query($connection, "SELECT `proto_effects` FROM `characters` WHERE `characters`.`session` = $sessionID;");
             $chumcount = 0;
             while ($chumrow = mysqli_fetch_array($chumroll)) {
                 $chumcount++;
@@ -154,9 +154,9 @@ function buildMegaquery($strifers, $n, $connection): string //$n is the number o
 {$values = array("health", "power", "status", "bonuses", "energy", "lastactive", "lastpassive", "subaction", "strifeID", "currentmotif", "motifsused", "teammotif", "brief_luck");
     $types = array("num", "num", "str", "str", "num", "str", "str", "num", "num", "str", "str", "num", "num"); //Contains the type of data (we need this for proper formatting)
     $j = 0;
-    $megaquery = "UPDATE `Strifers` SET ";
+    $megaquery = "UPDATE `strifers` SET ";
     while (!empty($values[$j])) {
-        $megaquery .= "`" . $values[$j] . "` = CASE `ID` ";
+        $megaquery .= "`" . $values[$j] . "` = CASE `id` ";
         $idlist = "";
         $k = 1;
         while ($k <= $n) {
@@ -180,7 +180,7 @@ function buildMegaquery($strifers, $n, $connection): string //$n is the number o
         if (!empty($values[$j + 1])) { //We still have another case after this
             $megaquery .= ", ";
         } else {
-            $megaquery .= " WHERE `ID` IN ($idlist);";
+            $megaquery .= " WHERE `id` IN ($idlist);";
         }
         $j++;
     }

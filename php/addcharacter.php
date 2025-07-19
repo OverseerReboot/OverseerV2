@@ -139,7 +139,7 @@ $insertchar->execute();
 $newcharid = $db->lastInsertId();
 unset($insertchar);
 
-$addtosession = $db->prepare("UPDATE `Sessions` SET members = :members WHERE ID = :sessionid");
+$addtosession = $db->prepare("UPDATE `sessions` SET members = :members WHERE ID = :sessionid");
 $addtosession->bindValue(':members', $members.strval($newcharid).'|');
 $addtosession->bindParam(':sessionid', $sessionrow['ID']);
 $addtosession->execute();
@@ -173,7 +173,7 @@ unset($updatestrifers);
 $dbtype = "";
 require $_SERVER['DOCUMENT_ROOT'] . '/inc/database.php'; // WHOOPS. THIS CANT BE require_once BECAUSE IT WAS REQUIRED AT THE TOP UH UH UH UH
 require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/global_functions.php';
-$charresult = mysqli_query($connection, "SELECT * FROM `Characters` WHERE `ID` = $newcharid LIMIT 1;");
+$charresult = mysqli_query($connection, "SELECT * FROM `characters` WHERE `id` = $newcharid LIMIT 1;");
 $charrow = mysqli_fetch_array($charresult);
 strifeInit($charrow);
 echo "Character " . $_POST['charname'] . " has been successfully created!<br />";

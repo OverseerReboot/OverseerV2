@@ -16,9 +16,9 @@ if (!empty($_POST['strifetojoin'])) {
     }
     $charrow = spendFatigue(10, $charrow); //Dumb magic number: strifes cost 10 fatigue
     $playerside = 0;
-    mysqli_query($connection, "UPDATE `Strifers` SET `strifeID` = $newID, `side` = $playerside, `leader` = 0, `fatigue` = " . $charrow[$fatiguestr] . " WHERE `Strifers`.`ID` = $sid LIMIT 1;"); //Add the player
+    mysqli_query($connection, "UPDATE `strifers` SET `strifeid` = $newID, `side` = $playerside, `leader` = 0, `fatigue` = " . $charrow[$fatiguestr] . " WHERE `strifers`.`id` = $sid LIMIT 1;"); //Add the player
     if ($charrow['dreamingstatus'] == "Awake") { //Allies can't follow you to the moons. Temporary, we might add moon allies later.
-        mysqli_query($connection, "UPDATE `Strifers` SET `strifeID` = $newID, `side` = $playerside WHERE `Strifers`.`owner` = " . $charrow['ID'] . " AND `Strifers`.`Aspect` = '';"); //Add allies
+        mysqli_query($connection, "UPDATE `strifers` SET `strifeid` = $newID, `side` = $playerside WHERE `strifers`.`owner` = " . $charrow['ID'] . " AND `strifers`.`aspect` = '';"); //Add allies
         $lead = mysqli_query($connection, "SELECT owner FROM Strifers WHERE leader=1 AND strifeID=". $newID . ";");
         $leader = mysqli_fetch_array($lead);
         notifyCharacter($leader['owner'], $charrow['name'] . " has joined you in Strife #" . $newID . "!");

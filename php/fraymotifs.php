@@ -11,7 +11,7 @@ if (empty($_SESSION['username'])) {
         $_SESSION['motiflist']['Aspect'] = "";
     } //Prevent complaints about empty values
     if ($_SESSION['motiflist']['Aspect'] != $charrow['aspect']) { //List of fraymotifs does not match current Aspect (or is empty!)
-        $motifresult = mysqli_query($connection, "SELECT * FROM `Fraymotifs` WHERE `Fraymotifs`.`Aspect` = '$charrow[aspect]' LIMIT 1;");
+        $motifresult = mysqli_query($connection, "SELECT * FROM `fraymotifs` WHERE `fraymotifs`.`aspect` = '$charrow[aspect]' LIMIT 1;");
         $_SESSION['motiflist'] = mysqli_fetch_array($motifresult); //Fetch the fraymotif names for this aspect and put them in the session variable
     }
     if ($charrow['dreamingstatus'] == "Awake") { //Grab the character's waking row
@@ -19,7 +19,7 @@ if (empty($_SESSION['username'])) {
     } else { //Grab their dream row
         $sid = $charrow['dreamself'];
     }
-    $striferesult = mysqli_query($connection, "SELECT * FROM `Strifers` WHERE `Strifers`.`ID` = $sid LIMIT 1;");
+    $striferesult = mysqli_query($connection, "SELECT * FROM `strifers` WHERE `strifers`.`id` = $sid LIMIT 1;");
     $striferow = mysqli_fetch_array($striferesult);
     $motiflist = array(0 => "I", "II", "III", "Hope", "Heart", "Life", "Doom", "Mind", "Space", "Time", "Void", "Blood", "Breath", "Light", "Rage");
     if (!empty($_POST['motifbuy'])) { //Fraymotif being purchased. DATA SECTION: Stores costs for fraymotifs
@@ -49,13 +49,13 @@ if (empty($_SESSION['username'])) {
             $charrow['fraymotifs'] .= $_POST['motifbuy'] . "|";
             $charrow['boondollars'] -= $cost;
             echo "You have successfully purchased $charrow[aspect]/" . $_POST['motifbuy'] . ": $motifname<br>";
-            mysqli_query($connection, "UPDATE `Characters` SET `fraymotifs` = '$charrow[fraymotifs]', `boondollars` = $charrow[boondollars] WHERE `Characters`.`ID` = $charrow[ID] LIMIT 1;");
+            mysqli_query($connection, "UPDATE `characters` SET `fraymotifs` = '$charrow[fraymotifs]', `boondollars` = $charrow[boondollars] WHERE `characters`.`id` = $charrow[ID] LIMIT 1;");
         } else {
             echo "You cannot afford that fraymotif! It is unknown at this time whether that was because a teammate convinced you to hand over some of your money.<br>";
         }
     }
     if (!empty($_POST['motifuse'])) {
-        $_POST['motifuse'] = mysqli_real_escape_string($connection, $_POST['motifuse']); //Paranoia. It shouldn't be possible to use DERP; DROP TABLE `Characters`;
+        $_POST['motifuse'] = mysqli_real_escape_string($connection, $_POST['motifuse']); //Paranoia. It shouldn't be possible to use DERP; DROP TABLE `characters`;
         $motifname = "Unnamed Fraymotif";
         if ($_SESSION['motiflist'][$_POST['motifuse']] != "") {
             $motifname = mysqli_real_escape_string($connection, $_SESSION['motiflist'][$_POST['motifuse']]);
@@ -83,8 +83,8 @@ if (empty($_SESSION['username'])) {
                 }
                 //Optimization spot: Figure out how to roll these two queries together into a single database transaction.
                 $striferow['motifsused'] .= "|" . $_POST['motifuse'] . ":" . $cooldown;
-                mysqli_query($connection, "UPDATE `Strifers` SET `teammotif` = 1, `motifsused` = '" . $striferow['motifsused'] . "' WHERE `strifeID` = $striferow[strifeID] AND `side` = $striferow[side];");
-                mysqli_query($connection, "UPDATE `Strifers` SET `currentmotif` = '" . $charrow['aspect'] . "/" . $_POST['motifuse'] . "', `currentmotifname` = '$motifname' WHERE `Strifers`.`ID` = $sid LIMIT 1;");
+                mysqli_query($connection, "UPDATE `strifers` SET `teammotif` = 1, `motifsused` = '" . $striferow['motifsused'] . "' WHERE `strifeid` = $striferow[strifeID] AND `side` = $striferow[side];");
+                mysqli_query($connection, "UPDATE `strifers` SET `currentmotif` = '" . $charrow['aspect'] . "/" . $_POST['motifuse'] . "', `currentmotifname` = '$motifname' WHERE `strifers`.`id` = $sid LIMIT 1;");
                 $motifname = $_SESSION['motiflist'][$_POST['motifuse']];
                 echo "You have successfully activated $charrow[aspect]/" . $_POST['motifuse'] . ": $motifname<br>";
                 //Format will be as printed: The currentmotif field would be set to "Breath/I" for the Breath I fraymotif, for instance.

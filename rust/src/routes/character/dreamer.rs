@@ -25,7 +25,7 @@ pub async fn character_dreamer_post(
     Ok(HtmlTemplate(match form.moon.as_str() {
         "Prospit" | "Derse" => {
             sqlx::query!(
-                "UPDATE Characters SET dreamer = ? WHERE id = ?",
+                "UPDATE characters SET dreamer = ? WHERE id = ?",
                 form.moon,
                 character.id
             )

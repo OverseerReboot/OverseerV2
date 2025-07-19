@@ -140,7 +140,7 @@ if (empty($_SESSION['character'])) {
     if (!empty($_POST['servergen'])) { //Dungeon is being constructed for house advancement purposes
         $gateresult = mysqli_query($connection, "SELECT * FROM Gates");
         $gaterow = mysqli_fetch_array($gateresult);
-        $clientresult = mysqli_query($connection, "SELECT * FROM Characters WHERE `ID` = '" . $charrow['client'] . "'");
+        $clientresult = mysqli_query($connection, "SELECT * FROM Characters WHERE `id` = '" . $charrow['client'] . "'");
         $clientrow = mysqli_fetch_array($clientresult);
         if ($gaterow['gate' . $_POST['gate']] <= $clientrow['house_build']) {
             $gate = $_POST['gate'];
@@ -357,7 +357,7 @@ if (empty($_SESSION['character'])) {
                 }
             }
         }
-        $dungeonquery = "INSERT INTO `Dungeons` (`gate`, `topmost`, `leftmost`, `rightmost`, `bottommost`, `floor`, `room`, `enc`, `loot`, `land`, `boss`, `loottypes`, `enemytypes`, `minpower`, `maxpower`, `minloot`, `maxloot`) VALUES ($gate, $upmost, $leftmost, $rightmost, $downmost, $floor, '$roomstr', '$encstr', '$lootstr', $land, '$boss', '$loots', '$enemies', $minpower, $maxpower, $minloot, $maxloot);";
+        $dungeonquery = "INSERT INTO `dungeons` (`gate`, `topmost`, `leftmost`, `rightmost`, `bottommost`, `floor`, `room`, `enc`, `loot`, `land`, `boss`, `loottypes`, `enemytypes`, `minpower`, `maxpower`, `minloot`, `maxloot`) VALUES ($gate, $upmost, $leftmost, $rightmost, $downmost, $floor, '$roomstr', '$encstr', '$lootstr', $land, '$boss', '$loots', '$enemies', $minpower, $maxpower, $minloot, $maxloot);";
         mysqli_query($connection, $dungeonquery); //insert da dungone.
         $dungeonid = mysqli_insert_id($connection);
         if (empty($_POST['servergen'])) {

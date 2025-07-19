@@ -8,7 +8,7 @@ $characters = [];
 $querycount = 0;
 
 $querycount++;
-$sessionquery = mysqli_query($connection, "SELECT * FROM `Sessions` WHERE `ID` = '" . $charrow['session'] . "' LIMIT 1;");
+$sessionquery = mysqli_query($connection, "SELECT * FROM `sessions` WHERE `id` = '" . $charrow['session'] . "' LIMIT 1;");
 $session = mysqli_fetch_array($sessionquery, MYSQLI_ASSOC);
 
 $characterids = explode("|", $session['members']);

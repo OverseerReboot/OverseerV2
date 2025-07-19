@@ -5,7 +5,7 @@ $headericon = "/images/header/gristy.png";
 require($_SERVER['DOCUMENT_ROOT'] . '/inc/header.php');
 
 // list all grists
-$gresult = mysqli_query($connection, "SELECT * FROM `Grists`;");
+$gresult = mysqli_query($connection, "SELECT * FROM `grists`;");
 $gristlist = [];
 while ($grow = mysqli_fetch_array($gresult, MYSQLI_ASSOC)) {
     $gristlist[$grow['name']] = $grow;
@@ -44,7 +44,7 @@ if (empty($_SESSION['character'])) {
     if ($compugood == true) {
         //--Begin wiring code here--
         if (isset($_POST['amount']) && intval($_POST['amount']) > 0) { //Player is attempting to wire a positive amount of grist.
-            //$sessionresult = mysqli_query($connection, "SELECT * FROM `Sessions` WHERE `Sessions`.`name` = '" . $_POST['session'] . "' LIMIT 1;");
+            //$sessionresult = mysqli_query($connection, "SELECT * FROM `sessions` WHERE `sessions`.`name` = '" . $_POST['session'] . "' LIMIT 1;");
             //$sessionrow = mysqli_fetch_array($sessionresult);
             //$sessionid = $sessionrow['ID'];
             if (1 == 1 or empty($_POST['session'])) {
@@ -57,7 +57,7 @@ if (empty($_SESSION['character'])) {
             } elseif (empty($_POST['grist_type'])) {
                 echo "You cannot wire a blank grist type!<br />";
             } else {
-                $wireresult = mysqli_query($connection, "SELECT * FROM Characters WHERE `Characters`.`name` = '" . mysqli_real_escape_string($connection, $_POST['target']) . "'");
+                $wireresult = mysqli_query($connection, "SELECT * FROM Characters WHERE `characters`.`name` = '" . mysqli_real_escape_string($connection, $_POST['target']) . "'");
                 $targetfound = false;
                 $poor = false;
                 $type = $_POST['grist_type'];
@@ -71,8 +71,8 @@ if (empty($_SESSION['character'])) {
                             $receivergrist = modifyGrist($wirerow['grists'], $type, $modifier);
                             $string = $charrow['name'] . " has wired you " . $modifier . " " . $type . "!";
                             notifyCharacter($wirerow['ID'], $string);
-                            mysqli_query($connection, "UPDATE `Characters` SET `grists` = '" . $receivergrist . "' WHERE `Characters`.`ID` = " . $wirerow['ID'] . " LIMIT 1 ;");
-                            mysqli_query($connection, "UPDATE `Characters` SET `grists` = '" . $sendergrist . "' WHERE `Characters`.`ID` = " . $charrow['ID'] . " LIMIT 1 ;");
+                            mysqli_query($connection, "UPDATE `characters` SET `grists` = '" . $receivergrist . "' WHERE `characters`.`id` = " . $wirerow['ID'] . " LIMIT 1 ;");
+                            mysqli_query($connection, "UPDATE `characters` SET `grists` = '" . $sendergrist . "' WHERE `characters`.`id` = " . $charrow['ID'] . " LIMIT 1 ;");
                             $remainder = howMuchGrist($charrow['grists'], $type) - $modifier;
                             $charrow['grists'] = $sendergrist;
                         }

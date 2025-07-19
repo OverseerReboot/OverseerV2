@@ -91,7 +91,7 @@ if (empty($_SESSION['character'])) {
                     } else {
                         $consumuser = $charrow['wakeself']; //if you use an item from this screen, the user is implied to be yourself
                         $targetuser = $_POST['target']; //Target's strife ID sent through
-                        $striferesult = mysqli_query($connection, "SELECT * FROM `Strifers` WHERE `Strifers`.`strifeID` = $striferow[strifeID];"); //Grab all strifers
+                        $striferesult = mysqli_query($connection, "SELECT * FROM `strifers` WHERE `strifers`.`strifeid` = $striferow[strifeID];"); //Grab all strifers
                         while ($row = mysqli_fetch_array($striferesult)) {
                             $n++; //NOTE - This means the first strifer will be entry 1 in the array, NOT entry 0
                             $strifers[$n] = $row; //Store each strifer in a successive index
@@ -173,7 +173,7 @@ if (empty($_SESSION['character'])) {
                     $boom = explode("|", $charrow['inventory']);
                     $newgrist = $charrow['grists'];
                     if (in_array($i, $boom)) {
-                        $iresult = mysqli_query($connection, "SELECT * FROM `Captchalogue` WHERE `Captchalogue`.`ID` = " . $i . " LIMIT 1;");
+                        $iresult = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE `captchalogue`.`id` = " . $i . " LIMIT 1;");
                         $irow = mysqli_fetch_array($iresult);
                         $nothing = true;
                         $gristname = initGrists();
@@ -212,7 +212,7 @@ if (empty($_SESSION['character'])) {
                         $invNew = str_replace($i."|", "", $invNew);
                         $invSlotsNew = $charrow['invslots']; //There was a +1 here, but I don't think that's necessary.
 
-                        mysqli_query($connection, "UPDATE `Characters` SET `grists` = '$newgrist', `inventory` = '$invNew', `invslots` = " . strval($invSlotsNew) . " WHERE `Characters`.`ID` = " . $charrow['ID'] . " LIMIT 1;");
+                        mysqli_query($connection, "UPDATE `characters` SET `grists` = '$newgrist', `inventory` = '$invNew', `invslots` = " . strval($invSlotsNew) . " WHERE `characters`.`id` = " . $charrow['ID'] . " LIMIT 1;");
                     }
                 } else {
                     echo "You have no items to recycle!<br />";
@@ -311,9 +311,9 @@ if (empty($_SESSION['character'])) {
     echo " on <select name='target'><option value=''>Nobody in particular</option>";
 
     if ($striferow['strifeID'] == 0) {
-        $targetresult = mysqli_query($connection, "SELECT * FROM `Characters` WHERE `Characters`.`session` = $charrow[session];");
+        $targetresult = mysqli_query($connection, "SELECT * FROM `characters` WHERE `characters`.`session` = $charrow[session];");
     } else {
-        $targetresult = mysqli_query($connection, "SELECT * FROM `Strifers` WHERE `Strifers`.`strifeID` = $striferow[strifeID];");
+        $targetresult = mysqli_query($connection, "SELECT * FROM `strifers` WHERE `strifers`.`strifeid` = $striferow[strifeID];");
     }
     while ($targetrow = mysqli_fetch_array($targetresult)) {
         echo "<option value='$targetrow[ID]'>$targetrow[name]</option>";
@@ -384,9 +384,9 @@ if (empty($_SESSION['character'])) {
     echo " on <select name='target'><option value=''>Nobody in particular</option>";
 
     if ($striferow['strifeID'] == 0) {
-        $targetresult = mysqli_query($connection, "SELECT * FROM `Characters` WHERE `Characters`.`session` = $charrow[session];");
+        $targetresult = mysqli_query($connection, "SELECT * FROM `characters` WHERE `characters`.`session` = $charrow[session];");
     } else {
-        $targetresult = mysqli_query($connection, "SELECT * FROM `Strifers` WHERE `Strifers`.`strifeID` = $striferow[strifeID];");
+        $targetresult = mysqli_query($connection, "SELECT * FROM `strifers` WHERE `strifers`.`strifeid` = $striferow[strifeID];");
     }
     while ($targetrow = mysqli_fetch_array($targetresult)) {
         echo "<option value='$targetrow[ID]'>$targetrow[name]</option>";

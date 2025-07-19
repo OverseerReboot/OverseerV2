@@ -6,14 +6,14 @@ require_once "/var/www/overseer2.com/inc/database.php";
 
 session_start();
 // Get the consort table and start the loop
-$consortsResult = mysqli_query($connection, "SELECT * FROM `Consorts`;");
+$consortsResult = mysqli_query($connection, "SELECT * FROM `consorts`;");
 while ($row = mysqli_fetch_assoc($consortsResult)) {
     echo "</br>";
     $charID = $row['belongsto'];
     $consortName = $row['name'];
     $consortID = $row['id'];
     $consortDisplay = '<a href="/mercenaries.php?info='.$consortID.'">'.$consortName.'</a>';
-    $charResult = mysqli_query($connection, "SELECT * FROM `Characters` WHERE `ID` = '$charID';");
+    $charResult = mysqli_query($connection, "SELECT * FROM `characters` WHERE `id` = '$charID';");
     $charRow = mysqli_fetch_array($charResult);
     $timeSinceStrife = time() - $row['lastcombat'];
     $timeSinceAction = time() - $row['lastaction'];
@@ -22,16 +22,16 @@ while ($row = mysqli_fetch_assoc($consortsResult)) {
             'skip' => array('min' => 0, 'max' => 100),
         );
         if ($row['injurycount'] >= 3) {
-            mysqli_query($connection, "INSERT INTO `DeadConsorts` (`belongedto`, `name`) VALUES ('$charID', '$consortName');");
-            mysqli_query($connection, "DELETE FROM `Consorts` WHERE `id` = '$consortID';");
+            mysqli_query($connection, "INSERT INTO `deadconsorts` (`belongedto`, `name`) VALUES ('$charID', '$consortName');");
+            mysqli_query($connection, "DELETE FROM `consorts` WHERE `id` = '$consortID';");
             $consortCountNew = $charRow['consortcount'] - 1;
-            mysqli_query($connection, "UPDATE `Characters` SET `consortcount` = '$consortCountNew' WHERE `ID` = '$charID';");
+            mysqli_query($connection, "UPDATE `characters` SET `consortcount` = '$consortCountNew' WHERE `id` = '$charID';");
             logThis("".$consortDisplay." succumbed to their injuries, and has died.", $charID);
         } else {
             $injuryRand = rand(0, 3); // 1 in 4 chance
             if ($injuryRand == 2) {  // with a random number to do it.
                 $consortid = $row['id'];
-                mysqli_query($connection, "UPDATE `Consorts` SET `status` = 'ALIVE' WHERE `id` = '$consortid';");
+                mysqli_query($connection, "UPDATE `consorts` SET `status` = 'ALIVE' WHERE `id` = '$consortid';");
                 logThis("".$consortDisplay." has recovered from their injuries, and are raring to get back in the fight!", $charID);
                 // Log recovery here
             }
@@ -102,7 +102,7 @@ while ($row = mysqli_fetch_assoc($consortsResult)) {
             // RNG random shit here - alchemy, funny notes, etc etc.
             echo "Other - Goofing off...";
             $updateTime = time();
-            mysqli_query($connection, "UPDATE `Consorts` SET `lastaction` = '$updateTime' WHERE `id` = '$consortID';");
+            mysqli_query($connection, "UPDATE `consorts` SET `lastaction` = '$updateTime' WHERE `id` = '$consortID';");
             $goofArray = array("Some of your consorts wonder why they're fighting. They decide to form a secret wizard's society.",
             "".$consortDisplay." has died of dysentry. <a href='http://www.mspaintadventures.com/?s=6&p=007980'>Luckily, something in a far off place revived them before they turned into a skeleton.</a>",
             "A consort lies down and thinks about the nature of existence. A nearby underling politely decides not to attack them - they've been there before.",
@@ -159,7 +159,7 @@ while ($row = mysqli_fetch_assoc($consortsResult)) {
             //var_dump($storageArray);
             $itemCodeArray = explode(":", $storageArray[$itemToCheck]);
             $itemID = $itemCodeArray[0];
-            $itemQuery = mysqli_query($connection, "SELECT * FROM `Captchalogue` WHERE `ID` = '$itemID';");
+            $itemQuery = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE `id` = '$itemID';");
             $itemRow = mysqli_fetch_array($itemQuery);
             if (substr_count($itemRow['abstratus'], 'notaweapon') == 0 && $itemRow['abstratus'] != "") {
                 $newPower = $itemRow['power'] + 20;
@@ -167,7 +167,7 @@ while ($row = mysqli_fetch_assoc($consortsResult)) {
                 echo $itemRow['abstratus'];
                 echo substr_count($itemRow['abstratus'], 'notaweapon');
                 //var_dump($storageArray);
-                mysqli_query($connection, "UPDATE `Consorts` SET `equipped` = '$itemID', `power` = '$newPower', `lastaction` = '$updateTime' WHERE `id` = '$consortID';");
+                mysqli_query($connection, "UPDATE `consorts` SET `equipped` = '$itemID', `power` = '$newPower', `lastaction` = '$updateTime' WHERE `id` = '$consortID';");
                 if ($itemCodeArray[1] == 1) {
                     unset($storageArray[$itemToCheck]);
                 } else {
@@ -181,7 +181,7 @@ while ($row = mysqli_fetch_assoc($consortsResult)) {
                 }
                 //var_dump($storageArray);
                 $recombinedStorageArray = implode('|', $storageArray);
-                mysqli_query($connection, "UPDATE `Characters` SET `storeditems` = '$recombinedStorageArray' WHERE `ID` = '$charID';");
+                mysqli_query($connection, "UPDATE `characters` SET `storeditems` = '$recombinedStorageArray' WHERE `id` = '$charID';");
                 logThis("".$consortDisplay." equipped ".$itemRow['name'].".", $charID);
                 echo 'Equipped a weapon<br>';
             } else {
@@ -193,8 +193,8 @@ while ($row = mysqli_fetch_assoc($consortsResult)) {
         echo "FIGHT!!";
         include_once("/var/www/overseer2.com/processes/consortstrife.php");
         $updateTime = time();
-        mysqli_query($connection, "UPDATE `Consorts` SET `lastaction` = '$updateTime' WHERE `id` = '$consortID';");
-        mysqli_query($connection, "UPDATE `Consorts` SET `lastcombat` = '$updateTime' WHERE `id` = '$consortID';");
+        mysqli_query($connection, "UPDATE `consorts` SET `lastaction` = '$updateTime' WHERE `id` = '$consortID';");
+        mysqli_query($connection, "UPDATE `consorts` SET `lastcombat` = '$updateTime' WHERE `id` = '$consortID';");
         rowRowFightThePower($consortID, $charID);
     } elseif ($action == 'skip') {
         echo "Do nothing.";

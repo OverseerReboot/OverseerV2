@@ -81,7 +81,7 @@ if (!empty($_POST['newimage'])) {
 // Player wants to set a new custom player image
 if (isset($_POST['symbol'])) {
 
-    $ownsession = mysqli_query($connection, "SELECT name FROM Sessions WHERE `ID` = $charrow[session];");
+    $ownsession = mysqli_query($connection, "SELECT name FROM Sessions WHERE `id` = $charrow[session];");
     $sessiont = mysqli_fetch_array($ownsession);
     $session = str_replace("''", "'", $sessiont['name']);
 
@@ -144,7 +144,7 @@ Moon: <?php echo $me->dreamer; ?><br>
 
 <br>
 <?php
-$ownsession = mysqli_query($connection, "SELECT name FROM Sessions WHERE `ID` = $charrow[session];");
+$ownsession = mysqli_query($connection, "SELECT name FROM Sessions WHERE `id` = $charrow[session];");
 $sessiont = mysqli_fetch_array($ownsession);
 $session = str_replace("''", "'", $sessiont['name']);
 echo 'Symbol: <img style="display:inline" src="' . $me->symbol . '"><br />';

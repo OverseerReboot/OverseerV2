@@ -12,7 +12,7 @@ if (!empty($_POST['session'])) {
 } elseif (!empty($_GET['session'])) {
     $session = mysqli_real_escape_string($connection, $_GET['session']);
 } else {
-    $ownsession = mysqli_query($connection, "SELECT name FROM Sessions WHERE `ID` = $charrow[session];");
+    $ownsession = mysqli_query($connection, "SELECT name FROM Sessions WHERE `id` = $charrow[session];");
     $sessiont = mysqli_fetch_array($ownsession);
     $session = str_replace("''", "'", $sessiont['name']);
 }

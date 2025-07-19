@@ -100,7 +100,7 @@ class Item
     {
         // Get the item's row to load it into the object
         $itemquery = $this->_dbhandle->prepare(
-            'SELECT * FROM `Captchalogue` WHERE `ID` = :itemid'
+            'SELECT * FROM `captchalogue` WHERE `id` = :itemid'
         );
         $itemquery->bindParam(':itemid', $itemID);
         $itemquery->execute();

@@ -53,7 +53,7 @@ pub async fn character_symbol_post(
             new_filepath
         ))?;
         sqlx::query!(
-            "UPDATE Characters SET symbol = ? WHERE id = ?",
+            "UPDATE characters SET symbol = ? WHERE id = ?",
             new_filepath,
             character.id
         )

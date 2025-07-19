@@ -270,7 +270,7 @@ if ($powerAllowed && $powerAllowedBonus && $fullyUnstable == 0) {
     //but this ensures that a user can't create a super easy power upgrade for themselves without any staff intervention.
     //$newGristTotal = $oldGristTotal * 1.2 + ($power + $abuse + $accuse + $abstain + $abjure + $aggrieve + $assail + $aggress + $assault) * 15;
     // Pull grist list from DB
-    /*	$gristResult = mysqli_query($connection, "SELECT `name` FROM `Grists`;");
+    /*	$gristResult = mysqli_query($connection, "SELECT `name` FROM `grists`;");
         $gristArray = mysqli_fetch_array($gristResult); // This is what we use to run through the _POST vars
         $gristArray = array_flip($gristArray); // This has the grist name as keys */
     // $$key can be used to set a variable with the name
@@ -282,7 +282,7 @@ if ($powerAllowed && $powerAllowedBonus && $fullyUnstable == 0) {
             }
         }
         */
-    $gristResult = mysqli_query($connection, "SELECT * FROM `Grists`;");
+    $gristResult = mysqli_query($connection, "SELECT * FROM `grists`;");
     while ($v = mysqli_fetch_assoc($gristResult)) {
         if (isset($_POST["$v[name]"])) {
             $gristWeight = intval($_POST["$v[name]"]);
@@ -293,7 +293,7 @@ if ($powerAllowed && $powerAllowedBonus && $fullyUnstable == 0) {
         }
     }
     $gristTiersSatisfied = 0;
-    $gristResult = mysqli_query($connection, "SELECT * FROM `Grists`;");
+    $gristResult = mysqli_query($connection, "SELECT * FROM `grists`;");
     while ($v = mysqli_fetch_assoc($gristResult)) {
         if (isset($_POST["$v[name]"])) {
             $gristWeight = intval($_POST["$v[name]"]);
@@ -379,7 +379,7 @@ if ($powerAllowed && $powerAllowedBonus && $fullyUnstable == 0) {
         } elseif ($power <= 0) {
             echo "The item's base power must be higher than 0!<br />";
         } else {
-            mysqli_query($connection, "INSERT INTO `Captchalogue` (`code`, `name`, `description`, `session`, `power`, `aggrieve`, `aggress`, `assail`, `assault`, `abuse`, `accuse`, `abjure`, `abstain`, `abstratus`, `wearable`, `size`, `gristcosts`, `notes`) VALUES ('$code', '$name', '$description', '$sessionID', '$power', " . $bonusstr . "'$abstrati', '$wearables', '$size', '$grists', '$comments');");
+            mysqli_query($connection, "INSERT INTO `captchalogue` (`code`, `name`, `description`, `session`, `power`, `aggrieve`, `aggress`, `assail`, `assault`, `abuse`, `accuse`, `abjure`, `abstain`, `abstratus`, `wearable`, `size`, `gristcosts`, `notes`) VALUES ('$code', '$name', '$description', '$sessionID', '$power', " . $bonusstr . "'$abstrati', '$wearables', '$size', '$grists', '$comments');");
             echo 'Success! You can now alchemise your item.';
         }
     }

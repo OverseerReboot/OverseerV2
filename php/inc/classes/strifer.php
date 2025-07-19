@@ -100,7 +100,7 @@ class Strifer
 
         // Get the character's row to load it into the object
         $strifequery = $this->_dbhandle->prepare(
-            'SELECT * FROM `Strifers` WHERE `ID` = :striferid'
+            'SELECT * FROM `strifers` WHERE `id` = :striferid'
         );
         $strifequery->bindParam(':striferid', $striferID);
         $strifequery->execute();

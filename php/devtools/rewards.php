@@ -7,7 +7,7 @@ if ($accrow['modlevel'] < 10) {
 } else {
     if (!empty($_POST['gift'])) {
         $_POST['character'] = mysqli_real_escape_string($connection, $_POST['character']);
-        $recipientresult = mysqli_query($connection, "SELECT * FROM `Characters` WHERE `Characters`.`ID` = '" . $_POST['character'] . "' LIMIT 1;");
+        $recipientresult = mysqli_query($connection, "SELECT * FROM `characters` WHERE `characters`.`id` = '" . $_POST['character'] . "' LIMIT 1;");
         $recipientrow = mysqli_fetch_array($recipientresult);
         $success = storeItem($recipientrow, $_POST['itemID'], 1, "");
         if ($success) {

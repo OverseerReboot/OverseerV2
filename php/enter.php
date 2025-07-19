@@ -4,7 +4,7 @@ require_once "header.php";
 require_once "includes/additem.php";
 /*function initRandomGrists($charrow) {
     global $connection;
-    $charresult = mysqli_query($connection, "SELECT `grist_type` FROM `Characters` WHERE `session` = " . $charrow['session'] . " AND `inmedium` = 1"); //query all medium-entered players for their grist types
+    $charresult = mysqli_query($connection, "SELECT `grist_type` FROM `characters` WHERE `session` = " . $charrow['session'] . " AND `inmedium` = 1"); //query all medium-entered players for their grist types
     while ($row = mysqli_fetch_array($charresult)) {
         $grists = explode("|", $row['grist_type']);
         $i = 0;
@@ -171,7 +171,7 @@ if (empty($_SESSION['character'])) {
             echo "Your adventure has only just begun...<br />";
             setAchievement($charrow, 'medium');
             notifySession($charrow, $charrow['name'] . " has entered the Land of ". $land1 . " and " .$land2 . "!");
-            mysqli_query($connection, "UPDATE `Characters` SET `inventory` = '$newinv' WHERE `Characters`.`ID` = '" . $charrow['ID'] . "'");
+            mysqli_query($connection, "UPDATE `characters` SET `inventory` = '$newinv' WHERE `characters`.`id` = '" . $charrow['ID'] . "'");
         }
     } else {
         $alreadyentered = false;

@@ -11,7 +11,7 @@ if (empty($_SESSION['character'])) {
     echo 'Session Atheneum<br />';
     echo 'All items acquired or previewed by players in your session will be shown here.<br /><br />';
     //retrieve session atheneum
-    $sessionresult = mysqli_query($connection, "SELECT `atheneum` FROM `Sessions` WHERE `Sessions`.`ID` = '" . $charrow['session'] . "' LIMIT 1;");
+    $sessionresult = mysqli_query($connection, "SELECT `atheneum` FROM `sessions` WHERE `sessions`.`id` = '" . $charrow['session'] . "' LIMIT 1;");
     $sesrow = mysqli_fetch_array($sessionresult);
     //if viewing an item:
     if (!empty($_GET['holoid'])) {
@@ -27,7 +27,7 @@ if (empty($_SESSION['character'])) {
                 }
             }
             //retrieve item information
-            $thisisanitem = mysqli_query($connection, "SELECT * FROM `Captchalogue` WHERE `Captchalogue`.`ID` = '" . $_GET['holoid'] . "' LIMIT 1;");
+            $thisisanitem = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE `captchalogue`.`id` = '" . $_GET['holoid'] . "' LIMIT 1;");
             $iteminfo = mysqli_fetch_array($thisisanitem);
             //if item has been obtained, display all information
             if ($itementry[1] == 2) {
@@ -55,10 +55,10 @@ if (empty($_SESSION['character'])) {
     //check various possible search parameters
     if (!empty($_GET['weapons'])) {
         if ($_GET['weapons'] == "yes") {
-            $showstring = $showstring . " `Captchalogue`.`abstratus` NOT LIKE '%notaweapon%'";
+            $showstring = $showstring . " `captchalogue`.`abstratus` NOT LIKE '%notaweapon%'";
             $othersearches = 1;
         } elseif ($_GET['weapons'] == "no") {
-            $showstring = $showstring . " `Captchalogue`.`abstratus` LIKE '%notaweapon%'";
+            $showstring = $showstring . " `captchalogue`.`abstratus` LIKE '%notaweapon%'";
             $othersearches = 1;
         }
     }
@@ -67,27 +67,27 @@ if (empty($_SESSION['character'])) {
             $showstring = $showstring . " AND";
         }
         $_GET['abstratus1'] = mysqli_real_escape_string($connection, $_GET['abstratus1']);
-        $showstring = $showstring . " `Captchalogue`.`abstratus` LIKE '%" . $_GET['abstratus1'] . "%'";
+        $showstring = $showstring . " `captchalogue`.`abstratus` LIKE '%" . $_GET['abstratus1'] . "%'";
     }
     if (!empty($_GET['abstratus2'])) {
         if ($othersearches == 1) {
             $showstring = $showstring . " AND";
         }
         $_GET['abstratus2'] = mysqli_real_escape_string($connection, $_GET['abstratus2']);
-        $showstring = $showstring . " `Captchalogue`.`abstratus` LIKE '%" . $_GET['abstratus2'] . "%'";
+        $showstring = $showstring . " `captchalogue`.`abstratus` LIKE '%" . $_GET['abstratus2'] . "%'";
     }
     if (!empty($_GET['wearables'])) {
         if ($_GET['wearables'] == "yes") {
             if ($othersearches == 1) {
                 $showstring = $showstring . " AND";
             }
-            $showstring = $showstring . " `Captchalogue`.`wearable` != 'none'";
+            $showstring = $showstring . " `captchalogue`.`wearable` != 'none'";
             $othersearches = 1;
         } elseif ($_GET['wearables'] == "no") {
             if ($othersearches == 1) {
                 $showstring = $showstring . " AND";
             }
-            $showstring = $showstring . " `Captchalogue`.`wearable` = 'none'";
+            $showstring = $showstring . " `captchalogue`.`wearable` = 'none'";
             $othersearches = 1;
         }
     }
@@ -96,13 +96,13 @@ if (empty($_SESSION['character'])) {
             if ($othersearches == 1) {
                 $showstring = $showstring . " AND";
             }
-            $showstring = $showstring . " `Captchalogue`.`consumable` IS NOT NULL";
+            $showstring = $showstring . " `captchalogue`.`consumable` IS NOT NULL";
             $othersearches = 1;
         } elseif ($_GET['consume'] == "no") {
             if ($othersearches == 1) {
                 $showstring = $showstring . " AND";
             }
-            $showstring = $showstring . " `Captchalogue`.`consumable` IS NULL";
+            $showstring = $showstring . " `captchalogue`.`consumable` IS NULL";
             $othersearches = 1;
         }
     }
@@ -111,13 +111,13 @@ if (empty($_SESSION['character'])) {
             if ($othersearches == 1) {
                 $showstring = $showstring . " AND";
             }
-            $showstring = $showstring . " `Captchalogue`.`base` = 1";
+            $showstring = $showstring . " `captchalogue`.`base` = 1";
             $othersearches = 1;
         } elseif ($_GET['base'] == "no") {
             if ($othersearches == 1) {
                 $showstring = $showstring . " AND";
             }
-            $showstring = $showstring . " `Captchalogue`.`base` = 0";
+            $showstring = $showstring . " `captchalogue`.`base` = 0";
             $othersearches = 1;
         }
     }
@@ -135,7 +135,7 @@ if (empty($_SESSION['character'])) {
     echo 'Sort by: <input type="radio" name="sortby" value="name">Name <input type="radio" name="sortby" value="power">Power<br />';
     echo '<input type="submit" value="Search"></form><br />';
     //retrieve all items
-    $captcharesult = mysqli_query($connection, "SELECT `ID`,`code`,`name` FROM `Captchalogue`$showstring ORDER BY `$sortby` ASC, `aggrieve` + `aggress` + `assail` + `assault` + `abuse` + `accuse` + `abjure` + `abstain` ASC");
+    $captcharesult = mysqli_query($connection, "SELECT `id`,`code`,`name` FROM `captchalogue`$showstring ORDER BY `$sortby` ASC, `aggrieve` + `aggress` + `assail` + `assault` + `abuse` + `accuse` + `abjure` + `abstain` ASC");
     $founditems = 0;
     $totalitems = 0;
     //while we're going through items:

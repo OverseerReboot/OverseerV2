@@ -20,8 +20,8 @@ function randomItem($querystring = "", $costcap = false, $session = 0)
     if ($querystring !== "") {
         $query .= $querystring . "AND ";
     }      // build query string
-    $query .= "`Captchalogue`.`effects` NOT LIKE '%NOCONSORT%' AND (`Captchalogue`.`session` = 0 OR `Captchalogue`.`session` = $session) ORDER BY RAND();";  // make sure not to get NOCONSORT items - consorts aren't going to give you the matriorb, nor ask for it as a hint
-    $poolresult = mysqli_query($connection, "SELECT * FROM `Captchalogue` WHERE " . $query);  // get the matching items
+    $query .= "`captchalogue`.`effects` NOT LIKE '%NOCONSORT%' AND (`captchalogue`.`session` = 0 OR `captchalogue`.`session` = $session) ORDER BY RAND();";  // make sure not to get NOCONSORT items - consorts aren't going to give you the matriorb, nor ask for it as a hint
+    $poolresult = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE " . $query);  // get the matching items
     $i = 0;
     while ($pool[$i] = mysqli_fetch_assoc($poolresult)) {
         $i++;
@@ -92,7 +92,7 @@ function compileSearchString($requirements): int|string
             $querystring .= ")";
             return $querystring;
         } elseif ($thisone[0] == "ID" && count($thisone >= 2)) {            // if looking for specific item(s) by id
-            $querystring = "`ID` IN ('" . $thisone[1] . "'";         // search for items matching given ids - note we're resetting the query string!
+            $querystring = "`id` IN ('" . $thisone[1] . "'";         // search for items matching given ids - note we're resetting the query string!
             for ($j = 2; $j < count($thisone); $j++) {
                 $querystring .= ", '" . $thisone[$j] . "'";
             }
@@ -390,7 +390,7 @@ function calcGristValue($gristname, $charrow): int|float
         return 20 * ($thistier + 1);                    // otherwise it's worth 20 per tier
     }
     global $connection;
-    $characterresult = mysqli_query($connection, "SELECT `grist_type` FROM `Characters` WHERE `session` = " . $charrow['session']);   // if the grist wasn't on the land (in which case the function is over since we already returned) get all griststrings for the session
+    $characterresult = mysqli_query($connection, "SELECT `grist_type` FROM `characters` WHERE `session` = " . $charrow['session']);   // if the grist wasn't on the land (in which case the function is over since we already returned) get all griststrings for the session
     $totallands = 0;
     $totaltier = 0;
     while ($characterrow = mysqli_fetch_assoc($characterresult)) {   // for each person's grist string
@@ -425,10 +425,10 @@ function getDialogue($dtype, $charrow, $gate = 1)
     elseif ($gate > 7) {
         $gate = 7;
     }
-    $countresult = mysqli_query($connection, "SELECT COUNT(*) FROM `Consort_Dialogue` WHERE `Consort_Dialogue`.`context` = '$dtype' AND `gate` <= $gate");  // count the number of matching dialogues
+    $countresult = mysqli_query($connection, "SELECT COUNT(*) FROM `consort_dialogue` WHERE `consort_dialogue`.`context` = '$dtype' AND `gate` <= $gate");  // count the number of matching dialogues
     $count = mysqli_fetch_row($countresult);   // grab the count
     $pick = rand(0, $count[0] - 1);                   // pick a random dialogue
-    $pickresult = mysqli_query($connection, "SELECT * FROM `Consort_Dialogue` WHERE `Consort_Dialogue`.`context` = '$dtype' AND `gate` <= $gate LIMIT $pick,1");  // grab the random dialogue
+    $pickresult = mysqli_query($connection, "SELECT * FROM `consort_dialogue` WHERE `consort_dialogue`.`context` = '$dtype' AND `gate` <= $gate LIMIT $pick,1");  // grab the random dialogue
     $pickrow = mysqli_fetch_assoc($pickresult);  // fetch the array
     if (!empty($pickrow['dialogue'])) {            // if the array exists, ie if there's a matching dialogue
         $pickrow = parseDialogue($pickrow, $charrow);   // parse the dialogue strings and stuff
@@ -631,7 +631,7 @@ function phatLoot(& $charrow, $qrow, & $landrow, $gate = 1, $itemcost = 0): int|
                         $boonreward += $basecost;
                     }
                 } else {
-                    $itemreward = mysqli_query($connection, "SELECT * FROM `Captchalogue` WHERE `ID` = 23 LIMIT 1;");
+                    $itemreward = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE `id` = 23 LIMIT 1;");
                     $itemreward = mysqli_fetch_assoc($itemreward);
                     $basecost = 0;
                     if ($rewardstring !== "") {
@@ -675,7 +675,7 @@ function phatLoot(& $charrow, $qrow, & $landrow, $gate = 1, $itemcost = 0): int|
                 $boonreward += $basecost;
             }
         } else {
-            $itemreward = mysqli_query($connection, "SELECT * FROM `Captchalogue` WHERE `ID` = 23 LIMIT 1;");
+            $itemreward = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE `id` = 23 LIMIT 1;");
             $itemreward = mysqli_fetch_assoc($itemreward);
             $basecost = 0;
             $rewardstring = "hOPY shIT x1";
@@ -707,13 +707,13 @@ function phatLoot(& $charrow, $qrow, & $landrow, $gate = 1, $itemcost = 0): int|
     $rewardquery = "";
     if ($boonreward > 0) {
         $charrow['boondollars'] += $boonreward;
-        $boons = mysqli_query($connection, "UPDATE `Characters` SET `boondollars` = " . $charrow['boondollars'] . " WHERE `ID` = " . $charrow['ID'] . " LIMIT 1;");
+        $boons = mysqli_query($connection, "UPDATE `characters` SET `boondollars` = " . $charrow['boondollars'] . " WHERE `id` = " . $charrow['ID'] . " LIMIT 1;");
     } else {
         $boons = true;
     }
     if ($unlockreward !== "") {
         $landrow['landallies'] .= $unlockreward;
-        $ally = mysqli_query($connection, "UPDATE `Characters` SET `landallies` = " . $landrow['landallies'] . " WHERE `ID` = " . $landrow['ID'] . " LIMIT 1;");
+        $ally = mysqli_query($connection, "UPDATE `characters` SET `landallies` = " . $landrow['landallies'] . " WHERE `id` = " . $landrow['ID'] . " LIMIT 1;");
     } else {
         $ally = true;
     }
@@ -723,7 +723,7 @@ function phatLoot(& $charrow, $qrow, & $landrow, $gate = 1, $itemcost = 0): int|
             $charrow['questland'] = 0;
         }
         $charrow['economy'] = $charrow['economy'] + $itemcost;
-        mysqli_query($connection, "UPDATE `Characters` SET `currentquest` = " . $charrow['currentquest'] . ", `questland` = " . $charrow['questland'] . ", `economy` = " . $charrow['economy'] . " WHERE `ID` = " . $charrow['ID'] . " LIMIT 1;");
+        mysqli_query($connection, "UPDATE `characters` SET `currentquest` = " . $charrow['currentquest'] . ", `questland` = " . $charrow['questland'] . ", `economy` = " . $charrow['economy'] . " WHERE `id` = " . $charrow['ID'] . " LIMIT 1;");
         return true;
     }
     echo "There was an issue giving the reward! Please contact a developer. <br />";

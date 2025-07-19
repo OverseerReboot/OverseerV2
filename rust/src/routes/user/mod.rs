@@ -17,7 +17,7 @@ impl User {
     pub async fn load(id: i64, db: &MySqlPool) -> Result<Option<Self>> {
         sqlx::query_as!(
             User,
-            "SELECT id, username, password as password_hash FROM Users WHERE id = ?",
+            "SELECT id, username, password as password_hash FROM users WHERE id = ?",
             id
         )
         .fetch_optional(db)
@@ -28,7 +28,7 @@ impl User {
     pub async fn load_by_username(username: &str, db: &MySqlPool) -> Result<Option<Self>> {
         sqlx::query_as!(
             User,
-            "SELECT id, username, password as password_hash FROM Users WHERE username = ?",
+            "SELECT id, username, password as password_hash FROM users WHERE username = ?",
             username
         )
         .fetch_optional(db)

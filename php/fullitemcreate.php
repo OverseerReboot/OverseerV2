@@ -29,8 +29,8 @@ function lookup($code, $table): array|false|null
 {
     global $connection;
     $codevar = "code";
-    $result = mysqli_query($connection, "SELECT * FROM `$table` WHERE `$codevar` = '$code'");
-    //echo "SELECT * FROM `$table` WHERE `$codevar` = '$code'<br />";
+    $result = mysqli_query($connection, "SELECT * FROM `$2` WHERE `$codevar` = '$code'");
+    //echo "SELECT * FROM `$2` WHERE `$codevar` = '$code'<br />";
     return mysqli_fetch_array($result);
 }
 
@@ -43,10 +43,10 @@ function lookleft($name): array|false|null
 {
     global $connection;
     $name = mysqli_real_escape_string($connection, $name);
-    $result = mysqli_query($connection, "SELECT * FROM `Captchalogue` WHERE `name` = '$name'");
+    $result = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE `name` = '$name'");
     $row = mysqli_fetch_array($result);
     if (empty($row['name'])) {
-        $result = mysqli_query($connection, "SELECT * FROM `Feedback` WHERE `name` = '$name'");
+        $result = mysqli_query($connection, "SELECT * FROM `feedback` WHERE `name` = '$name'");
         $row = mysqli_fetch_array($result);
     }
     return $row;

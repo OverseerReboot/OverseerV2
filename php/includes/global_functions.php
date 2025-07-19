@@ -16,8 +16,8 @@ function spendFatigue($fatigue, $charrow)
     $charrow[$currentfatiguestr] = $newfatigue;
     $reducedfatigue = 0; // max($charrow[$otherfatiguestr] - floor($fatigue * 0.3), 0);
     $charrow[$otherfatiguestr] = $reducedfatigue;
-    mysqli_query($connection, "UPDATE `Characters` SET `$currentfatiguestr` = $newfatigue, `$otherfatiguestr` = $reducedfatigue WHERE `Characters`.`ID` = " . $charrow['ID'] . " LIMIT 1;");
-    $striferesult = mysqli_query($connection, "SELECT * FROM `Strifers` WHERE `Strifers`.`ID` = " . $charrow[$otherstriferstr] . " LIMIT 1");
+    mysqli_query($connection, "UPDATE `characters` SET `$currentfatiguestr` = $newfatigue, `$otherfatiguestr` = $reducedfatigue WHERE `characters`.`id` = " . $charrow['ID'] . " LIMIT 1;");
+    $striferesult = mysqli_query($connection, "SELECT * FROM `strifers` WHERE `strifers`.`id` = " . $charrow[$otherstriferstr] . " LIMIT 1");
     $striferow = mysqli_fetch_assoc($striferesult);
     $newhealth = $striferow['health'] + floor($striferow['maxhealth'] * ($fatigue / 100));
     if ($newhealth > $striferow['maxhealth']) {
@@ -27,7 +27,7 @@ function spendFatigue($fatigue, $charrow)
     if ($newenergy > $striferow['maxenergy']) {
         $newenergy = $striferow['maxenergy'];
     }
-    mysqli_query($connection, "UPDATE `Strifers` SET `health` = $newhealth, `energy` = $newenergy WHERE `Strifers`.`ID` = " . $charrow[$otherstriferstr] . " LIMIT 1");
+    mysqli_query($connection, "UPDATE `strifers` SET `health` = $newhealth, `energy` = $newenergy WHERE `strifers`.`id` = " . $charrow[$otherstriferstr] . " LIMIT 1");
     return $charrow;
 }
 
@@ -39,7 +39,7 @@ function spendFatigue($fatigue, $charrow)
 function loadSessionrow($id): array|false|null
 {
     global $connection;
-    $result = mysqli_query($connection, "SELECT * FROM `Sessions` WHERE `ID` = $id");
+    $result = mysqli_query($connection, "SELECT * FROM `sessions` WHERE `id` = $id");
     $row = mysqli_fetch_array($result);
     return $row;
 }
@@ -52,7 +52,7 @@ function loadSessionrow($id): array|false|null
 function loadStriferow($id): array|false|null
 {
     global $connection;
-    $result = mysqli_query($connection, "SELECT * FROM `Strifers` WHERE `ID` = $id");
+    $result = mysqli_query($connection, "SELECT * FROM `strifers` WHERE `id` = $id");
     $row = mysqli_fetch_array($result);
     return $row;
 }
@@ -61,7 +61,7 @@ function loadStriferow($id): array|false|null
 function initGrists()
 {
     global $connection;
-    $result2 = mysqli_query($connection, "SELECT * FROM `Grists` ORDER BY `tier` ASC"); //document grist types now so we don't have to do it later
+    $result2 = mysqli_query($connection, "SELECT * FROM `grists` ORDER BY `tier` ASC"); //document grist types now so we don't have to do it later
     $totalgrists = 0;
     while ($gristrow = mysqli_fetch_array($result2)) {
         $grist[$totalgrists] = $gristrow;
@@ -378,7 +378,7 @@ function appendNotifications($char, $string): void
 function writeNotifications($char, $string): void
 {
     global $connection;
-    $query = "UPDATE `Characters` SET notifications='$string' WHERE ID = '$char[ID]'";
+    $query = "UPDATE `characters` SET notifications='$string' WHERE ID = '$char[ID]'";
     mysqli_query($connection, $query);
 }
 
@@ -476,7 +476,7 @@ function bonusStr($bonus): string
 function chainArray($charrow)
 {
     global $connection;
-    $chumroll = mysqli_query($connection, "SELECT * FROM `Characters` WHERE `Characters`.`session` = '$charrow[session]';");
+    $chumroll = mysqli_query($connection, "SELECT * FROM `characters` WHERE `characters`.`session` = '$charrow[session]';");
     $auto = false; //Condition for automatic success (e.g. flight, god tier).
     while ($chumrow = mysqli_fetch_array($chumroll)) {
         $sessionmates[$chumrow['ID']] = $chumrow;
@@ -544,7 +544,7 @@ function getChar($charid)
     }
     if (!isset($characters[$charid])) {
         $querycount++;
-        $charquery = mysqli_query($connection, "SELECT * FROM `Characters` WHERE `ID` = '$charid' LIMIT 1");
+        $charquery = mysqli_query($connection, "SELECT * FROM `characters` WHERE `id` = '$charid' LIMIT 1");
         $characters[$charid] = mysqli_fetch_array($charquery, MYSQLI_ASSOC);
     }
     return $characters[$charid];
@@ -634,7 +634,7 @@ function strifeInit($charrow): void
     global $connection;
 
     //Health formula: +5 for 1 rung, +10 for 3 rungs, +15 for 9 rungs, +20 for 27 rungs, etc. The following code does that.
-    $charresult = mysqli_query($connection, "SELECT * FROM `Characters` WHERE `Characters`.`ID` = " . $charrow['ID'] . " LIMIT 1;");
+    $charresult = mysqli_query($connection, "SELECT * FROM `characters` WHERE `characters`.`id` = " . $charrow['ID'] . " LIMIT 1;");
     $charrow = mysqli_fetch_array($charresult);
     $viscosity = 10; //Used for waking AND dreaming health AND energy
     $rungs = $charrow['echeladder'] - 1; //NOTE - First rung you start with a base of 10. It is not counted here.
@@ -677,7 +677,7 @@ function strifeInit($charrow): void
             $wid = $equip[1];
         } //other wearable, this argument will just be the ID of the item
         if ($wid != 0) { //if there's actually something equipped here
-            $wresult = mysqli_query($connection, "SELECT * FROM `Captchalogue` WHERE `ID` = $wid");
+            $wresult = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE `id` = $wid");
             $wrow = mysqli_fetch_array($wresult);
             $n = 0;
             while ($n < 8) { //go through each bonus
@@ -709,7 +709,7 @@ function strifeInit($charrow): void
         $equippedcomputer = 1;
     }
     if ($equippedcomputer != $charrow['equippedcomputer']) {
-        mysqli_query($connection, "UPDATE `Characters` SET `equippedcomputer` = " . $equippedcomputer . " WHERE `Characters`.`ID` = " . $charrow['ID'] . " LIMIT 1;");
+        mysqli_query($connection, "UPDATE `characters` SET `equippedcomputer` = " . $equippedcomputer . " WHERE `characters`.`id` = " . $charrow['ID'] . " LIMIT 1;");
     }
     $n = 0;
     while ($n < 9) { //go through each bonus one last time, this time including defense
@@ -740,8 +740,8 @@ function strifeInit($charrow): void
     //We could use a single CASE query but this function will be occurring infrequently enough that two queries won't really break the bank.
     //Still if anyone feels like updating it that'd be fine. At the moment it sets both rows to the dreamself's parameters
     //and then modifies the wakeself parameters that are different immediately after.
-    mysqli_query($connection, "UPDATE `Strifers` SET `maxhealth` = $viscosity, `maxenergy` = $viscosity, `abilities` = '" . $charrow['abilities'] . "', `aspect` = '" . $charrow['aspect'] . "', `echeladder` = " . $charrow['echeladder'] . ", `maxpower` = $dreampower, `power` = $dreampower WHERE `Strifers`.`ID` IN (" . $charrow['wakeself'] . ", " . $charrow['dreamself'] . ") LIMIT 2;");
-    mysqli_query($connection, "UPDATE `Strifers` SET `maxpower` = $wakepower, `power` = $wakepower, `effects` = '$wakeeffects', `equipbonuses` = '$wakebonuses', `equipstatus` = '$wakestatus' WHERE `Strifers`.`ID` = " . $charrow['wakeself'] . " LIMIT 1;");
+    mysqli_query($connection, "UPDATE `strifers` SET `maxhealth` = $viscosity, `maxenergy` = $viscosity, `abilities` = '" . $charrow['abilities'] . "', `aspect` = '" . $charrow['aspect'] . "', `echeladder` = " . $charrow['echeladder'] . ", `maxpower` = $dreampower, `power` = $dreampower WHERE `strifers`.`id` IN (" . $charrow['wakeself'] . ", " . $charrow['dreamself'] . ") LIMIT 2;");
+    mysqli_query($connection, "UPDATE `strifers` SET `maxpower` = $wakepower, `power` = $wakepower, `effects` = '$wakeeffects', `equipbonuses` = '$wakebonuses', `equipstatus` = '$wakestatus' WHERE `strifers`.`id` = " . $charrow['wakeself'] . " LIMIT 1;");
 }
 
 /**
@@ -777,8 +777,8 @@ function gainRungs($charrow, $rungs): string|false
             $rungprocessor++;
         }
         $abilities = $charrow['abilities'];
-        $abilityresult = mysqli_query($connection, "SELECT `ID`,`Name` FROM `Abilities` WHERE
-		`Abilities`.`Class` IN ('$class', 'All') AND `Abilities`.`Aspect` IN ('$aspect', 'All') AND `Abilities`.`Rungreq` BETWEEN 1 AND $newrung;");
+        $abilityresult = mysqli_query($connection, "SELECT `id`,`name` FROM `abilities` WHERE
+		`abilities`.`class` IN ('$class', 'All') AND `abilities`.`aspect` IN ('$aspect', 'All') AND `abilities`.`rungreq` BETWEEN 1 AND $newrung;");
         //NOTE - No need to check for god tiers here. They'll be listed as requiring a rung of "1025" and have a god tier requirement instead.
         if ($abilityresult) {
             while ($row = mysqli_fetch_array($abilityresult)) {
@@ -788,8 +788,8 @@ function gainRungs($charrow, $rungs): string|false
                 }
             }
         }
-        mysqli_query($connection, "UPDATE `Characters` SET `echeladder` = $newrung, `abilities` = '$abilities', `boondollars` = $boondollars
-		WHERE `Characters`.`ID` = $charrow[ID] LIMIT 1;");
+        mysqli_query($connection, "UPDATE `characters` SET `echeladder` = $newrung, `abilities` = '$abilities', `boondollars` = $boondollars
+		WHERE `characters`.`id` = $charrow[ID] LIMIT 1;");
         strifeInit($charrow);
         return $message;
     }

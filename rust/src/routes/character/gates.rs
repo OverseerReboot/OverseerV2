@@ -14,7 +14,7 @@ pub async fn debug_clear(
     if (character.gates_cleared as usize) < character.gates_reached() {
         character.gates_cleared += 1;
         sqlx::query!(
-            "UPDATE Characters SET gatescleared = ? WHERE id = ?",
+            "UPDATE characters SET gatescleared = ? WHERE id = ?",
             character.gates_cleared,
             character.id
         )

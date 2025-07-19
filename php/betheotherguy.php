@@ -8,7 +8,7 @@ if (empty($_SESSION['username'])) {
     if (!empty($_POST['char'])) {
         if (strpos($accrow['characters'], strval($_POST['char']) . "|") !== false) {
             $_SESSION['character'] = $_POST['char'];
-            $charresult = mysqli_query($connection, "SELECT * FROM `Characters` WHERE `ID` = " . mysqli_real_escape_string($connection, $_SESSION['character']) . " LIMIT 1;");
+            $charresult = mysqli_query($connection, "SELECT * FROM `characters` WHERE `id` = " . mysqli_real_escape_string($connection, $_SESSION['character']) . " LIMIT 1;");
             $charrow = mysqli_fetch_array($charresult);
             echo "You are now $charrow[name].<br /><br />What will you do?<br />";
             if ($accrow['lastchar'] != $_SESSION['character']) {
@@ -29,7 +29,7 @@ if (empty($_SESSION['username'])) {
     }
     $chars = explode("|", $accrow['characters']);
     $i = 0;
-    $charquery = "SELECT `ID`,`name`,`session` FROM Characters WHERE ";
+    $charquery = "SELECT `id`,`name`,`session` FROM Characters WHERE ";
     $foundone = false;
     while (!empty($chars[$i])) {
         $foundone = true;

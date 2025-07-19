@@ -113,7 +113,7 @@ if ($accrow['modlevel'] < 99) {
     echo '<input type="submit" value="Execute it!" /></form><br />';
     echo "Current tables:  ";
 
-    $tablenames = mysqli_query($connection, "SELECT `TABLE_NAME` FROM information_schema.tables WHERE `TABLE_SCHEMA` = 'OverseerDev';");
+    $tablenames = mysqli_query($connection, "SELECT `table_name` FROM information_schema.tables WHERE `table_schema` = 'OverseerDev';");
     while ($tablename = mysqli_fetch_array($tablenames)) {
         echo $tablename['TABLE_NAME'] . ", ";
     }

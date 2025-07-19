@@ -1,12 +1,12 @@
 {
-  "db_name": "MySQL",
-  "query": "UPDATE Characters SET colour = ? WHERE id = ?",
-  "describe": {
-    "columns": [],
-    "parameters": {
-      "Right": 2
-    },
-    "nullable": []
-  },
-  "hash": "3fc42a6b0704ef0492ab5309d702eed051d4559559b82e9d5f283f2b276ab23b"
+	"db_name": "MySQL",
+	"query": "UPDATE characters SET colour = ? WHERE id = ?",
+	"describe": {
+		"columns": [],
+		"parameters": {
+			"Right": 2
+		},
+		"nullable": []
+	},
+	"hash": "3fc42a6b0704ef0492ab5309d702eed051d4559559b82e9d5f283f2b276ab23b"
 }

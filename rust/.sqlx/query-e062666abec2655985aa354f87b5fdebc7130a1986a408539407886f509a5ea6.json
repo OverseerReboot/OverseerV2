@@ -1,44 +1,44 @@
 {
-  "db_name": "MySQL",
-  "query": "SELECT id, username, password as password_hash FROM Users WHERE username = ?",
-  "describe": {
-    "columns": [
-      {
-        "ordinal": 0,
-        "name": "id",
-        "type_info": {
-          "type": "LongLong",
-          "flags": "NOT_NULL | PRIMARY_KEY | AUTO_INCREMENT",
-          "max_size": 20
-        }
-      },
-      {
-        "ordinal": 1,
-        "name": "username",
-        "type_info": {
-          "type": "VarString",
-          "flags": "NOT_NULL | UNIQUE_KEY | NO_DEFAULT_VALUE",
-          "max_size": 200
-        }
-      },
-      {
-        "ordinal": 2,
-        "name": "password_hash",
-        "type_info": {
-          "type": "VarString",
-          "flags": "NOT_NULL | NO_DEFAULT_VALUE",
-          "max_size": 1000
-        }
-      }
-    ],
-    "parameters": {
-      "Right": 1
-    },
-    "nullable": [
-      false,
-      false,
-      false
-    ]
-  },
-  "hash": "e062666abec2655985aa354f87b5fdebc7130a1986a408539407886f509a5ea6"
+	"db_name": "MySQL",
+	"query": "SELECT id, username, password as password_hash FROM users WHERE username = ?",
+	"describe": {
+		"columns": [
+			{
+				"ordinal": 0,
+				"name": "id",
+				"type_info": {
+					"type": "LongLong",
+					"flags": "NOT_NULL | PRIMARY_KEY | AUTO_INCREMENT",
+					"max_size": 20
+				}
+			},
+			{
+				"ordinal": 1,
+				"name": "username",
+				"type_info": {
+					"type": "VarString",
+					"flags": "NOT_NULL | UNIQUE_KEY | NO_DEFAULT_VALUE",
+					"max_size": 200
+				}
+			},
+			{
+				"ordinal": 2,
+				"name": "password_hash",
+				"type_info": {
+					"type": "VarString",
+					"flags": "NOT_NULL | NO_DEFAULT_VALUE",
+					"max_size": 1000
+				}
+			}
+		],
+		"parameters": {
+			"Right": 1
+		},
+		"nullable": [
+			false,
+			false,
+			false
+		]
+	},
+	"hash": "e062666abec2655985aa354f87b5fdebc7130a1986a408539407886f509a5ea6"
 }

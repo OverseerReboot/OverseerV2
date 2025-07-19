@@ -16,7 +16,7 @@ if (!empty($_GET['session'])) {
     $sessiont = mysqli_fetch_array($ownsession);
     echo "Showing stats in session " . $_GET['session'] . ":</br>";
 } else {
-    $ownsession = mysqli_query($connection, "SELECT * FROM Sessions WHERE `ID` = $charrow[session];");
+    $ownsession = mysqli_query($connection, "SELECT * FROM Sessions WHERE `id` = $charrow[session];");
     $sessiont = mysqli_fetch_array($ownsession);
     echo "Showing stats in session " . $sessiont['name'] . ":</br>";
 }

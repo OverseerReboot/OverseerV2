@@ -4,11 +4,11 @@ function rowRowFightThePower($consortID, $charID): void
 {
     global $connection;
     // Get necesary data here
-    $consortQuery = mysqli_query($connection, "SELECT * FROM `Consorts` WHERE `id` = '$consortID';");
+    $consortQuery = mysqli_query($connection, "SELECT * FROM `consorts` WHERE `id` = '$consortID';");
     $consortRow = mysqli_fetch_array($consortQuery);
     $consortName = $consortRow['name'];
     $consortDisplay = '<a href="/mercenaries.php?info='.$consortRow['id'].'">'.$consortName.'</a>';
-    $charQuery = mysqli_query($connection, "SELECT * FROM `Characters` WHERE `ID` = '$charID';");
+    $charQuery = mysqli_query($connection, "SELECT * FROM `characters` WHERE `id` = '$charID';");
     $charRow = mysqli_fetch_array($charQuery);
     $failure = 0; //They han't lost yet
     // Pick an enemy here
@@ -56,7 +56,7 @@ function rowRowFightThePower($consortID, $charID): void
 
         // F I G H T
         $time = time();
-        mysqli_query($connection, "UPDATE `Consorts` SET `lastaction` = '$time', `lastcombat` = '$time' WHERE `id` = '$consortID';");
+        mysqli_query($connection, "UPDATE `consorts` SET `lastaction` = '$time', `lastcombat` = '$time' WHERE `id` = '$consortID';");
         $criticalChance = round($squadBonus  / 100);
         if ($criticalChance == 0) {
             $criticalChance = 1;
@@ -71,7 +71,7 @@ function rowRowFightThePower($consortID, $charID): void
             if ($consortEffectivePower < $enemyPower) {
                 $injuryRand = rand(1, 20);
                 if ($injuryRand == 3) {
-                    mysqli_query($connection, "UPDATE `Consorts` SET `status` = 'INJURED', `injurycount` = injurycount + 1 WHERE `id` = '$consortID';");
+                    mysqli_query($connection, "UPDATE `consorts` SET `status` = 'INJURED', `injurycount` = injurycount + 1 WHERE `id` = '$consortID';");
                     $failure = 1; // They lost :(
                     logThis("The ".$fightThis." that ".$consortDisplay." tried to fight was too strong! They got injured and need some time to recover.", $charID);
                 } else {
@@ -297,7 +297,7 @@ function rowRowFightThePower($consortID, $charID): void
                 }
                 $gristI++;
             }
-            mysqli_query($connection, "UPDATE `Characters` SET `consortgrist` = '$gristStr' WHERE `ID` = '$charID';") or die("test");
+            mysqli_query($connection, "UPDATE `characters` SET `consortgrist` = '$gristStr' WHERE `id` = '$charID';") or die("test");
             // Need to get index of gristTable and match it to gristTypeArray. Variable lengths of the grist table array make things hard and make me sad.
         } // End of failure check
     } // End of "consort is stronger" else

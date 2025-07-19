@@ -27,6 +27,6 @@ if (empty($_SESSION['username'])) {
         }
     }
     echo "New abstratus string: " . $allabs . "<br />";
-    mysqli_query($connection, "UPDATE `System` SET allabstrati = '$allabs'");
+    mysqli_query($connection, "UPDATE `system` SET allabstrati = '$allabs'");
     echo "Done!";
 }

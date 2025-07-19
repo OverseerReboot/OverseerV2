@@ -30,7 +30,7 @@ if ($charrow['dreamingstatus'] == "Awake") {
 } else {
     $sid = $charrow['dreamself'];
 }
-$striferesult = mysqli_query($connection, "SELECT * FROM `Strifers` WHERE `Strifers`.`ID` = $sid LIMIT 1;");
+$striferesult = mysqli_query($connection, "SELECT * FROM `strifers` WHERE `strifers`.`id` = $sid LIMIT 1;");
 $striferow = mysqli_fetch_array($striferesult);
 if ($striferow['strifeID'] == 0 || empty($striferow['strifeID'])) { //This user is not currently strifing.
     echo "You are not currently engaged in strife!<br />";
@@ -104,7 +104,7 @@ if ($striferow['strifeID'] == 0 || empty($striferow['strifeID'])) { //This user 
         if ($charrow['dreamdown'] != 1) { //Player is not dream KOed
             $location = $charrow['dreamingstatus']; //Grab their dreaming status as their current location
             $maxenemies = 12;
-            $enemyresult = mysqli_query($connection, "SELECT `basename`, `basepower` FROM `Enemy_Types` WHERE `Enemy_Types`.`appearson` = '$location' ORDER BY basepower ASC;");
+            $enemyresult = mysqli_query($connection, "SELECT `basename`, `basepower` FROM `enemy_types` WHERE `enemy_types`.`appearson` = '$location' ORDER BY basepower ASC;");
             $n = 0;
             while ($row = mysqli_fetch_array($enemyresult)) {
                 $enemyarray[$n] = $row;
@@ -143,14 +143,14 @@ if ($striferow['strifeID'] == 0 || empty($striferow['strifeID'])) { //This user 
         }
     }
 } elseif (!empty($_POST['abscond'])) { //User loading the page is absconding from strife
-    $abscondquery = "UPDATE `Strifers` SET `strifeID` = 0 WHERE `Strifers`.`ID` IN (";
-    $striferesult = mysqli_query($connection, "SELECT * FROM `Strifers` WHERE `Strifers`.`strifeID` = $striferow[strifeID];"); //Grab all strifers
+    $abscondquery = "UPDATE `strifers` SET `strifeid` = 0 WHERE `strifers`.`id` IN (";
+    $striferesult = mysqli_query($connection, "SELECT * FROM `strifers` WHERE `strifers`.`strifeid` = $striferow[strifeID];"); //Grab all strifers
     $newleader = false;
     while ($row = mysqli_fetch_array($striferesult)) {
         if ($row['owner'] == $charrow['ID']) { //Strifer is part of the fleeing player's entourage
             $abscondquery .= $row['ID'] . ", ";
         } elseif ($row['aspect'] != "" && !$newleader) { //We found another player character. They're the leader now.
-            mysqli_query($connection, "UPDATE `Strifers` SET `leader` = 1 WHERE `Strifers`.`ID` = $row[ID] LIMIT 1;");
+            mysqli_query($connection, "UPDATE `strifers` SET `leader` = 1 WHERE `strifers`.`id` = $row[ID] LIMIT 1;");
         }
     }
     $abscondquery = substr($abscondquery, 0, -2) . ")"; //Remove the final trailing ", " and end the query
@@ -180,7 +180,7 @@ if ($striferow['strifeID'] == 0 || empty($striferow['strifeID'])) { //This user 
         }
         $n = -1; //n for "number of strifers". We want to start from 0 for strifedisplay because array_values, which we are using to recycle the strifers
         //array from striferesolve if it exists, starts from 0 by default. We start with -1 so that the initial $n++ sets n to 0.
-        $striferesult = mysqli_query($connection, "SELECT * FROM `Strifers` WHERE `Strifers`.`strifeID` = $striferow[strifeID];"); //Grab all strifers
+        $striferesult = mysqli_query($connection, "SELECT * FROM `strifers` WHERE `strifers`.`strifeid` = $striferow[strifeID];"); //Grab all strifers
         while ($row = mysqli_fetch_array($striferesult)) {
             $n++;
             $strifers[$n] = $row; //Store each strifer in a successive index
@@ -193,8 +193,8 @@ if ($striferow['strifeID'] == 0 || empty($striferow['strifeID'])) { //This user 
                     $striferow['leader'] = 0;
                     $strifers[$n]['leader'] = 1;
                     //This can almost certainly be done in one query...
-                    mysqli_query($connection, "UPDATE `Strifers` SET `leader` = 0 WHERE `Strifers`.`ID` = " . $striferow['ID'] . " LIMIT 1;");
-                    mysqli_query($connection, "UPDATE `Strifers` SET `leader` = 1 WHERE `Strifers`.`ID` = " . $strifers[$n]['ID'] . " LIMIT 1;");
+                    mysqli_query($connection, "UPDATE `strifers` SET `leader` = 0 WHERE `strifers`.`id` = " . $striferow['ID'] . " LIMIT 1;");
+                    mysqli_query($connection, "UPDATE `strifers` SET `leader` = 1 WHERE `strifers`.`id` = " . $strifers[$n]['ID'] . " LIMIT 1;");
                     $leaderfound = true;
                 }
             }

@@ -60,13 +60,13 @@ if ($charrow['dreamingstatus'] == "Awake") {
 } else {
     $sid = $charrow['dreamself'];
 }
-$striferesult = mysqli_query($connection, "SELECT * FROM `Strifers` WHERE `Strifers`.`ID` = $sid LIMIT 1;");
+$striferesult = mysqli_query($connection, "SELECT * FROM `strifers` WHERE `strifers`.`id` = $sid LIMIT 1;");
 $striferow = mysqli_fetch_array($striferesult);
 
 $me = new \Overseer\Character($db, $_SESSION['character']);
 
 require_once "accrow.php";
-$maintResult = mysqli_query($connection, "SELECT * FROM `System` WHERE `Index` = '0';");
+$maintResult = mysqli_query($connection, "SELECT * FROM `system` WHERE `index` = '0';");
 $maintRow = mysqli_fetch_array($maintResult);
 $maint = isset($maintRow['maint']) ? $maintRow['maint'] : 0;
 if ($maint != 0 && $accrow['modlevel'] < 99) { ?>

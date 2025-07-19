@@ -25,6 +25,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/inc/pageload.php';
 
 header("Content-type: image/png");
 
-$result = mysqli_query($connection, "SELECT * FROM `Art_Submissions` WHERE ID = '".mysqli_real_escape_string($connection, $_GET['id'])."' LIMIT 1;");
+$result = mysqli_query($connection, "SELECT * FROM `art_submissions` WHERE ID = '".mysqli_real_escape_string($connection, $_GET['id'])."' LIMIT 1;");
 $row = mysqli_fetch_array($result);
 echo $row['data'];
