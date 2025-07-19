@@ -193,7 +193,7 @@ if (empty($_SESSION['character'])) {
                     if (!empty($tdir)) {
                         if (strpos($exits, $tdir) !== false) { //chosen movement direction is available
                             if (!$canmove) { //Move hasn't happened yet.
-                                mysqli_query($connection, "UPDATE `characters` SET dungeonrow = $trow, dungeoncol = $tcol, olddungeonrow = $row, olddungeoncol = $col WHERE Characters.ID = " . $charrow['id'] . " LIMIT 1;");
+                                mysqli_query($connection, "UPDATE `characters` SET dungeonrow = $trow, dungeoncol = $tcol, olddungeonrow = $row, olddungeoncol = $col WHERE `characters`.`id` = " . $charrow['id'] . " LIMIT 1;");
                             }
                             $canmove = true;
                             $row = $trow;
@@ -209,7 +209,7 @@ if (empty($_SESSION['character'])) {
                                 $j++;
                                 if ($map[$j] == $troom) { //Transportation success
                                     if (!$canmove) { //Move hasn't happened yet.
-                                        mysqli_query($connection, "UPDATE `characters` SET dungeonrow = $trow, dungeoncol = $tcol, olddungeonrow = $row, olddungeoncol = $col WHERE Characters.ID = " . $charrow['id'] . " LIMIT 1;");
+                                        mysqli_query($connection, "UPDATE `characters` SET dungeonrow = $trow, dungeoncol = $tcol, olddungeonrow = $row, olddungeoncol = $col WHERE `characters`.`id` = " . $charrow['id'] . " LIMIT 1;");
                                     }
                                     $canmove = true;
                                     $row = $trow;
@@ -446,7 +446,7 @@ if (empty($_SESSION['character'])) {
                         if ($boonplus > 0) {
                             echo strval($boonplus) . " Boondollars<br />";
                             $charrow['boondollars'] += $boonplus;
-                            mysqli_query($connection, "UPDATE `characters` SET boondollars = " . $charrow['boondollars'] . " WHERE Characters.ID = " . $charrow['id'] . " LIMIT 1;");
+                            mysqli_query($connection, "UPDATE `characters` SET boondollars = " . $charrow['boondollars'] . " WHERE `characters`.`id` = " . $charrow['id'] . " LIMIT 1;");
                         }
                         if ($gotloot) {
                             $lootresult = mysqli_query($connection, "SELECT ID, `name` FROM `captchalogue` WHERE $gotloot AND (`session` = 0 OR `session` = $charrow[session])");

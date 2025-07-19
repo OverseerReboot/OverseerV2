@@ -406,16 +406,16 @@ while ($i <= $n) {
         if ($strifers[$i]['owner'] != 0 && $strifers[$i]['aspect'] != "") { //This strifer is a player character!
             //Set character details about that player being KOed here. (Set them to being down, etc)
             setAchievement($charrow, 'ko'); //ko achievement
-            $koresult = mysqli_query($connection, "SELECT * FROM `characters` WHERE Characters.ID = " . $strifers[$i]['owner'] . " LIMIT 1;");
+            $koresult = mysqli_query($connection, "SELECT * FROM `characters` WHERE `characters`.`id` = " . $strifers[$i]['owner'] . " LIMIT 1;");
             $korow = mysqli_fetch_array($koresult);
             if (strpos($strifers[$i]['description'], "dreamself") !== false) { //Dreamself was KOed
                 $newfatigue = $korow['dreamfatigue'];// + 100;
-                mysqli_query($connection, "UPDATE `characters` set dreamfatigue = $newfatigue WHERE Characters.ID = " . $strifers[$i]['owner'] . " LIMIT 1;");
+                mysqli_query($connection, "UPDATE `characters` set dreamfatigue = $newfatigue WHERE `characters`.`id` = " . $strifers[$i]['owner'] . " LIMIT 1;");
             } else { //Waking self was KOed
                 $newfatigue = $korow['wakefatigue'];// + 100;
                 $olddungeonrow = $korow['olddungeonrow'];
                 $olddungeoncol = $korow['olddungeoncol'];
-                mysqli_query($connection, "UPDATE `characters` set wakefatigue = $newfatigue, dungeonrow = $olddungeonrow, dungeoncol = $olddungeoncol WHERE Characters.ID = " . $strifers[$i]['owner'] . " LIMIT 1;");
+                mysqli_query($connection, "UPDATE `characters` set wakefatigue = $newfatigue, dungeonrow = $olddungeonrow, dungeoncol = $olddungeoncol WHERE `characters`.`id` = " . $strifers[$i]['owner'] . " LIMIT 1;");
             }
             if ($strifers[$i]['leader'] != 0) { //This strifer was the leader! We'll need to try and find another one
                 $j = 0;
@@ -690,7 +690,7 @@ if ((empty($exists) || count($exists) == 1) && !$unstuck) { //There is only one 
             echo "You are forced back into the room you just left! <a id='advance' href='dungeons.php'>Return to dungeon ==></a><br />";
             $olddungeonrow = $charrow['olddungeonrow'];
             $olddungeoncol = $charrow['olddungeoncol'];
-            mysqli_query($connection, "UPDATE `characters` set dungeonrow = $olddungeonrow, dungeoncol = $olddungeoncol WHERE Characters.ID = " . $charrow['id'] . " LIMIT 1;");
+            mysqli_query($connection, "UPDATE `characters` set dungeonrow = $olddungeonrow, dungeoncol = $olddungeoncol WHERE `characters`.`id` = " . $charrow['id'] . " LIMIT 1;");
         }
     }
     if ($charrow['dreamingstatus'] == "Awake" && $charrow['dungeon'] != 0) {

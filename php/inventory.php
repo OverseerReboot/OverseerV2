@@ -65,7 +65,7 @@ if (empty($_SESSION['character'])) {
                             $_POST['target'] = $charrow['id'];
                         }
                         if ($_POST['target'] != $charrow['id']) { //Fetch the target's rows and do some verification
-                            $targetcharresult = mysqli_query($connection, "SELECT * FROM `characters` WHERE Characters.ID = ". mysqli_real_escape_string($connection, $_POST['target']) ." LIMIT 1;");
+                            $targetcharresult = mysqli_query($connection, "SELECT * FROM `characters` WHERE `characters`.`id` = ". mysqli_real_escape_string($connection, $_POST['target']) ." LIMIT 1;");
                             $targetcharrow = mysqli_fetch_array($targetcharresult);
                             if ($targetcharrow['dreamingstatus'] != "Awake") {
                                 echo "That player is currently asleep!<br />";

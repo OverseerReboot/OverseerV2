@@ -160,7 +160,7 @@ if ($striferow['strifeID'] == 0 || empty($striferow['strifeID'])) { //This user 
         echo "You are forced back into the room you just left! <a id='advance' href='dungeons.php'>Return to dungeon ==></a><br />";
         $olddungeonrow = $charrow['olddungeonrow'];
         $olddungeoncol = $charrow['olddungeoncol'];
-        mysqli_query($connection, "UPDATE `characters` set dungeonrow = $olddungeonrow, dungeoncol = $olddungeoncol WHERE Characters.ID = " . $charrow['id'] . " LIMIT 1;");
+        mysqli_query($connection, "UPDATE `characters` set dungeonrow = $olddungeonrow, dungeoncol = $olddungeoncol WHERE `characters`.`id` = " . $charrow['id'] . " LIMIT 1;");
     }
 } else {
     if (!empty($strifers)) { //We came from striferesolve. We can just reuse the results from there!

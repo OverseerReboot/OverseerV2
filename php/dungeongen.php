@@ -363,7 +363,7 @@ if (empty($_SESSION['character'])) {
         if (empty($_POST['servergen'])) {
             $charrow['dungeon'] = $dungeonid;
             $charrow = spendFatigue(15, $charrow);
-            mysqli_query($connection, "UPDATE `characters` SET dungeon = $dungeonid, dungeonrow = 0, dungeoncol = 0 WHERE Characters.ID = " . $charrow['id'] . " LIMIT 1;");
+            mysqli_query($connection, "UPDATE `characters` SET dungeon = $dungeonid, dungeonrow = 0, dungeoncol = 0 WHERE `characters`.`id` = " . $charrow['id'] . " LIMIT 1;");
             echo "Dungeon generated!<br />";
             include 'dungeons.php';
         } else {
