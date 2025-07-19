@@ -22,5 +22,5 @@ jobs:
           echo OVERSEER_ROOT="/php/" >> .env
           echo OVERSEER_PHP_SESSIONS_ROOT="/.session/" >> .env
           echo SITE_HOSTNAME=http://localhost:8000 >> .env
-          docker compose stop
+          docker compose stop $(docker compose ps --services)
           docker compose --profile prod up -d --build
