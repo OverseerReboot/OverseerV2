@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `overseerv2`
+-- Database: `mysql_database` (gets replaced in config/mysql/Dockerfile)
 --
 
 CREATE DATABASE IF NOT EXISTS `mysql_database`;

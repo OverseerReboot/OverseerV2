@@ -1,0 +1,204 @@
+{
+  "db_name": "MySQL",
+  "query": "SELECT id, name, aspect, class, wakeself, dreamself, dreamingstatus, echeladder, boondollars, symbol, colour, dreamer, land1, land2, grist_type, consort, house_build, achievements, gatescleared FROM characters WHERE id = ?",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": {
+          "type": "Long",
+          "flags": "NOT_NULL | PRIMARY_KEY | AUTO_INCREMENT",
+          "max_size": 11
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "name",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL | NO_DEFAULT_VALUE",
+          "max_size": 400
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "aspect",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL | NO_DEFAULT_VALUE",
+          "max_size": 80
+        }
+      },
+      {
+        "ordinal": 3,
+        "name": "class",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL | NO_DEFAULT_VALUE",
+          "max_size": 80
+        }
+      },
+      {
+        "ordinal": 4,
+        "name": "wakeself",
+        "type_info": {
+          "type": "LongLong",
+          "flags": "NOT_NULL",
+          "max_size": 20
+        }
+      },
+      {
+        "ordinal": 5,
+        "name": "dreamself",
+        "type_info": {
+          "type": "LongLong",
+          "flags": "NOT_NULL",
+          "max_size": 20
+        }
+      },
+      {
+        "ordinal": 6,
+        "name": "dreamingstatus",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL",
+          "max_size": 40
+        }
+      },
+      {
+        "ordinal": 7,
+        "name": "echeladder",
+        "type_info": {
+          "type": "Long",
+          "flags": "NOT_NULL",
+          "max_size": 11
+        }
+      },
+      {
+        "ordinal": 8,
+        "name": "boondollars",
+        "type_info": {
+          "type": "LongLong",
+          "flags": "NOT_NULL",
+          "max_size": 20
+        }
+      },
+      {
+        "ordinal": 9,
+        "name": "symbol",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL",
+          "max_size": 400
+        }
+      },
+      {
+        "ordinal": 10,
+        "name": "colour",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL",
+          "max_size": 24
+        }
+      },
+      {
+        "ordinal": 11,
+        "name": "dreamer",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL",
+          "max_size": 40
+        }
+      },
+      {
+        "ordinal": 12,
+        "name": "land1",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL",
+          "max_size": 200
+        }
+      },
+      {
+        "ordinal": 13,
+        "name": "land2",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL",
+          "max_size": 200
+        }
+      },
+      {
+        "ordinal": 14,
+        "name": "grist_type",
+        "type_info": {
+          "type": "Blob",
+          "flags": "NOT_NULL | BLOB",
+          "max_size": 262140
+        }
+      },
+      {
+        "ordinal": 15,
+        "name": "consort",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL",
+          "max_size": 200
+        }
+      },
+      {
+        "ordinal": 16,
+        "name": "house_build",
+        "type_info": {
+          "type": "Long",
+          "flags": "NOT_NULL",
+          "max_size": 11
+        }
+      },
+      {
+        "ordinal": 17,
+        "name": "achievements",
+        "type_info": {
+          "type": "Blob",
+          "flags": "NOT_NULL | BLOB",
+          "max_size": 4294967295
+        }
+      },
+      {
+        "ordinal": 18,
+        "name": "gatescleared",
+        "type_info": {
+          "type": "Tiny",
+          "flags": "NOT_NULL",
+          "max_size": 4
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "695ba8a7150414efd1e19f567d76013ad53407bb2475b09bb51d67e0f8ba8077"
+}

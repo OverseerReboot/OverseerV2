@@ -1,0 +1,84 @@
+{
+  "db_name": "MySQL",
+  "query": "SELECT power, health, maxhealth as max_health, energy, maxenergy as max_energy, description, echeladder FROM strifers WHERE id = ?",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "power",
+        "type_info": {
+          "type": "Long",
+          "flags": "NOT_NULL",
+          "max_size": 11
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "health",
+        "type_info": {
+          "type": "Long",
+          "flags": "NOT_NULL | NO_DEFAULT_VALUE",
+          "max_size": 11
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "max_health",
+        "type_info": {
+          "type": "Long",
+          "flags": "NOT_NULL | NO_DEFAULT_VALUE",
+          "max_size": 11
+        }
+      },
+      {
+        "ordinal": 3,
+        "name": "energy",
+        "type_info": {
+          "type": "Long",
+          "flags": "NOT_NULL",
+          "max_size": 11
+        }
+      },
+      {
+        "ordinal": 4,
+        "name": "max_energy",
+        "type_info": {
+          "type": "Long",
+          "flags": "NOT_NULL",
+          "max_size": 11
+        }
+      },
+      {
+        "ordinal": 5,
+        "name": "description",
+        "type_info": {
+          "type": "Blob",
+          "flags": "NOT_NULL | BLOB | NO_DEFAULT_VALUE",
+          "max_size": 4294967295
+        }
+      },
+      {
+        "ordinal": 6,
+        "name": "echeladder",
+        "type_info": {
+          "type": "Long",
+          "flags": "NOT_NULL",
+          "max_size": 4
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "143c09c31028c1bc0c78ef247572045a9798fa9eef0ef17fbb44a3360b6f71df"
+}

@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "UPDATE characters SET dreamer = ? WHERE id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "00f8800c35da2c42d1d0c8d9b2ee091b59e18eac7e25e857d822c3acb041b86b"
+}

@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "UPDATE characters SET gatescleared = ? WHERE id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "125d40c1578c4033799a91024b3abaa7f372b5c86dadfd3df9446f9798769e29"
+}
