@@ -15,7 +15,7 @@ if (empty($_SESSION['username'])) {
             header('Location: /overview.php');
             if ($accrow['lastchar'] != $_SESSION['character']) {
                 $accrow['lastchar'] = $_SESSION['character'];
-                mysqli_query($connection, "UPDATE Users SET lastchar = " . $_SESSION['character'] . " WHERE ID = " . $accrow['ID']);
+                mysqli_query($connection, "UPDATE `users` SET lastchar = " . $_SESSION['character'] . " WHERE ID = " . $accrow['id']);
             }
         } else {
             echo "You can't be a character that doesn't belong to you!<br />";

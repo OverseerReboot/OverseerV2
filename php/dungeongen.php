@@ -144,7 +144,7 @@ if (empty($_SESSION['character'])) {
         $clientrow = mysqli_fetch_array($clientresult);
         if ($gaterow['gate' . $_POST['gate']] <= $clientrow['house_build']) {
             $gate = $_POST['gate'];
-            $land = $clientrow['ID'];
+            $land = $clientrow['id'];
             $telechance = 0; //transportalizers are too complicated for servers to build (might change later though)
             $maxdistance = 10 + $gate;
             $complexity = $_POST['complex'] + $gate;
@@ -170,7 +170,7 @@ if (empty($_SESSION['character'])) {
             echo "You have not built your client up to that gate yet!<br />";
         }
     } elseif (!empty($_POST['dungeonkind']) && $charrow['dungeon'] == 0) {
-        $land = $charrow['ID']; //Default the land to the current character's land
+        $land = $charrow['id']; //Default the land to the current character's land
         if (!empty($_POST['land'])) {
             $land = $_POST['land'];
         }
@@ -363,7 +363,7 @@ if (empty($_SESSION['character'])) {
         if (empty($_POST['servergen'])) {
             $charrow['dungeon'] = $dungeonid;
             $charrow = spendFatigue(15, $charrow);
-            mysqli_query($connection, "UPDATE Characters SET dungeon = $dungeonid, dungeonrow = 0, dungeoncol = 0 WHERE Characters.ID = " . $charrow['ID'] . " LIMIT 1;");
+            mysqli_query($connection, "UPDATE Characters SET dungeon = $dungeonid, dungeonrow = 0, dungeoncol = 0 WHERE Characters.ID = " . $charrow['id'] . " LIMIT 1;");
             echo "Dungeon generated!<br />";
             include 'dungeons.php';
         } else {

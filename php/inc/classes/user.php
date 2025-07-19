@@ -175,7 +175,7 @@ class User
         // Set the class ID variable to the ID loaded from the database.
         // There is no real reason that it should differ from what was passed
         // in the original argument, but oh well.
-        $this->id = $userrow['ID'];
+        $this->id = $userrow['id'];
 
         // Start with an empty data table.
         $this->_data = [];
@@ -210,9 +210,9 @@ class User
         $getcharq->execute();
         $this->characters = [];
         foreach ($getcharq->fetchAll() as $character) {
-            $this->characters[$character['ID']] = new Character(
+            $this->characters[$character['id']] = new Character(
                 $this->_dbhandle,
-                $character['ID']
+                $character['id']
             );
         }
         unset($getcharq);
@@ -276,7 +276,7 @@ class User
 
             // Create the prepared statement object.
             $updateuser = $this->_dbhandle->prepare(
-                'UPDATE Users SET ' . implode(',', $querypairs) .
+                'UPDATE `users` SET ' . implode(',', $querypairs) .
                 ' WHERE ID=:userid'
             );
 

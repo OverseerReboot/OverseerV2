@@ -15,7 +15,7 @@ if (empty($_SESSION['username'])) {
         } else {
             $consrow = mysqli_fetch_array($consresult);
 
-            if ($consrow['belongsto'] != $charrow['ID']) {
+            if ($consrow['belongsto'] != $charrow['id']) {
                 echo 'That is not your consort!<br/><br/>';
             } else {
                 if (!empty($_GET['name'])) {
@@ -39,7 +39,7 @@ if (empty($_SESSION['username'])) {
         }
     }
 
-    $consortRows = mysqli_query($connection, "SELECT * FROM `consorts` WHERE `belongsto` = '".$charrow['ID']."';");
+    $consortRows = mysqli_query($connection, "SELECT * FROM `consorts` WHERE `belongsto` = '".$charrow['id']."';");
     //	$consortArray = mysqli_fetch_array($consortRows);
 
     echo 'This is a list of your hired consorts, working tirelessly to find grist for your noblest of noble causes. You\'re currently 
@@ -59,7 +59,7 @@ if (empty($_SESSION['username'])) {
             $consortCount = $charRow['consortcount'];
             $boondollarsRequired = 0;
             while ($consortsAdded < $hireCount) {
-                $hireLoopCharRow = mysqli_fetch_array(mysqli_query($connection, "SELECT * FROM `characters` WHERE `id` = '".$charrow['ID']."';"));
+                $hireLoopCharRow = mysqli_fetch_array(mysqli_query($connection, "SELECT * FROM `characters` WHERE `id` = '".$charrow['id']."';"));
                 $newConsortCount = $hireLoopCharRow['consortcount'] + $consortsAdded;
                 $boondollarsRequired = $boondollarsRequired + 100000 + (10000 * $newConsortCount);
                 $consortsAdded++;
@@ -82,7 +82,7 @@ if (empty($_SESSION['username'])) {
                 $consortCount = $charrow['consortcount'];
                 $newCount = $consortCount + $i;
                 //echo 'ConsortCount:'.$consortCount.' NewCount:'.$newCount.' "i":'.$i; // Debug Line
-                mysqli_query($connection, "UPDATE `characters` SET `consortcount` = '$newCount', `boondollars` = '$newBoonies' WHERE `id` = '".$charrow['ID']."';");
+                mysqli_query($connection, "UPDATE `characters` SET `consortcount` = '$newCount', `boondollars` = '$newBoonies' WHERE `id` = '".$charrow['id']."';");
                 $charrow['boondollars'] = $newBoonies;
             }
         }
@@ -94,7 +94,7 @@ if (empty($_SESSION['username'])) {
             $consortID = $row['id'];
             $equippedItem = $row['equipped'];
             if ($row['equipped'] != 0) {
-                $intCharrow = mysqli_fetch_array(mysqli_query($connection, "SELECT * FROM `characters` WHERE `id` = '".$charrow['ID']."';"));
+                $intCharrow = mysqli_fetch_array(mysqli_query($connection, "SELECT * FROM `characters` WHERE `id` = '".$charrow['id']."';"));
                 storeItem($intCharrow, $equippedItem, 1);
                 mysqli_query($connection, "UPDATE `consorts` SET `equipped` = '0', `power` = '20' WHERE `id` = '$consortID';");
             }
@@ -113,11 +113,11 @@ if (empty($_SESSION['username'])) {
             $valueToAdd = $explodedGrist[1];
             $gristString = modifyGrist($gristString, $typeToAdd, $valueToAdd);
         }
-        mysqli_query($connection, "UPDATE `characters` SET `consortgrist` = '', `grists` = '$gristString' WHERE `id` = '".$charrow['ID']."';");
+        mysqli_query($connection, "UPDATE `characters` SET `consortgrist` = '', `grists` = '$gristString' WHERE `id` = '".$charrow['id']."';");
         echo 'Collected grist!<br><br>';
     }
     echo 'Your minions:<br><br>';
-    $consortRows = mysqli_query($connection, "SELECT * FROM `consorts` WHERE `belongsto` = '".$charrow['ID']."';");
+    $consortRows = mysqli_query($connection, "SELECT * FROM `consorts` WHERE `belongsto` = '".$charrow['id']."';");
     while ($row = mysqli_fetch_assoc($consortRows)) {
         $consortID = $row['id'];
         if ($row['status'] == 'ALIVE') {
@@ -139,7 +139,7 @@ if (empty($_SESSION['username'])) {
     echo '<br><br>To unequip items from all your consorts (especially if they took something you wanted from storage!), <a href="mercenaries.php?unequip">click here</a>.';
     echo '<br><br>For your fallen allies, click <a href="/fallenmercs.php">here</a>.';
     echo '<br><br>Between them, your consorts have stored up the following grist:<br>';
-    $gristCharrow = mysqli_fetch_array(mysqli_query($connection, "SELECT * FROM `characters` WHERE `id` = '".$charrow['ID']."';"));
+    $gristCharrow = mysqli_fetch_array(mysqli_query($connection, "SELECT * FROM `characters` WHERE `id` = '".$charrow['id']."';"));
     $grists =  explode('|', $gristCharrow['consortgrist']);
     array_pop($grists); // "pops" the last item in the array - in this case, the blank entry after the final |
     foreach ($grists as $grist) {

@@ -20,7 +20,7 @@ if (!empty($_POST['land'])) { //Waking strife. Check that the Land is legal.
         }
     } else {
         $connected = chainArray($charrow);
-        if ($connected[$_POST['land']] || $_POST['land'] == $charrow['ID']) {
+        if ($connected[$_POST['land']] || $_POST['land'] == $charrow['id']) {
             $landresult = mysqli_query($connection, "SELECT `grist_type` FROM `characters` WHERE `characters`.`id` = '$_POST[land]' LIMIT 1;");
             $landrow = mysqli_fetch_array($landresult);
             $gristarray = explode('|', $landrow['grist_type']); //Items 0 through 8 are the grists for tiers 1 through 9 here.
@@ -79,7 +79,7 @@ if (!empty($_POST['land'])) { //Waking strife. Check that the Land is legal.
         }
         $appearson = "Event";
         $_POST['enemy1'] = $denizen;
-        $_POST['land'] = $charrow['ID'];
+        $_POST['land'] = $charrow['id'];
     } else {
         echo "ERROR: You do not currently qualify to fight your Denizen!<br />";
     }
@@ -129,7 +129,7 @@ if ($legit) {
             $playerside = 0;
             mysqli_query($connection, "UPDATE `strifers` SET `strifeid` = $newID, `side` = $playerside, `leader` = 1, `fatigue` = " . $charrow[$fatiguestr] . " WHERE `strifers`.`id` = $sid LIMIT 1;"); //Add the player
             if ($charrow['dreamingstatus'] == "Awake") { //Allies can't follow you to the moons. Temporary, we might add moon allies later.
-                mysqli_query($connection, "UPDATE `strifers` SET `strifeid` = $newID, `side` = $playerside WHERE `strifers`.`owner` = " . $charrow['ID'] . " AND `strifers`.`aspect` = '';"); //Add allies
+                mysqli_query($connection, "UPDATE `strifers` SET `strifeid` = $newID, `side` = $playerside WHERE `strifers`.`owner` = " . $charrow['id'] . " AND `strifers`.`aspect` = '';"); //Add allies
             }
             if (strpos($savedcommand, "DONOTSAVE") === false) {
                 mysqli_query($connection, "UPDATE Characters SET oldenemydata = '$savedcommand' WHERE Characters.ID = $charrow[ID] LIMIT 1;");

@@ -7,7 +7,7 @@ if (empty($_SESSION['username'])) {
     echo "Choose a character to view your log.<br>";
 } else {
 
-    $charID = $charrow['ID'];
+    $charID = $charrow['id'];
     $filename = "/logs/char".$charID."txt";
     echo '<h1>Log for '.$charrow['name'].':</h1><br><br>';
     echo file_get_contents($filename); // Echoes out the content of the file

@@ -13,7 +13,7 @@ if (empty($_SESSION['username'])) {
             echo "You are now $charrow[name].<br /><br />What will you do?<br />";
             if ($accrow['lastchar'] != $_SESSION['character']) {
                 $accrow['lastchar'] = $_SESSION['character'];
-                mysqli_query($connection, "UPDATE Users SET lastchar = " . mysqli_real_escape_string($connection, $_SESSION['character']) . " WHERE ID = " . $accrow['ID']);
+                mysqli_query($connection, "UPDATE `users` SET lastchar = " . mysqli_real_escape_string($connection, $_SESSION['character']) . " WHERE ID = " . $accrow['id']);
             }
         } else {
             echo "You can't be a character that doesn't belong to you!<br />";
@@ -46,7 +46,7 @@ if (empty($_SESSION['username'])) {
                 $sesrow = loadSessionrow($row['session']);
                 $sname[$row['session']] = $sesrow['name'];
             }
-            echo "<option value='" . $row['ID'] . "'>" . $row['name'] . " - " . $sname[$row['session']] . "</option>";
+            echo "<option value='" . $row['id'] . "'>" . $row['name'] . " - " . $sname[$row['session']] . "</option>";
         }
         echo "</select><input type='submit' value='Switch!' /></form>";
     } else {

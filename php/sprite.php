@@ -183,7 +183,7 @@ if (empty($_SESSION['character'])) {
             $maxpower = $power + $spriterow['maxpower']; //add the new power to the current base power
             $maxhealth = abs($maxpower * 10) + 10; //absolute value in case of negative prototyping lol
             $health = $maxhealth; //Prototyping fully heals
-            mysqli_query($connection, "UPDATE Strifers SET name = '" . mysqli_real_escape_string($connection, $name) . "', description = '" . mysqli_real_escape_string($connection, $desc) . "', power = $maxpower, maxpower = $maxpower, health = $health, maxhealth = $maxhealth, effects = '" . mysqli_real_escape_string($connection, $effectstr) . "' WHERE ID = " .strval($spriterow['ID']));
+            mysqli_query($connection, "UPDATE Strifers SET name = '" . mysqli_real_escape_string($connection, $name) . "', description = '" . mysqli_real_escape_string($connection, $desc) . "', power = $maxpower, maxpower = $maxpower, health = $health, maxhealth = $maxhealth, effects = '" . mysqli_real_escape_string($connection, $effectstr) . "' WHERE ID = " .strval($spriterow['id']));
             $spriterow['name'] = $name;
             $spriterow['description'] = $desc;
             $spriterow['maxpower'] = $maxpower;
@@ -217,7 +217,7 @@ if (empty($_SESSION['character'])) {
         } else {
             $desc = $_POST['protodesc'];
         }
-        mysqli_query($connection, "UPDATE Strifers SET name = '" . mysqli_real_escape_string($connection, $name) . "', description = '" . mysqli_real_escape_string($connection, $desc) . "' WHERE ID = " .strval($spriterow['ID']));
+        mysqli_query($connection, "UPDATE Strifers SET name = '" . mysqli_real_escape_string($connection, $name) . "', description = '" . mysqli_real_escape_string($connection, $desc) . "' WHERE ID = " .strval($spriterow['id']));
         $spriterow['name'] = $name;
         $spriterow['description'] = $desc;
         echo "Sprite name and/or description updated.<br />";

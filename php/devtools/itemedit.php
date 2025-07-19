@@ -210,7 +210,7 @@ if ($accrow['modlevel'] < 4) {
                             $updatequery = "UPDATE `captchalogue` SET ";
                         }
                     }
-                } elseif ($fname != 'ID') {
+                } elseif ($fname != 'id') {
                     if ($fname == "gristcosts") {
                         $gstring = ""; //lol
                         foreach ($grist as $g) {
@@ -338,7 +338,7 @@ if ($accrow['modlevel'] < 4) {
         if ($feedrow['greenlight'] == 1) {
             //logDebugMessage($accrow['username'] . " - began working on the submission " . $feedrow['name']);
             $founditem = true;
-            echo 'Submission ID: ' . strval($feedrow['ID']) . '<br />';
+            echo 'Submission ID: ' . strval($feedrow['id']) . '<br />';
             echo 'Submitted by: ' . $feedrow['user'] . '<br />';
             echo 'Item code: ' . $feedrow['code'] . '<br />';
             $erow['code'] = $feedrow['code'];
@@ -361,7 +361,7 @@ if ($accrow['modlevel'] < 4) {
                 $count++;
             }
             echo "<br /><br />";
-            $processing = $feedrow['ID'];
+            $processing = $feedrow['id'];
             if (!empty($feedrow['size'])) {
                 $erow['size'] = $feedrow['size'];
             } else {

@@ -9,8 +9,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/inc/header.php';
 <script type="text/javascript" src="/js/jquery.tooltipster.min.js"></script>
 <?php
 
-if (isset($_GET['ID'])) {
-    $profiler = getChar(intval($_GET['ID']));
+if (isset($_GET['id'])) {
+    $profiler = getChar(intval($_GET['id']));
 } else {
     $profiler = $charrow;
 }
@@ -51,12 +51,12 @@ if ($profiler) {
     $psessionarray = mysqli_fetch_array($psession);
     echo 'Session: <a href="/sessioninfo.php?session=' . $psessionarray['name'] . '">' . $psessionarray['name'] . "</a><br>";
     if (isset($server)) {
-        echo "Server Player: " . profileString($server['ID']) . "<br>";
+        echo "Server Player: " . profileString($server['id']) . "<br>";
     } else {
         echo "Server Player: Not yet connected. <br>";
     }
     if (isset($client)) {
-        echo "Client Player: " . profileString($client['ID']) . "<br>";
+        echo "Client Player: " . profileString($client['id']) . "<br>";
     } else {
         echo "Client Player: Not yet connected. <br>";
     }

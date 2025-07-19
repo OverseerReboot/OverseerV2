@@ -16,7 +16,7 @@ function spendFatigue($fatigue, $charrow)
     $charrow[$currentfatiguestr] = $newfatigue;
     $reducedfatigue = 0; // max($charrow[$otherfatiguestr] - floor($fatigue * 0.3), 0);
     $charrow[$otherfatiguestr] = $reducedfatigue;
-    mysqli_query($connection, "UPDATE `characters` SET `$currentfatiguestr` = $newfatigue, `$otherfatiguestr` = $reducedfatigue WHERE `characters`.`id` = " . $charrow['ID'] . " LIMIT 1;");
+    mysqli_query($connection, "UPDATE `characters` SET `$currentfatiguestr` = $newfatigue, `$otherfatiguestr` = $reducedfatigue WHERE `characters`.`id` = " . $charrow['id'] . " LIMIT 1;");
     $striferesult = mysqli_query($connection, "SELECT * FROM `strifers` WHERE `strifers`.`id` = " . $charrow[$otherstriferstr] . " LIMIT 1");
     $striferow = mysqli_fetch_assoc($striferesult);
     $newhealth = $striferow['health'] + floor($striferow['maxhealth'] * ($fatigue / 100));
@@ -242,7 +242,7 @@ function setAchievement($char, $achievement): bool
 function sendAchievement($char, $achievement): bool
 {
     if (!getAchievement($char, $achievement)) {
-        notifyCharacter($char['ID'], '<img src="/images/achievements/'.$achievement.'.png" align="middle">ACHIEVEMENT UNLOCKED!');
+        notifyCharacter($char['id'], '<img src="/images/achievements/'.$achievement.'.png" align="middle">ACHIEVEMENT UNLOCKED!');
         $string = $char['achievements'] . $achievement . '|';
         writeAchievement($char, $string);
         return true;
@@ -479,24 +479,24 @@ function chainArray($charrow)
     $chumroll = mysqli_query($connection, "SELECT * FROM `characters` WHERE `characters`.`session` = '$charrow[session]';");
     $auto = false; //Condition for automatic success (e.g. flight, god tier).
     while ($chumrow = mysqli_fetch_array($chumroll)) {
-        $sessionmates[$chumrow['ID']] = $chumrow;
-        $chain[$chumrow['ID']] = false;
+        $sessionmates[$chumrow['id']] = $chumrow;
+        $chain[$chumrow['id']] = false;
         if ($auto) {
-            $chain[$chumrow['ID']] = true;
+            $chain[$chumrow['id']] = true;
         } else {
-            $duderow[$chumrow['ID']] = $chumrow;
+            $duderow[$chumrow['id']] = $chumrow;
         } //set this so that we can use the row later by ID
         //NOTE - We could save some processing by having a flag in the session that is set to true when the whole session is connected
         //and making that one of the success conditions...if there's a good way to deal with de-building the house negating that.
     }
     //we no longer need to pull gaterow because gatescleared directly stores gates... well, cleared
     if ($charrow['gatescleared'] >= 1) {
-        $chain[$charrow['ID']] = true;
+        $chain[$charrow['id']] = true;
     } //Access to your own Land is granted when you reach your first Gate.
     if ($charrow['gatescleared'] >= 2 && !$auto) { //Can access /second/ gate #CANON. Check out access chain, but no need if auto is true
         $currentrow = $charrow;
         $nobreak = true; // fix an error caused by $nobreak not being defined yet
-        while (($currentrow['server'] != $charrow['ID']) && ($currentrow['server'] != 0) && $nobreak) {
+        while (($currentrow['server'] != $charrow['id']) && ($currentrow['server'] != 0) && $nobreak) {
             //Above: Keep checking as long as there's a server player that isn't this player.
             $nobreak = false;
             $minus3row = $minus2row;
@@ -514,7 +514,7 @@ function chainArray($charrow)
                 $nobreak = true;
             }
             if ($nobreak) {
-                $chain[$currentrow['ID']] = true;
+                $chain[$currentrow['id']] = true;
             } //A successful connection was found, so this character is added to the chain
         }
     }
@@ -634,7 +634,7 @@ function strifeInit($charrow): void
     global $connection;
 
     //Health formula: +5 for 1 rung, +10 for 3 rungs, +15 for 9 rungs, +20 for 27 rungs, etc. The following code does that.
-    $charresult = mysqli_query($connection, "SELECT * FROM `characters` WHERE `characters`.`id` = " . $charrow['ID'] . " LIMIT 1;");
+    $charresult = mysqli_query($connection, "SELECT * FROM `characters` WHERE `characters`.`id` = " . $charrow['id'] . " LIMIT 1;");
     $charrow = mysqli_fetch_array($charresult);
     $viscosity = 10; //Used for waking AND dreaming health AND energy
     $rungs = $charrow['echeladder'] - 1; //NOTE - First rung you start with a base of 10. It is not counted here.
@@ -709,7 +709,7 @@ function strifeInit($charrow): void
         $equippedcomputer = 1;
     }
     if ($equippedcomputer != $charrow['equippedcomputer']) {
-        mysqli_query($connection, "UPDATE `characters` SET `equippedcomputer` = " . $equippedcomputer . " WHERE `characters`.`id` = " . $charrow['ID'] . " LIMIT 1;");
+        mysqli_query($connection, "UPDATE `characters` SET `equippedcomputer` = " . $equippedcomputer . " WHERE `characters`.`id` = " . $charrow['id'] . " LIMIT 1;");
     }
     $n = 0;
     while ($n < 9) { //go through each bonus one last time, this time including defense
@@ -782,8 +782,8 @@ function gainRungs($charrow, $rungs): string|false
         //NOTE - No need to check for god tiers here. They'll be listed as requiring a rung of "1025" and have a god tier requirement instead.
         if ($abilityresult) {
             while ($row = mysqli_fetch_array($abilityresult)) {
-                if (strpos("|" . $charrow['abilities'], "|" . $row['ID'] . "|") === false) {
-                    $abilities .= intval($row['ID']) . "|"; //Add this ability to the ability string
+                if (strpos("|" . $charrow['abilities'], "|" . $row['id'] . "|") === false) {
+                    $abilities .= intval($row['id']) . "|"; //Add this ability to the ability string
                     $message .= $charrow['name'] . " gains a new ability: $row[Name]!<br />";
                 }
             }

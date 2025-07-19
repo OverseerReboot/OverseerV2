@@ -61,9 +61,9 @@ if ($accrow['modlevel'] < 4) {
         echo '<br/>';
         echo 'Submitted by '.$arow['username'].'.<br/>';
         echo 'Suggested art:<br/>';
-        echo '<img src="/getartsubmission.php?id='.$row['ID'].'" />';
+        echo '<img src="/getartsubmission.php?id='.$row['id'].'" />';
         echo '<form action="" method="POST">';
-        echo '<input type="hidden" name="id" value="'.$row['ID'].'" />';
+        echo '<input type="hidden" name="id" value="'.$row['id'].'" />';
         echo '<input type="submit" name="ap" value="Approve" />';
         echo '<input type="submit" name="re" value="Remove" />';
         echo '</form>';

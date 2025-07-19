@@ -32,7 +32,7 @@ if (!preg_match('/^[a-zA-Z0-9 ]*$/', $_POST['charname'])) {
 $_POST['sessionname'] = trim($_POST['sessionname']);
 
 // Grab the user's account line
-$accquery = $db->prepare("SELECT ID,username FROM Users WHERE ID = :userid");
+$accquery = $db->prepare("SELECT ID,username FROM `users` WHERE ID = :userid");
 $accquery->bindParam(':userid', $_SESSION['userid']);
 $accquery->execute();
 if ($accquery->rowcount() != 1) {

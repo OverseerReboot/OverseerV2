@@ -40,13 +40,13 @@ if ($striferow['strifeID'] == 0 || empty($striferow['strifeID'])) { //This user 
                 $connected = chainArray($charrow); //Get an array of connected Lands
                 $chumroll = mysqli_query($connection, "SELECT * FROM Characters WHERE session = '$charrow[session]';");
                 while ($chumrow = mysqli_fetch_array($chumroll)) {
-                    if ($connected[$chumrow['ID']] || $chumrow['ID'] == $charrow['ID']) { //Can always fight your own underlings, even with no building done
+                    if ($connected[$chumrow['id']] || $chumrow['id'] == $charrow['id']) { //Can always fight your own underlings, even with no building done
                         $chums[] = $chumrow;
                     }
                 }
                 echo '<form action="strifeselect.php" method="post"><select name="land">';
                 foreach ($chums as $chum) {//Note that the last value of n will not correspond to an index.
-                    echo '<option value="' . $chum['ID'] . '">Land of ' . $chum['land1'] . ' and ' . $chum['land2'] . '</option>';
+                    echo '<option value="' . $chum['id'] . '">Land of ' . $chum['land1'] . ' and ' . $chum['land2'] . '</option>';
                 }
                 if ($charrow['denizendown'] == 1) {
                     echo '<option value="battlefield">The Battlefield</option>';
@@ -74,7 +74,7 @@ if ($striferow['strifeID'] == 0 || empty($striferow['strifeID'])) { //This user 
                     echo 'If any of your reachable allies are engaged in strife, you may assist them here:<br />';
                     $allyquery = "SELECT strifeID, name from Strifers WHERE ID IN (";
                     foreach ($chums as $chum) {
-                        if ($chum['ID'] != $charrow['ID']) { //No self-assisting!
+                        if ($chum['id'] != $charrow['id']) { //No self-assisting!
                             $allyquery .= $chum['wakeself'] . ", ";
                         }
                     }
@@ -147,8 +147,8 @@ if ($striferow['strifeID'] == 0 || empty($striferow['strifeID'])) { //This user 
     $striferesult = mysqli_query($connection, "SELECT * FROM `strifers` WHERE `strifers`.`strifeid` = $striferow[strifeID];"); //Grab all strifers
     $newleader = false;
     while ($row = mysqli_fetch_array($striferesult)) {
-        if ($row['owner'] == $charrow['ID']) { //Strifer is part of the fleeing player's entourage
-            $abscondquery .= $row['ID'] . ", ";
+        if ($row['owner'] == $charrow['id']) { //Strifer is part of the fleeing player's entourage
+            $abscondquery .= $row['id'] . ", ";
         } elseif ($row['aspect'] != "" && !$newleader) { //We found another player character. They're the leader now.
             mysqli_query($connection, "UPDATE `strifers` SET `leader` = 1 WHERE `strifers`.`id` = $row[ID] LIMIT 1;");
         }
@@ -160,7 +160,7 @@ if ($striferow['strifeID'] == 0 || empty($striferow['strifeID'])) { //This user 
         echo "You are forced back into the room you just left! <a id='advance' href='dungeons.php'>Return to dungeon ==></a><br />";
         $olddungeonrow = $charrow['olddungeonrow'];
         $olddungeoncol = $charrow['olddungeoncol'];
-        mysqli_query($connection, "UPDATE Characters set dungeonrow = $olddungeonrow, dungeoncol = $olddungeoncol WHERE Characters.ID = " . $charrow['ID'] . " LIMIT 1;");
+        mysqli_query($connection, "UPDATE Characters set dungeonrow = $olddungeonrow, dungeoncol = $olddungeoncol WHERE Characters.ID = " . $charrow['id'] . " LIMIT 1;");
     }
 } else {
     if (!empty($strifers)) { //We came from striferesolve. We can just reuse the results from there!
@@ -184,17 +184,17 @@ if ($striferow['strifeID'] == 0 || empty($striferow['strifeID'])) { //This user 
         while ($row = mysqli_fetch_array($striferesult)) {
             $n++;
             $strifers[$n] = $row; //Store each strifer in a successive index
-            if ($strifers[$n]['owner'] == $charrow['ID']) {
+            if ($strifers[$n]['owner'] == $charrow['id']) {
                 $playerside = $strifers[$n]['side'];
             } //Set $playerside to the side the player is on
             if (!empty($newleaderid)) { //Checking if this player is the leader swap target.
-                if (!empty($strifers[$n]['aspect']) && ($strifers[$n]['side'] == $striferow['side']) && ($strifers[$n]['ID'] == $newleaderid)) {
+                if (!empty($strifers[$n]['aspect']) && ($strifers[$n]['side'] == $striferow['side']) && ($strifers[$n]['id'] == $newleaderid)) {
                     //The new leader has been found. Set them as leader, unset the current player.
                     $striferow['leader'] = 0;
                     $strifers[$n]['leader'] = 1;
                     //This can almost certainly be done in one query...
-                    mysqli_query($connection, "UPDATE `strifers` SET `leader` = 0 WHERE `strifers`.`id` = " . $striferow['ID'] . " LIMIT 1;");
-                    mysqli_query($connection, "UPDATE `strifers` SET `leader` = 1 WHERE `strifers`.`id` = " . $strifers[$n]['ID'] . " LIMIT 1;");
+                    mysqli_query($connection, "UPDATE `strifers` SET `leader` = 0 WHERE `strifers`.`id` = " . $striferow['id'] . " LIMIT 1;");
+                    mysqli_query($connection, "UPDATE `strifers` SET `leader` = 1 WHERE `strifers`.`id` = " . $strifers[$n]['id'] . " LIMIT 1;");
                     $leaderfound = true;
                 }
             }
@@ -204,16 +204,16 @@ if ($striferow['strifeID'] == 0 || empty($striferow['strifeID'])) { //This user 
         } elseif (!empty($_POST['actiondecision'])) { //Updating combat commands. DEFINITELY can't happen coming from striferesolve!
             $i = 0;
             while (!empty($strifers[$i])) {
-                $activestr = strval($strifers[$i]['ID']) . "active";
-                $passivestr = strval($strifers[$i]['ID']) . "passive";
+                $activestr = strval($strifers[$i]['id']) . "active";
+                $passivestr = strval($strifers[$i]['id']) . "passive";
                 //Set the commands according to form input, if any.
-                if (!empty($_POST[$activestr]) && $strifers[$i]['control'] == 1 && $strifers[$i]['owner'] == $charrow['ID']) {
+                if (!empty($_POST[$activestr]) && $strifers[$i]['control'] == 1 && $strifers[$i]['owner'] == $charrow['id']) {
                     $strifers[$i]['lastactive'] = $_POST[$activestr];
                 }
-                if (!empty($_POST[$passivestr]) && $strifers[$i]['control'] == 1 && $strifers[$i]['owner'] == $charrow['ID']) {
+                if (!empty($_POST[$passivestr]) && $strifers[$i]['control'] == 1 && $strifers[$i]['owner'] == $charrow['id']) {
                     $strifers[$i]['lastpassive'] = $_POST[$passivestr];
                 }
-                mysqli_query($connection, "UPDATE Strifers SET lastactive = '" . $strifers[$i]['lastactive'] . "', lastpassive = '" . $strifers[$i]['lastpassive'] . "' WHERE Strifers.ID = " . $strifers[$i]['ID'] . " LIMIT 1;");
+                mysqli_query($connection, "UPDATE Strifers SET lastactive = '" . $strifers[$i]['lastactive'] . "', lastpassive = '" . $strifers[$i]['lastpassive'] . "' WHERE Strifers.ID = " . $strifers[$i]['id'] . " LIMIT 1;");
                 $i++;
             }
         }
@@ -221,7 +221,7 @@ if ($striferow['strifeID'] == 0 || empty($striferow['strifeID'])) { //This user 
     echo "Your current opponents:<br />";
     $i = 0;
     while (!empty($strifers[$i])) {
-        if (($strifers[$i]['ID'] == $striferow['ID']) && ($strifers[$i]['leader'] != $striferow['leader'])) {
+        if (($strifers[$i]['id'] == $striferow['id']) && ($strifers[$i]['leader'] != $striferow['leader'])) {
             $strifers[$i]['leader'] = $striferow['leader'];
         }
         //Above: If we gave away leadership, update the relevant $strifers row with this information.
@@ -285,10 +285,10 @@ if ($striferow['strifeID'] == 0 || empty($striferow['strifeID'])) { //This user 
         $i = 0;
         echo '<form action="striferesolve.php" method="post">';
         while (!empty($strifers[$i])) {
-            if ($strifers[$i]['side'] == $playerside && $strifers[$i]['control'] == 1 && $strifers[$i]['owner'] == $charrow['ID']) { //We can input the commands for this strifer
+            if ($strifers[$i]['side'] == $playerside && $strifers[$i]['control'] == 1 && $strifers[$i]['owner'] == $charrow['id']) { //We can input the commands for this strifer
                 echo $strifers[$i]['name'] . ":<br />";
-                $activestr = strval($strifers[$i]['ID']) . "active";
-                $passivestr = strval($strifers[$i]['ID']) . "passive";
+                $activestr = strval($strifers[$i]['id']) . "active";
+                $passivestr = strval($strifers[$i]['id']) . "passive";
                 $bonusarray = array("AGGRIEVE" => 0, "AGGRESS" => 0, "ASSAIL" => 0, "ASSAULT" => 0, "ABUSE" => 0, "ACCUSE" => 0, "ABJURE" => 0, "ABSTAIN" => 0);
                 $bonuses = explode("|", $strifers[$i]['bonuses']); //We evaluate command bonuses here so we can print them
                 $j = 0;
@@ -326,11 +326,11 @@ if ($striferow['strifeID'] == 0 || empty($striferow['strifeID'])) { //This user 
                 echo $strifers[$i]['name'] . ":<br />";
                 echo "Selected actions: " . $strifers[$i]['lastactive'] . "/" . $strifers[$i]['lastpassive'] . "<br />";
             }
-            if (!empty($strifers[$i]['aspect']) && ($strifers[$i]['side'] == $striferow['side']) && $strifers[$i]['ID'] != $striferow['ID']) { //If this strifer is an allied player...
+            if (!empty($strifers[$i]['aspect']) && ($strifers[$i]['side'] == $striferow['side']) && $strifers[$i]['id'] != $striferow['id']) { //If this strifer is an allied player...
                 //...we add them to the leader change form that is coming up.
                 //This strifer is another player and therefore a potential new leader. Only players will have an entry under Aspect. Not even
                 //Denizens get one of those!
-                $leaderform .= "<option value='" . $strifers[$i]['ID'] . "'>" . $strifers[$i]['name'] . "</option>";
+                $leaderform .= "<option value='" . $strifers[$i]['id'] . "'>" . $strifers[$i]['name'] . "</option>";
             }
             $i++;
         }
@@ -345,10 +345,10 @@ if ($striferow['strifeID'] == 0 || empty($striferow['strifeID'])) { //This user 
         $i = 0;
         echo '<form action="strifedisplay.php" method="post">';
         while (!empty($strifers[$i])) {
-            if ($strifers[$i]['side'] == $playerside && $strifers[$i]['control'] == 1 && $strifers[$i]['owner'] == $charrow['ID']) { //We can input the commands for this strifer
+            if ($strifers[$i]['side'] == $playerside && $strifers[$i]['control'] == 1 && $strifers[$i]['owner'] == $charrow['id']) { //We can input the commands for this strifer
                 echo $strifers[$i]['name'] . ":<br />";
-                $activestr = strval($strifers[$i]['ID']) . "active";
-                $passivestr = strval($strifers[$i]['ID']) . "passive";
+                $activestr = strval($strifers[$i]['id']) . "active";
+                $passivestr = strval($strifers[$i]['id']) . "passive";
                 $bonusarray = array("AGGRIEVE" => 0, "AGGRESS" => 0, "ASSAIL" => 0, "ASSAULT" => 0, "ABUSE" => 0, "ACCUSE" => 0, "ABJURE" => 0, "ABSTAIN" => 0);
                 $bonuses = explode("|", $strifers[$i]['bonuses']); //We evaluate command bonuses here so we can print them
                 $j = 0;

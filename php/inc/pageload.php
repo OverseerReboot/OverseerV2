@@ -16,12 +16,12 @@ if (!empty($_SESSION['username'])) {
     if (!empty($_SESSION['character'])) {
         $charresult = mysqli_query($connection, "SELECT * FROM `characters` WHERE `id` = " . $_SESSION['character'] . " LIMIT 1;");
         $charrow = mysqli_fetch_array($charresult);
-        if ($charrow['owner'] != $accrow['ID']) {
+        if ($charrow['owner'] != $accrow['id']) {
             echo "ERROR: You tried to select a character that doesn't belong to you!";
             $_SESSION['character'] = 0; //reset character
             $charrow = []; //blank charrow
         } else {
-            $cid = $charrow['ID'];
+            $cid = $charrow['id'];
             //$striferesult = mysqli_query($connection, "SELECT * FROM `users` WHERE `id` = " . $_SESSION['character'] . " LIMIT 1;");
             //maybe only load in strifer row when on a strife-related page?
         }

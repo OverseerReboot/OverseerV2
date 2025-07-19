@@ -3,7 +3,7 @@
 $i = 1;
 while ($i <= $n) {
 	//Check out EOT effects in the status field here
-	$strifers[$i]['status'] = $updatedstatus[$strifers[$i]['ID']];
+	$strifers[$i]['status'] = $updatedstatus[$strifers[$i]['id']];
 	//The above line is necessary so that new status effects aren't applied until AFTER the round is over so they don't care about when during the round
 	//they are applied.
 	$strifers[$i]['subaction'] = 0; //Everyone's action refreshes.
@@ -445,7 +445,7 @@ while ($i <= $n) {
             $strifers[$i]['health'] = $health;
             $strifers[$i]['energy'] = $energy;
             $strifers[$i]['power'] = $power;
-            mysqli_query($connection, "UPDATE `strifers` SET `health` = $health, `energy` = $energy, `power` = $power WHERE `strifers`.`id` = " . $strifers[$i]['ID'] . " LIMIT 1;");
+            mysqli_query($connection, "UPDATE `strifers` SET `health` = $health, `energy` = $energy, `power` = $power WHERE `strifers`.`id` = " . $strifers[$i]['id'] . " LIMIT 1;");
             $strifers[$i] = endStrife($strifers[$i]);
             //Code to handle allies being KOed goes in here.
         } else { //An enemy has been slain
@@ -530,7 +530,7 @@ while ($i <= $n) {
                                     setAchievement($charrow, 'denizen');
                                     notifySession($charrow, $charrow['name'] . " has defeated their Denizen!");
                                     $lootstr = "You have defeated your Denizen, granting you access to the Battlefield.<br />";
-                                    mysqli_query($connection, "UPDATE `characters` SET `denizendown` = 1 WHERE `characters`.`id` = " . $charrow['ID'] . " LIMIT 1;");
+                                    mysqli_query($connection, "UPDATE `characters` SET `denizendown` = 1 WHERE `characters`.`id` = " . $charrow['id'] . " LIMIT 1;");
                                     break;
                                 default:
                                     break;
@@ -605,7 +605,7 @@ while ($i <= $n) {
                 if ($strifers[$i]['power'] > $charrow['enemiesbeaten']) { //This is the strongest enemy the leader has ever taken out!
                     mysqli_query($connection, "UPDATE `characters` SET `enemiesbeaten` = " . $strifers[$i]['power'] . " WHERE `characters`.`id` = $charrow[ID] LIMIT 1");
                 }
-                mysqli_query($connection, "DELETE FROM `strifers` WHERE `strifers`.`id` = " . $strifers[$i]['ID'] . " LIMIT 1;");
+                mysqli_query($connection, "DELETE FROM `strifers` WHERE `strifers`.`id` = " . $strifers[$i]['id'] . " LIMIT 1;");
                 unset($strifers[$i]); //Remove their row from the database, then zap it out of the current combat array.
             } else { //Since player deaths are picked out above, this should never happen.
             }
@@ -636,7 +636,7 @@ if ((empty($exists) || count($exists) == 1) && !$unstuck) { //There is only one 
                 $strifeID = $strifers[$j]['strifeID'];
             } //Save off strife ID for working with dungeon string.
             if ($strifers[$j]['owner'] == 0 && $strifers[$j]['persist'] == 0) { //No "owner" and not persisted. Strifer will be removed.
-                mysqli_query($connection, "DELETE FROM `strifers` WHERE `strifers`.`id` = " . $strifers[$j]['ID'] . " LIMIT 1;");
+                mysqli_query($connection, "DELETE FROM `strifers` WHERE `strifers`.`id` = " . $strifers[$j]['id'] . " LIMIT 1;");
             } elseif ($strifers[$j]['persist'] == 0) { //Persisters should hold on to their strife ID so they can be dialed up later
                 $strifers[$j] = endStrife($strifers[$j]);
             }
@@ -665,7 +665,7 @@ if ((empty($exists) || count($exists) == 1) && !$unstuck) { //There is only one 
                     $strifers[$j]['health'] = $health;
                     $strifers[$j]['energy'] = $energy;
                     $strifers[$j]['power'] = $power;
-                    mysqli_query($connection, "UPDATE `strifers` SET `health` = $health, `energy` = $energy, `power` = $power WHERE `strifers`.`id` = " . $strifers[$j]['ID'] . " LIMIT 1;");
+                    mysqli_query($connection, "UPDATE `strifers` SET `health` = $health, `energy` = $energy, `power` = $power WHERE `strifers`.`id` = " . $strifers[$j]['id'] . " LIMIT 1;");
                 }
             }
             $j++;
@@ -681,7 +681,7 @@ if ((empty($exists) || count($exists) == 1) && !$unstuck) { //There is only one 
             $dungeonrow['enc'] = str_replace($newencstr, "", $dungeonrow['enc']);
             $newencstr = $currentroom . ":EXISTS:BOSS:" . strval($strifeID);
             $dungeonrow['enc'] = str_replace($newencstr, "", $dungeonrow['enc']);
-            mysqli_query($connection, "UPDATE Dungeons SET enc = '" . $dungeonrow['enc'] . "' WHERE Dungeons.ID = " . $dungeonrow['ID'] . " LIMIT 1;");
+            mysqli_query($connection, "UPDATE Dungeons SET enc = '" . $dungeonrow['enc'] . "' WHERE Dungeons.ID = " . $dungeonrow['id'] . " LIMIT 1;");
         }
     } else { //Player has been defeated
         $output .= "You're a loser!<br />";
@@ -690,7 +690,7 @@ if ((empty($exists) || count($exists) == 1) && !$unstuck) { //There is only one 
             echo "You are forced back into the room you just left! <a id='advance' href='dungeons.php'>Return to dungeon ==></a><br />";
             $olddungeonrow = $charrow['olddungeonrow'];
             $olddungeoncol = $charrow['olddungeoncol'];
-            mysqli_query($connection, "UPDATE Characters set dungeonrow = $olddungeonrow, dungeoncol = $olddungeoncol WHERE Characters.ID = " . $charrow['ID'] . " LIMIT 1;");
+            mysqli_query($connection, "UPDATE Characters set dungeonrow = $olddungeonrow, dungeoncol = $olddungeoncol WHERE Characters.ID = " . $charrow['id'] . " LIMIT 1;");
         }
     }
     if ($charrow['dreamingstatus'] == "Awake" && $charrow['dungeon'] != 0) {

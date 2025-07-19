@@ -15,7 +15,7 @@ if (empty($_SESSION['userid'])) {
 }
 
 // Grab the user's account line
-$accquery = $db->prepare("SELECT ID,username,characters FROM Users WHERE ID = :userid");
+$accquery = $db->prepare("SELECT ID,username,characters FROM `users` WHERE ID = :userid");
 $accquery->bindParam(':userid', $_SESSION['userid']);
 $accquery->execute();
 if ($accquery->rowcount() != 1) {
@@ -86,7 +86,7 @@ if (!password_verify($_POST['sessionpw'], $sessionrow['password'])) {
 // Check that the character's name isn't already being used in this session.
 $checkquery = $db->prepare("SELECT name FROM Characters WHERE name = :charname AND session = :sessionid");
 $checkquery->bindParam(':charname', $_POST['charname']);
-$checkquery->bindParam(':sessionid', $sessionrow['ID']);
+$checkquery->bindParam(':sessionid', $sessionrow['id']);
 $checkquery->execute();
 if ($checkquery->rowcount() != 0) {
     $_SESSION['loginmsg'] = 'That name is already taken in this session.';
@@ -127,7 +127,7 @@ $achievements = array('created');
 $insertchar = $db->prepare("INSERT INTO Characters (name, owner, session, class, aspect, dreamer, symbol, grists, stats, fatiguetimer, invslots) VALUES (:charname, :userid, :session, :class, :aspect, :dreamer, :symbol, :grists, :stats, :time, 25);");
 $insertchar->bindParam(':charname', $_POST['charname']);
 $insertchar->bindParam(':userid', $_SESSION['userid']);
-$insertchar->bindParam(':session', $sessionrow['ID']);
+$insertchar->bindParam(':session', $sessionrow['id']);
 $insertchar->bindParam(':class', $_POST['class']);
 $insertchar->bindParam(':aspect', $_POST['aspect']);
 $insertchar->bindParam(':dreamer', $_POST['dreamer']);
@@ -141,13 +141,13 @@ unset($insertchar);
 
 $addtosession = $db->prepare("UPDATE `sessions` SET members = :members WHERE ID = :sessionid");
 $addtosession->bindValue(':members', $members.strval($newcharid).'|');
-$addtosession->bindParam(':sessionid', $sessionrow['ID']);
+$addtosession->bindParam(':sessionid', $sessionrow['id']);
 $addtosession->execute();
 unset($addtosession);
 
-$addtoaccount = $db->prepare("UPDATE Users SET characters = :characters WHERE ID = :userid");
+$addtoaccount = $db->prepare("UPDATE `users` SET characters = :characters WHERE ID = :userid");
 $addtoaccount->bindValue(':characters', $accrow['characters'].strval($newcharid).'|');
-$addtoaccount->bindParam(':userid', $accrow['ID']);
+$addtoaccount->bindParam(':userid', $accrow['id']);
 $addtoaccount->execute();
 unset($addtoaccount);
 

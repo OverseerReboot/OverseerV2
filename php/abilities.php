@@ -38,7 +38,7 @@ if (empty($_SESSION['username'])) {
                 } else {
                     $notarget = true;
                 }
-                switch ($abilityrow['ID']) {
+                switch ($abilityrow['id']) {
                     case 6: //Esauna (ID 6)
                         if (!$notarget) {
                             if ($reach) {
@@ -79,7 +79,7 @@ if (empty($_SESSION['username'])) {
                         $findstr = "(";
                         $allyresult = mysqli_query($connection, "SELECT * FROM `characters` WHERE `characters`.`session` = $charrow[session];");
                         while ($allyrow = mysqli_fetch_array($allyresult)) {
-                            if (true && $allyrow['ID'] != $charrow['ID']) { //NOTE - The TRUE condition will be "if the player currently has a computer"
+                            if (true && $allyrow['id'] != $charrow['id']) { //NOTE - The TRUE condition will be "if the player currently has a computer"
                                 if ($allyrow['wakeself']  != 0) {
                                     $findstr .= strval($allyrow['wakeself']) . ", ";
                                 } //Add strife selves to list of beneficiaries
@@ -125,7 +125,7 @@ if (empty($_SESSION['username'])) {
                 echo "Aspect cost: $abilitycost%<br />";
             }
             if ($abilityrow['Active'] == 1) {
-                echo '<form action="abilities.php" method="post"><input type="hidden" name="abilityused" value="' . $abilityrow['ID'] . '">';
+                echo '<form action="abilities.php" method="post"><input type="hidden" name="abilityused" value="' . $abilityrow['id'] . '">';
                 if ($abilityrow['targets'] == 1) {
                     echo 'Ability target: <input type="text" name="target"><br />';
                 }

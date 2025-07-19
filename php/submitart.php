@@ -19,7 +19,7 @@ if ($_SESSION['username'] == "") {
     } else {
         echo 'Your submissions:<br/>';
         while ($subrow = mysqli_fetch_array($subresult)) {
-            echo '<a href="getartsubmission.php?id='.$subrow['ID'].'">'.$subrow['code'].'</a><br/>';
+            echo '<a href="getartsubmission.php?id='.$subrow['id'].'">'.$subrow['code'].'</a><br/>';
         }
         echo '<br/><br/>';
 

@@ -8,7 +8,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/inc/database.php';
 
 
 // Grab the user row for specified user.
-$userrowquery = $db->prepare("SELECT username,password,ID FROM Users WHERE Users.username = :username");
+$userrowquery = $db->prepare("SELECT 'username', 'password', 'id' FROM `users` WHERE `users`.`username` = :username");
 $userrowquery->bindParam(':username', $_POST['username']);
 $userrowquery->execute();
 
@@ -28,7 +28,7 @@ if (password_verify($_POST['password'], $userrow['password'])) {
     session_set_cookie_params(0, '/');
     session_start();
     $_SESSION['username'] = $userrow['username'];
-    $_SESSION['userid'] = $userrow['ID'];
+    $_SESSION['userid'] = $userrow['id'];
     header('Location: /');
 } else {
     // The login failed.  Bounce them back to the index and make it yell at them.

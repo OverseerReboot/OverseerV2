@@ -213,7 +213,7 @@ function matchItem($itemrow, $requirements): bool
         } elseif ($thisone[0] == "ID" && count($thisone >= 2)) {            // if looking for specific item(s) by ID
             $matched = false;
             for ($j = 1; $j < count($thisone) && !$matched; $j++) {
-                if ($thisone[$j] == $itemrow['ID']) {
+                if ($thisone[$j] == $itemrow['id']) {
                     $matched = true;
                 }
             }
@@ -697,9 +697,9 @@ function phatLoot(& $charrow, $qrow, & $landrow, $gate = 1, $itemcost = 0): int|
     echo "You receive $rewardstring for completing the quest!<br />";
     if (!empty($itemreward)) {
         $item = false;
-        $item = addItem($charrow, $itemreward['ID']);
+        $item = addItem($charrow, $itemreward['id']);
         if ($item == false) {
-            $item = storeItem($charrow, $itemreward['ID']);
+            $item = storeItem($charrow, $itemreward['id']);
         }
     } else {
         $item = true;
@@ -707,13 +707,13 @@ function phatLoot(& $charrow, $qrow, & $landrow, $gate = 1, $itemcost = 0): int|
     $rewardquery = "";
     if ($boonreward > 0) {
         $charrow['boondollars'] += $boonreward;
-        $boons = mysqli_query($connection, "UPDATE `characters` SET `boondollars` = " . $charrow['boondollars'] . " WHERE `id` = " . $charrow['ID'] . " LIMIT 1;");
+        $boons = mysqli_query($connection, "UPDATE `characters` SET `boondollars` = " . $charrow['boondollars'] . " WHERE `id` = " . $charrow['id'] . " LIMIT 1;");
     } else {
         $boons = true;
     }
     if ($unlockreward !== "") {
         $landrow['landallies'] .= $unlockreward;
-        $ally = mysqli_query($connection, "UPDATE `characters` SET `landallies` = " . $landrow['landallies'] . " WHERE `id` = " . $landrow['ID'] . " LIMIT 1;");
+        $ally = mysqli_query($connection, "UPDATE `characters` SET `landallies` = " . $landrow['landallies'] . " WHERE `id` = " . $landrow['id'] . " LIMIT 1;");
     } else {
         $ally = true;
     }
@@ -723,7 +723,7 @@ function phatLoot(& $charrow, $qrow, & $landrow, $gate = 1, $itemcost = 0): int|
             $charrow['questland'] = 0;
         }
         $charrow['economy'] = $charrow['economy'] + $itemcost;
-        mysqli_query($connection, "UPDATE `characters` SET `currentquest` = " . $charrow['currentquest'] . ", `questland` = " . $charrow['questland'] . ", `economy` = " . $charrow['economy'] . " WHERE `id` = " . $charrow['ID'] . " LIMIT 1;");
+        mysqli_query($connection, "UPDATE `characters` SET `currentquest` = " . $charrow['currentquest'] . ", `questland` = " . $charrow['questland'] . ", `economy` = " . $charrow['economy'] . " WHERE `id` = " . $charrow['id'] . " LIMIT 1;");
         return true;
     }
     echo "There was an issue giving the reward! Please contact a developer. <br />";

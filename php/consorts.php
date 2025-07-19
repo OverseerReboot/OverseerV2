@@ -37,9 +37,9 @@ if (empty($_SESSION['character'])) {
         $chumroll = mysqli_query($connection, "SELECT `id`, `land1`, `land2` FROM `characters` WHERE `characters`.`session` = '$charrow[session]';");
         $n = 0;
         while ($chumrow = mysqli_fetch_array($chumroll)) {
-            if ($connected[$chumrow['ID']]) { //Can always fight your own underlings, even with no building done
-                if ($chumrow['ID'] == $charrow['ID']) {
-                    $chumrow['ID'] = 0;
+            if ($connected[$chumrow['id']]) { //Can always fight your own underlings, even with no building done
+                if ($chumrow['id'] == $charrow['id']) {
+                    $chumrow['id'] = 0;
                 }
                 $lands[$n] = $chumrow;
                 $n++;
@@ -48,7 +48,7 @@ if (empty($_SESSION['character'])) {
         $i = 0;
         echo '<form method="get">Select a Land to explore: <select name="land"> ';
         while ($i < $n) { //Note that the last value of n will not correspond to an index.
-            echo '<option value="' . $lands[$i]['ID'] . '">Land of ' . $lands[$i]['land1'] . ' and ' . $lands[$i]['land2'] . '</option>';
+            echo '<option value="' . $lands[$i]['id'] . '">Land of ' . $lands[$i]['land1'] . ' and ' . $lands[$i]['land2'] . '</option>';
             $i++;
         }
         // additional lands should be printed here
@@ -66,7 +66,7 @@ if (empty($_SESSION['character'])) {
             $accesses = chainArray($charrow);
             if ($land > 0 && $accesses[$land]) {
                 $canaccess = true;
-            } elseif ($land == 0 && $accesses[$charrow['ID']]) {
+            } elseif ($land == 0 && $accesses[$charrow['id']]) {
                 $canaccess = true;
             } else {
                 $canaccess = false;
@@ -198,7 +198,7 @@ if (empty($_SESSION['character'])) {
                     $questrow = parseDialogue($questrow, $charrow);
                     echo "A $consort has an ongoing request for you...</br>";
                     if ($accrow['modlevel'] >= 10) {
-                        echo "This quest's ID is " . $questrow['ID'] . ".<br />";
+                        echo "This quest's ID is " . $questrow['id'] . ".<br />";
                     }
                     echo "<br />";
                     echo $questrow['dialogue'] . "<br /><br />";
@@ -234,12 +234,12 @@ if (empty($_SESSION['character'])) {
                 }  // technically bugged, default to fetch quest
                 $questresult = getDialogue($questtype, $charrow, $gate);
                 if ($accrow['modlevel'] >= 10) {
-                    echo "This quest's ID is " . $questresult['ID'] . ".<br />";
+                    echo "This quest's ID is " . $questresult['id'] . ".<br />";
                 }
                 echo "<br />";
                 echo $questresult['dialogue'] . "<br />";
                 echo '<a href="?search=quest&land=' . $land . '">Choose this quest!</a> <a href="?search=quest&land=' . $land . '&completequest=cancel">...or search for another</a><br />';
-                mysqli_query($connection, "UPDATE `characters` SET `currentquest` = " . $questresult['ID'] . ", `questland` = " . $land . " WHERE `id` = " . $charrow['ID'] . " LIMIT 1;");
+                mysqli_query($connection, "UPDATE `characters` SET `currentquest` = " . $questresult['id'] . ", `questland` = " . $land . " WHERE `id` = " . $charrow['id'] . " LIMIT 1;");
             } else {
                 echo "You search $location for a while, but cannot find a single $consort in need of anything! Try waiting a bit.</br>";
             }
@@ -259,7 +259,7 @@ if (empty($_SESSION['character'])) {
                     $thisone = explode(":", $thisone);
                     $shopitem = mysqli_query($connection, "SELECT `name`, `id` FROM `captchalogue` WHERE `id` = " . $thisone[0] . " LIMIT 1;");
                     $shopitem = mysqli_fetch_array($shopitem);
-                    $shopID = $shopitem['ID'];
+                    $shopID = $shopitem['id'];
                     $shopitem = $shopitem['name'];
                     $shopprice = $thisone[1];
                     $shopstock = intval($thisone[2]);
@@ -301,8 +301,8 @@ if (empty($_SESSION['character'])) {
                             }
                         }
                         echo "You purchase " . $shopitem . " x1 for " . $shopprice . " Boondollars.</br>";
-                        mysqli_query($connection, "UPDATE `characters` SET `boondollars` = " . $charrow['boondollars'] . ", `economy` = " . $charrow['economy'] . " WHERE `id` = '" . $charrow['ID'] . "' LIMIT 1;");
-                        mysqli_query($connection, "UPDATE `characters` SET `shopstock` = '" . $charland['shopstock'] . "' WHERE `id` = '" . $charland['ID'] . "' LIMIT 1;");
+                        mysqli_query($connection, "UPDATE `characters` SET `boondollars` = " . $charrow['boondollars'] . ", `economy` = " . $charrow['economy'] . " WHERE `id` = '" . $charrow['id'] . "' LIMIT 1;");
+                        mysqli_query($connection, "UPDATE `characters` SET `shopstock` = '" . $charland['shopstock'] . "' WHERE `id` = '" . $charland['id'] . "' LIMIT 1;");
                     } else {
                         echo "You don't have room in your inventory for this item! You'll have to clear some space before you can buy it.<br />";
                     }
@@ -328,13 +328,13 @@ if (empty($_SESSION['character'])) {
                     if (!$randitem) {
                         $randitem = randomItem("", $gaterow[$gate - 1], $charrow['session']);
                     }
-                    $shopitemID[$tsi] = $randitem['ID'];
+                    $shopitemID[$tsi] = $randitem['id'];
                     $shopitemprice[$tsi] = round(totalBooncost($randitem['gristcosts'], $charland) * $shopinflation);
                     $shopitemstock[$tsi] = 1 + rand(0, $gate * 2);
                     $shopstring .= $shopitemID[$tsi] . ":" . $shopitemprice[$tsi] . ":" . $shopitemstock[$tsi] . "|";
                     $tsi++;
                 }
-                mysqli_query($connection, "UPDATE `characters` SET `shopstock` = '" . $shopstring . "', `lastshoptick` = " . time() . " WHERE `id` = '" . $charland['ID'] . "'");
+                mysqli_query($connection, "UPDATE `characters` SET `shopstock` = '" . $shopstring . "', `lastshoptick` = " . time() . " WHERE `id` = '" . $charland['id'] . "'");
                 $charland['lastshoptick'] = time();
                 $charland['shopstock'] = $shopstring;
             } else {
@@ -383,13 +383,13 @@ if (empty($_SESSION['character'])) {
                 echo '<form action="?land=' . $land . '&search=shop" method="post">';
                 $csi = 0; //current shop item. no, not crime scene investigation.
                 while ($thisitem = mysqli_fetch_assoc($shopitems)) {
-                    $whichisthis = array_search($thisitem['ID'], $shopitemID);
-                    if ($whichisthis === false || $shopitemID[$whichisthis] != $thisitem['ID']) {
+                    $whichisthis = array_search($thisitem['id'], $shopitemID);
+                    if ($whichisthis === false || $shopitemID[$whichisthis] != $thisitem['id']) {
                         logDebugMessage("Something went drastically wrong while printing shop contents of " . $charland['shopstock']);
                         echo "Something went drastically wrong while printing shop contents of " . $charland['shopstock'];
                         continue;
                     }
-                    echo '<input type="radio" name="shopaction" value="' . $thisitem['ID'] . '"> ' . $thisitem['name'] . ' (Cost: ' . $shopitemprice[$whichisthis] . ' Boondollars, ' . $shopitemstock[$whichisthis] . ' in stock)<br />';
+                    echo '<input type="radio" name="shopaction" value="' . $thisitem['id'] . '"> ' . $thisitem['name'] . ' (Cost: ' . $shopitemprice[$whichisthis] . ' Boondollars, ' . $shopitemstock[$whichisthis] . ' in stock)<br />';
                     $canwield = false;
                     $abstrati = explode("|", substr($charrow['abstratus'], 1));
                     for ($i = 0; $i < count($abstrati); $i++) {
@@ -493,7 +493,7 @@ if (empty($_SESSION['character'])) {
             echo '<form method="get">Look for something to do: <select name="search"> ';
             //echo '<option value="quest">Go questing</option>';
             echo '<option value="shop">Buy items</option>';
-            if ($charrow['ID'] == $exchangeloc) {
+            if ($charrow['id'] == $exchangeloc) {
                 echo '<option value="exchange">Visit the Grist Exchange</option>';
             }
             // echo '<option value="mercenary">Hire a consort</option>';

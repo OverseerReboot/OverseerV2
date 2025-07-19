@@ -178,7 +178,7 @@ class Character
         // Set the class ID variable to the ID loaded from the database.
         // There is no real reason that it should differ from what was passed
         // in the original argument, but oh well.
-        $this->id = $charrow['ID'];
+        $this->id = $charrow['id'];
 
         // Start with an empty data table.
         $this->_data = [];

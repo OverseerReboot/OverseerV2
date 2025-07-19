@@ -185,7 +185,7 @@ if ($_SESSION['username'] != "") {
             echo "Searching all databases for items with code: " . $code . "<br />";
             $itemrow = lookup($code, "Feedback"); //look up in feedback to see if someone else submitted this
             if (!empty($itemrow['name'])) {
-                echo "A <a href='submissions.php?view=" . strval($itemrow['ID']) . "'>submission</a> already exists with this code. You may submit another, but keep in mind only one of them will be accepted into the game.<br />";
+                echo "A <a href='submissions.php?view=" . strval($itemrow['id']) . "'>submission</a> already exists with this code. You may submit another, but keep in mind only one of them will be accepted into the game.<br />";
                 //don't keep from loading other existing versions
             }
             $itemrow = lookup($code, "Captchalogue"); //next look up in current database

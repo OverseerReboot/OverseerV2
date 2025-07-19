@@ -11,8 +11,8 @@ $abilityresult = mysqli_query($connection, "SELECT `id`,`name` FROM `abilities` 
 //NOTE - No need to check for god tiers here. They'll be listed as requiring a rung of "1025" and have a god tier requirement instead.
 if ($abilityresult != false) {
     while ($row = mysqli_fetch_array($abilityresult)) {
-        if (strpos("|" . $charrow['abilities'], "|" . $row['ID'] . "|") === false) {
-            $abilities .= intval($row['ID']) . "|"; //Add this ability to the ability string
+        if (strpos("|" . $charrow['abilities'], "|" . $row['id'] . "|") === false) {
+            $abilities .= intval($row['id']) . "|"; //Add this ability to the ability string
             $message .= $charrow['name'] . " gains a new ability: $row[Name]!<br />";
         }
     }

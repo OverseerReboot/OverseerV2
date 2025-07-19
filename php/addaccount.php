@@ -26,7 +26,7 @@ if (!preg_match('/^[a-zA-Z0-9 ]*$/', $_POST['username'])) {
 $_POST['username'] = trim($_POST['username']);
 
 // Grab the user's account line
-$checkquery = $db->prepare("SELECT ID FROM Users WHERE username = :name");
+$checkquery = $db->prepare("SELECT ID FROM `users` WHERE username = :name");
 $checkquery->bindParam(':name', $_POST['username']);
 $checkquery->execute();
 if ($checkquery->rowcount() != 0) {
@@ -52,7 +52,7 @@ if (!isset($_POST['email'])) {
     $_POST['email'] = "";
 }
 
-$insertquery = $db->prepare("INSERT INTO Users (username, password, email) VALUES (:username, :password, :email)");
+$insertquery = $db->prepare("INSERT INTO `users` (username, password, email) VALUES (:username, :password, :email)");
 $insertquery->bindParam(':username', $_POST['username']);
 $insertquery->bindValue(':password', password_hash($_POST['password'], PASSWORD_BCRYPT));
 $insertquery->bindParam(':email', $_POST['email']);

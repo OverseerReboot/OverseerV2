@@ -100,7 +100,7 @@ function genLoot($minloot, $maxloot, $search, $session): string|false
             $i++;
         }
         if ($gtotal > $minloot && $gtotal < $maxloot) { //this loot is good!
-            return strval($row['ID']) . "|" . strval($gtotal);
+            return strval($row['id']) . "|" . strval($gtotal);
         }
     }
     return false; //could not find loot that matches criteria
@@ -193,7 +193,7 @@ if (empty($_SESSION['character'])) {
                     if (!empty($tdir)) {
                         if (strpos($exits, $tdir) !== false) { //chosen movement direction is available
                             if (!$canmove) { //Move hasn't happened yet.
-                                mysqli_query($connection, "UPDATE Characters SET dungeonrow = $trow, dungeoncol = $tcol, olddungeonrow = $row, olddungeoncol = $col WHERE Characters.ID = " . $charrow['ID'] . " LIMIT 1;");
+                                mysqli_query($connection, "UPDATE Characters SET dungeonrow = $trow, dungeoncol = $tcol, olddungeonrow = $row, olddungeoncol = $col WHERE Characters.ID = " . $charrow['id'] . " LIMIT 1;");
                             }
                             $canmove = true;
                             $row = $trow;
@@ -209,7 +209,7 @@ if (empty($_SESSION['character'])) {
                                 $j++;
                                 if ($map[$j] == $troom) { //Transportation success
                                     if (!$canmove) { //Move hasn't happened yet.
-                                        mysqli_query($connection, "UPDATE Characters SET dungeonrow = $trow, dungeoncol = $tcol, olddungeonrow = $row, olddungeoncol = $col WHERE Characters.ID = " . $charrow['ID'] . " LIMIT 1;");
+                                        mysqli_query($connection, "UPDATE Characters SET dungeonrow = $trow, dungeoncol = $tcol, olddungeonrow = $row, olddungeoncol = $col WHERE Characters.ID = " . $charrow['id'] . " LIMIT 1;");
                                     }
                                     $canmove = true;
                                     $row = $trow;
@@ -243,7 +243,7 @@ if (empty($_SESSION['character'])) {
                 if (strpos($dungeonrow['room'], ("ROOM:" . $currentroom . ":")) !== false) { //Room not yet visited, flag it as visited.
                     $dungeonrow['room'] = str_replace(("ROOM:" . $currentroom . ":"), ("VISITED:" . $currentroom . ":"), $dungeonrow['room']);
                     $dungeonstring[$tcol][$trow] = str_replace("ROOM:", "VISITED:", $dungeonstring[$tcol][$trow]);
-                    mysqli_query($connection, "UPDATE Dungeons SET room = '" . $dungeonrow['room'] . "' WHERE Dungeons.ID = " . $dungeonrow['ID'] . " LIMIT 1;");
+                    mysqli_query($connection, "UPDATE Dungeons SET room = '" . $dungeonrow['room'] . "' WHERE Dungeons.ID = " . $dungeonrow['id'] . " LIMIT 1;");
                 }
             }
             $newID = 0;
@@ -294,7 +294,7 @@ if (empty($_SESSION['character'])) {
                     $newencstr = $currentroom . ":EXISTS:BOSS:" . strval($newID);
                     $encstr = implode(":", $enc);
                     $dungeonrow['enc'] = str_replace($encstr, $newencstr, $dungeonrow['enc']);
-                    mysqli_query($connection, "UPDATE Dungeons SET enc = '" . $dungeonrow['enc'] . "' WHERE Dungeons.ID = " . $dungeonrow['ID'] . " LIMIT 1;");
+                    mysqli_query($connection, "UPDATE Dungeons SET enc = '" . $dungeonrow['enc'] . "' WHERE Dungeons.ID = " . $dungeonrow['id'] . " LIMIT 1;");
                 } else { //Encounter not generated yet, so arg 1 is the difficulty
                     $done = false;
                     $mini = $dungeonrow['minpower'] * (1 + ($enc[1] / 10));
@@ -342,7 +342,7 @@ if (empty($_SESSION['character'])) {
                         $newencstr = $currentroom . ":EXISTS:" . strval($newID);
                         $encstr = implode(":", $enc);
                         $dungeonrow['enc'] = str_replace($encstr, $newencstr, $dungeonrow['enc']);
-                        mysqli_query($connection, "UPDATE Dungeons SET enc = '" . $dungeonrow['enc'] . "' WHERE Dungeons.ID = " . $dungeonrow['ID'] . " LIMIT 1;");
+                        mysqli_query($connection, "UPDATE Dungeons SET enc = '" . $dungeonrow['enc'] . "' WHERE Dungeons.ID = " . $dungeonrow['id'] . " LIMIT 1;");
                     }
                 }
                 if ($newID != 0) {
@@ -369,15 +369,15 @@ if (empty($_SESSION['character'])) {
                         echo "<a id='strifelink' href='strifedisplay.php'>==&gt;</a><br />";
                         spendFatigue(10, $charrow);
                         $playerside = 0;
-                        mysqli_query($connection, "UPDATE Strifers SET strifeID = $newID, side = $playerside, leader = 1 WHERE ID = " . strval($strife['ID'])); //Add player
-                        mysqli_query($connection, "UPDATE `strifers` SET `strifeid` = $newID, `side` = $playerside WHERE `strifers`.`owner` = " . $charrow['ID'] . " AND `strifers`.`aspect` = '';"); //Add allies
+                        mysqli_query($connection, "UPDATE Strifers SET strifeID = $newID, side = $playerside, leader = 1 WHERE ID = " . strval($strife['id'])); //Add player
+                        mysqli_query($connection, "UPDATE `strifers` SET `strifeid` = $newID, `side` = $playerside WHERE `strifers`.`owner` = " . $charrow['id'] . " AND `strifers`.`aspect` = '';"); //Add allies
                     } else { //Encounter was beaten by someone else while the explorer was elsewhere. Remove it.
                         echo "Victory!<br />";
                         $newencstr = $currentroom . ":EXISTS:" . strval($newID);
                         $dungeonrow['enc'] = str_replace($newencstr, "", $dungeonrow['enc']);
                         $newencstr = $currentroom . ":EXISTS:BOSS:" . strval($newID);
                         $dungeonrow['enc'] = str_replace($newencstr, "", $dungeonrow['enc']);
-                        mysqli_query($connection, "UPDATE Dungeons SET enc = '" . $dungeonrow['enc'] . "' WHERE Dungeons.ID = " . $dungeonrow['ID'] . " LIMIT 1;");
+                        mysqli_query($connection, "UPDATE Dungeons SET enc = '" . $dungeonrow['enc'] . "' WHERE Dungeons.ID = " . $dungeonrow['id'] . " LIMIT 1;");
                         $newID = 0; //Not fighting anything!
                     }
                 }
@@ -446,23 +446,23 @@ if (empty($_SESSION['character'])) {
                         if ($boonplus > 0) {
                             echo strval($boonplus) . " Boondollars<br />";
                             $charrow['boondollars'] += $boonplus;
-                            mysqli_query($connection, "UPDATE Characters SET boondollars = " . $charrow['boondollars'] . " WHERE Characters.ID = " . $charrow['ID'] . " LIMIT 1;");
+                            mysqli_query($connection, "UPDATE Characters SET boondollars = " . $charrow['boondollars'] . " WHERE Characters.ID = " . $charrow['id'] . " LIMIT 1;");
                         }
                         if ($gotloot) {
                             $lootresult = mysqli_query($connection, "SELECT ID, `name` FROM Captchalogue WHERE $gotloot AND (`session` = 0 OR `session` = $charrow[session])");
                             while ($row = mysqli_fetch_array($lootresult)) {
-                                $got = addItem($charrow, $row['ID']);
+                                $got = addItem($charrow, $row['id']);
                                 echo $row['name'];
                                 if (!$got) {
                                     echo ", but you can't pick it up.";
                                 } else {
                                     echo ", which you captchalogue.";
-                                    $copies = substr_count($loots, strval($row['ID']) . ":");
-                                    $loots = str_replace(strval($row['ID']) . ":", "", $loots); //item was taken, so remove it from the loot string
+                                    $copies = substr_count($loots, strval($row['id']) . ":");
+                                    $loots = str_replace(strval($row['id']) . ":", "", $loots); //item was taken, so remove it from the loot string
                                     //str_replace will delete ALL instances of the item, but preg_replace was erroring. Hence we then restore all but one.
                                     $copies--;
                                     while ($copies > 0) {
-                                        $loots .= strval($row['ID'] . ":");
+                                        $loots .= strval($row['id'] . ":");
                                         $copies--;
                                     }
                                 }
@@ -483,7 +483,7 @@ if (empty($_SESSION['character'])) {
                             echo "DEBUG: $loots contains " . substr_count($loots, ":") . " colons.<br />";
                         }
                         $dungeonrow['loot'] = substr($dungeonrow['loot'], 1);
-                        mysqli_query($connection, "UPDATE Dungeons SET loot = '" . $dungeonrow['loot'] . "' WHERE ID = " . $dungeonrow['ID']);
+                        mysqli_query($connection, "UPDATE Dungeons SET loot = '" . $dungeonrow['loot'] . "' WHERE ID = " . $dungeonrow['id']);
                     }
                 }
             }

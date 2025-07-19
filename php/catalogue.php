@@ -49,7 +49,7 @@ if (empty($_SESSION['username'])) {
     echo "<form action='catalogue.php' method='post'><select name='item'>";
     $baseresult = mysqli_query($connection, "SELECT `id`,`name` FROM `captchalogue` WHERE `base` = 1 ORDER BY name ASC");
     while ($row = mysqli_fetch_array($baseresult)) {
-        echo "<option value='" . $row['ID'] . "'>" . $row['name'] . "</option>";
+        echo "<option value='" . $row['id'] . "'>" . $row['name'] . "</option>";
     }
     echo "</select><input type='submit' value='Captchalogue' /></form>";
 
@@ -57,7 +57,7 @@ if (empty($_SESSION['username'])) {
     echo "<form action='catalogue.php' method='post'><select name='item'>";
     $baseresult = mysqli_query($connection, "SELECT `id`,`name`,`abstratus` FROM `captchalogue` WHERE `base` = 1 AND abstratus IS NOT NULL AND abstratus!='notaweapon' ORDER BY abstratus ASC, name ASC");
     while ($row = mysqli_fetch_array($baseresult)) {
-        echo "<option value='" . $row['ID'] . "'>" . $row['name'] . " - " . $row['abstratus'] ."</option>";
+        echo "<option value='" . $row['id'] . "'>" . $row['name'] . " - " . $row['abstratus'] ."</option>";
     }
     echo "</select><input type='submit' value='Captchalogue' /></form>";
 
@@ -66,7 +66,7 @@ if (empty($_SESSION['username'])) {
     $baseresult = mysqli_query($connection, "SELECT `id`,`name`, `wearable` FROM `captchalogue` WHERE `base` = 1 AND wearable IS NOT NULL AND wearable!='' AND wearable!='none'
 		ORDER BY wearable like '%accessory%', wearable like '%body%', wearable like '%face', wearable like '%head%', name ASC");
     while ($row = mysqli_fetch_array($baseresult)) {
-        echo "<option value='" . $row['ID'] . "'>" . $row['name'] . " - " . $row['wearable'] ."</option>";
+        echo "<option value='" . $row['id'] . "'>" . $row['name'] . " - " . $row['wearable'] ."</option>";
     }
     echo "</select><input type='submit' value='Captchalogue' /></form>";
 
@@ -74,7 +74,7 @@ if (empty($_SESSION['username'])) {
     echo "<form action='catalogue.php' method='post'><select name='item'>";
     $baseresult = mysqli_query($connection, "SELECT `id`,`name` FROM `captchalogue` WHERE `base` = 1 AND `refrance` = 1 ORDER BY name ASC");
     while ($row = mysqli_fetch_array($baseresult)) {
-        echo "<option value='" . $row['ID'] . "'>" . $row['name'] ."</option>";
+        echo "<option value='" . $row['id'] . "'>" . $row['name'] ."</option>";
     }
     echo "</select><input type='submit' value='Captchalogue' /></form>";
 

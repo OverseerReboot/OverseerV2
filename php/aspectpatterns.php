@@ -131,7 +131,7 @@ if (empty($charrow)) {
                     $fail = "You are currently strifing and cannot target outside your current strife.";
                 }
                 //Active conditions: You are the leader, OR you are targeting yourself.
-                if ($striferow['leader'] == 1 || $targetrow['ID'] == $striferow['ID']) {
+                if ($striferow['leader'] == 1 || $targetrow['id'] == $striferow['id']) {
                     $active = true;
                 }
                 if (!$active) {
@@ -162,7 +162,7 @@ if (empty($charrow)) {
                     if ($targetrow['noassist'] == 1) {
                         $fail = "The player you have targeted is currently unable to receive assistance!";
                     }
-                    if ($targetrow['ID'] == $striferow['ID']) {
+                    if ($targetrow['id'] == $striferow['id']) {
                         $active = true;
                     } //Outside strife, only active if you target yourself
                     if (!$active) {
@@ -184,7 +184,7 @@ if (empty($charrow)) {
             while (!empty($abilities[$i])) {
                 switch ($abilities[$i]) { //Abilities only ever have the one argument: Their ID number.
                     case "10": //Hey! Listen! (ID 10)
-                        if ($targetrow['ID'] != $striferow['ID'] && $targetrow['side'] == $striferow['side']) { //Only applies if an ally is targeted.
+                        if ($targetrow['id'] != $striferow['id'] && $targetrow['side'] == $striferow['side']) { //Only applies if an ally is targeted.
                             $aspectpower *= 1.2;
                             echo "Lv. 135 Navitech HEY! LISTEN! activates!! You offer high-quality assistance to your ally, increasing the effectiveness of the buff.<br />";
                         }

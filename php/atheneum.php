@@ -142,10 +142,10 @@ if (empty($_SESSION['character'])) {
     while ($crow = mysqli_fetch_array($captcharesult)) {
         $totalitems++;
         //if the item is in the atheneum
-        if (strrpos($sesrow['atheneum'], "|" . $crow['ID'] . ":") !== false) {
+        if (strrpos($sesrow['atheneum'], "|" . $crow['id'] . ":") !== false) {
             $founditems++;
             //display it
-            echo '<a href="atheneum.php?holoid=' . $crow['ID'] . '">' . $crow['name'] . ' - <itemcode>' . $crow['code'] . '</itemcode></a></br>';
+            echo '<a href="atheneum.php?holoid=' . $crow['id'] . '">' . $crow['name'] . ' - <itemcode>' . $crow['code'] . '</itemcode></a></br>';
         }
     }
     //display percentage of items the session has found

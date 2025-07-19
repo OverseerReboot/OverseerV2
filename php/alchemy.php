@@ -47,7 +47,7 @@ if ($_SESSION['username'] != "") {
             }
             echo "<br />";
             if ($canafford) { //user can afford to spend the grist
-                $success = storeItem($charrow, $itemrow['ID'], $_POST['alchnum']);
+                $success = storeItem($charrow, $itemrow['id'], $_POST['alchnum']);
                 if ($success) { //user has room for all the newly-created items
                     echo "You successfully create " . $itemrow['name'] . " x " . strval($_POST['alchnum']) . "!<br />";
                     incrementStat($charrow, 'alchemy');

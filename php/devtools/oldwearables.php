@@ -38,7 +38,7 @@ if ($accrow['modlevel'] < 10) {
         } //probably not going to happen but you know what
         echo $wrow['name'] . ": " . $newabs . "; " . $newwears . "<br/>";
         if (!empty($_GET['doit'])) {
-            mysqli_query($connection, "UPDATE Captchalogue SET abstratus = '$newabs', wearable = '$newwears' WHERE ID = " . $wrow['ID']);
+            mysqli_query($connection, "UPDATE Captchalogue SET abstratus = '$newabs', wearable = '$newwears' WHERE ID = " . $wrow['id']);
         }
     }
     echo "done with those 100. refresh the page to do more";

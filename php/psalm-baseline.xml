@@ -764,7 +764,7 @@
       <code><![CDATA[howMuchGrist($charrow['grists'], $type)]]></code>
       <code><![CDATA[modifyGrist($charrow['grists'], $type, ($modifier * -1))]]></code>
       <code><![CDATA[modifyGrist($wirerow['grists'], $type, $modifier)]]></code>
-      <code><![CDATA[notifyCharacter($wirerow['ID'], $string)]]></code>
+      <code><![CDATA[notifyCharacter($wirerow['id'], $string)]]></code>
     </UndefinedFunction>
     <UndefinedGlobalVariable>
       <code><![CDATA[$connection]]></code>
@@ -1432,7 +1432,7 @@
       <code><![CDATA[$thisone >= 2]]></code>
     </InvalidArgument>
     <UndefinedFunction>
-      <code><![CDATA[addItem($charrow, $itemreward['ID'])]]></code>
+      <code><![CDATA[addItem($charrow, $itemreward['id'])]]></code>
       <code><![CDATA[initGrists()]]></code>
       <code><![CDATA[lobDebugMessage("Couldn't find random item with no special query!")]]></code>
       <code><![CDATA[logDebugMessage("Invalid item requirement string: " . $boom[$i])]]></code>
@@ -1449,7 +1449,7 @@
       <code><![CDATA[logDebugMessage("phatLoot didn't recieve $errormessage")]]></code>
       <code><![CDATA[logDebugMessage("randomItem given invalid string for costcap: $costcap")]]></code>
       <code><![CDATA[logDebugMessage("randomItem returned -1 for $searchstring, $costtemp!")]]></code>
-      <code><![CDATA[storeItem($charrow, $itemreward['ID'])]]></code>
+      <code><![CDATA[storeItem($charrow, $itemreward['id'])]]></code>
     </UndefinedFunction>
     <UnusedVariable>
       <code><![CDATA[$basecost]]></code>
@@ -1821,10 +1821,10 @@
       <code><![CDATA[getAchievement($profiler, $name)]]></code>
       <code><![CDATA[getChar($profiler['client'])]]></code>
       <code><![CDATA[getChar($profiler['server'])]]></code>
-      <code><![CDATA[getChar(intval($_GET['ID']))]]></code>
+      <code><![CDATA[getChar(intval($_GET['id']))]]></code>
       <code><![CDATA[loadStriferow($profiler['wakeself'])]]></code>
-      <code><![CDATA[profileString($client['ID'])]]></code>
-      <code><![CDATA[profileString($server['ID'])]]></code>
+      <code><![CDATA[profileString($client['id'])]]></code>
+      <code><![CDATA[profileString($server['id'])]]></code>
     </UndefinedFunction>
     <UndefinedGlobalVariable>
       <code><![CDATA[$charrow]]></code>
@@ -1958,10 +1958,10 @@
       <code><![CDATA[modifyGrist($clientrow['grists'], "Build_Grist", ($buildit * -1))]]></code>
       <code><![CDATA[modifyGrist($clientrow['grists'], $tier1grist, -(int)$deploytag[2])]]></code>
       <code><![CDATA[modifyGrist($newgrist, $boomo[0], $boomo[1])]]></code>
-      <code><![CDATA[notifyCharacter($clientrow['ID'], $charrow['name'] . " has spent " . $buildit . " Build Grist building your house!")]]></code>
-      <code><![CDATA[notifyCharacter($row['ID'], $charrow['name'] . " has become your server player!")]]></code>
-      <code><![CDATA[notifyCharacterOnce($charrow, $clientrow['ID'], $charrow['name'] . " has deployed a " . $drow['name'] . " in your house!")]]></code>
-      <code><![CDATA[profileString($clientrow['ID'])]]></code>
+      <code><![CDATA[notifyCharacter($clientrow['id'], $charrow['name'] . " has spent " . $buildit . " Build Grist building your house!")]]></code>
+      <code><![CDATA[notifyCharacter($row['id'], $charrow['name'] . " has become your server player!")]]></code>
+      <code><![CDATA[notifyCharacterOnce($charrow, $clientrow['id'], $charrow['name'] . " has deployed a " . $drow['name'] . " in your house!")]]></code>
+      <code><![CDATA[profileString($clientrow['id'])]]></code>
       <code><![CDATA[setAchievement($charrow, 'gate7')]]></code>
       <code><![CDATA[specialArray($clientrow['storeditems'], $_POST['deployitem'])]]></code>
       <code><![CDATA[specialArray($drow['effects'], "DEPLOYABLE")]]></code>
@@ -2005,9 +2005,9 @@
   <file src="sessionadmin.php">
     <UndefinedFunction>
       <code><![CDATA[notifyCharacter($_POST['adminchar'], "You have become the session's admin!")]]></code>
-      <code><![CDATA[notifyCharacter($clientRow['ID'], $serverRow['name'] . " has become your server player!")]]></code>
+      <code><![CDATA[notifyCharacter($clientRow['id'], $serverRow['name'] . " has become your server player!")]]></code>
       <code><![CDATA[notifyCharacter($exileChar, "You have been sent to DoomHeim as a result of your session being destroyed!")]]></code>
-      <code><![CDATA[notifyCharacter($exiledRow['ID'], "You have been exiled! Welcome to DoomHeim, the exile session!")]]></code>
+      <code><![CDATA[notifyCharacter($exiledRow['id'], "You have been exiled! Welcome to DoomHeim, the exile session!")]]></code>
     </UndefinedFunction>
     <UndefinedGlobalVariable>
       <code><![CDATA[$charrow]]></code>
@@ -2100,7 +2100,7 @@
   </file>
   <file src="sessionmates.php">
     <InvalidArrayOffset>
-      <code><![CDATA[$session['ID']]]></code>
+      <code><![CDATA[$session['id']]]></code>
       <code><![CDATA[$session['creator']]]></code>
       <code><![CDATA[$session['members']]]></code>
       <code><![CDATA[$session['name']]]></code>

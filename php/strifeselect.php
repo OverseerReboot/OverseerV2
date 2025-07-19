@@ -50,7 +50,7 @@ if (!empty($_POST['land'])) {
         echo "Dersite Army power remaining: " . $sessionrow['battlefield_power'] . "<br />";
         echo "Warning! The Black King hasn't been implemented yet so the above doesn't matter right now!<br>";
     }
-    if ($charrow['gatescleared'] >= 7 && $charrow['denizendown'] == 0 && $_POST['land'] == $charrow['ID']) {
+    if ($charrow['gatescleared'] >= 7 && $charrow['denizendown'] == 0 && $_POST['land'] == $charrow['id']) {
         echo '<br /><form action="strifebegin.php" method="post">';
         echo '<input type="hidden" name="Denizen" value="true">';
         echo '<input type="hidden" name="enemy1" value="Denizen">';

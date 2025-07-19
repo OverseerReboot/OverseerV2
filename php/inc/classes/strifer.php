@@ -111,7 +111,7 @@ class Strifer
         }
         $striferow = $strifequery->fetch(PDO::FETCH_ASSOC);
         unset($strifequery);
-        $this->id = $striferow['ID'];
+        $this->id = $striferow['id'];
 
         // Turn all strings and integers directly into data keys
         $this->_data = array(

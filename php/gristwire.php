@@ -46,7 +46,7 @@ if (empty($_SESSION['character'])) {
         if (isset($_POST['amount']) && intval($_POST['amount']) > 0) { //Player is attempting to wire a positive amount of grist.
             //$sessionresult = mysqli_query($connection, "SELECT * FROM `sessions` WHERE `sessions`.`name` = '" . $_POST['session'] . "' LIMIT 1;");
             //$sessionrow = mysqli_fetch_array($sessionresult);
-            //$sessionid = $sessionrow['ID'];
+            //$sessionid = $sessionrow['id'];
             if (1 == 1 or empty($_POST['session'])) {
                 $sessionid = $charrow['session'];
             } //leaving that just in case we want to readd intersession stuff
@@ -70,9 +70,9 @@ if (empty($_SESSION['character'])) {
                             $sendergrist = modifyGrist($charrow['grists'], $type, ($modifier * -1));
                             $receivergrist = modifyGrist($wirerow['grists'], $type, $modifier);
                             $string = $charrow['name'] . " has wired you " . $modifier . " " . $type . "!";
-                            notifyCharacter($wirerow['ID'], $string);
-                            mysqli_query($connection, "UPDATE `characters` SET `grists` = '" . $receivergrist . "' WHERE `characters`.`id` = " . $wirerow['ID'] . " LIMIT 1 ;");
-                            mysqli_query($connection, "UPDATE `characters` SET `grists` = '" . $sendergrist . "' WHERE `characters`.`id` = " . $charrow['ID'] . " LIMIT 1 ;");
+                            notifyCharacter($wirerow['id'], $string);
+                            mysqli_query($connection, "UPDATE `characters` SET `grists` = '" . $receivergrist . "' WHERE `characters`.`id` = " . $wirerow['id'] . " LIMIT 1 ;");
+                            mysqli_query($connection, "UPDATE `characters` SET `grists` = '" . $sendergrist . "' WHERE `characters`.`id` = " . $charrow['id'] . " LIMIT 1 ;");
                             $remainder = howMuchGrist($charrow['grists'], $type) - $modifier;
                             $charrow['grists'] = $sendergrist;
                         }

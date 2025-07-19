@@ -171,7 +171,7 @@ if (empty($_SESSION['character'])) {
             echo "Your adventure has only just begun...<br />";
             setAchievement($charrow, 'medium');
             notifySession($charrow, $charrow['name'] . " has entered the Land of ". $land1 . " and " .$land2 . "!");
-            mysqli_query($connection, "UPDATE `characters` SET `inventory` = '$newinv' WHERE `characters`.`id` = '" . $charrow['ID'] . "'");
+            mysqli_query($connection, "UPDATE `characters` SET `inventory` = '$newinv' WHERE `characters`.`id` = '" . $charrow['id'] . "'");
         }
     } else {
         $alreadyentered = false;

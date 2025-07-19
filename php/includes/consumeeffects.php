@@ -125,9 +125,9 @@ while (!empty($consumeffect[$conscount])) {
         case "HEALTH": //Modifies the current health of targets. Format: HEALTH:<amount>:<scope>:<overs>
             foreach ($strifers as $st => $strow) { //cycle through each strifer
                 if ($strow['health'] > 0) { //don't affect dead guys
-                    if (($args[2] == 0 && $consumuser == $strow['ID']) || ($args[2] == 1 && $strow['side'] == $strifers[$consumerindex]['side'])
+                    if (($args[2] == 0 && $consumuser == $strow['id']) || ($args[2] == 1 && $strow['side'] == $strifers[$consumerindex]['side'])
                     || ($args[2] == 2)
-                    || ($args[2] == 3 && $strow['side'] == $strifers[$targetindex]['side']) || ($args[2] == 4 && $targetuser == $strow['ID'])) { //this strifer falls within the scope
+                    || ($args[2] == 3 && $strow['side'] == $strifers[$targetindex]['side']) || ($args[2] == 4 && $targetuser == $strow['id'])) { //this strifer falls within the scope
                         $strifers[$st]['health'] += $args[1];
                         if ($args[3] != 1) {
                             if ($strifers[$st]['health'] > $strifers[$st]['maxhealth'] && $args[1] > 0) { //we don't want overheals
@@ -144,9 +144,9 @@ while (!empty($consumeffect[$conscount])) {
         case "ENERGY": //Modifies the current energy of targets. Format: ENERGY:<amount>:<scope>:<overs>:<continue if fail>|
             foreach ($strifers as $st => $strow) { //cycle through each strifer
                 if ($strow['health'] > 0) { //don't affect dead guys
-                    if (($args[2] == 0 && $consumuser == $strow['ID']) || ($args[2] == 1 && $strow['side'] == $strifers[$consumerindex]['side'])
+                    if (($args[2] == 0 && $consumuser == $strow['id']) || ($args[2] == 1 && $strow['side'] == $strifers[$consumerindex]['side'])
                     || ($args[2] == 2)
-                    || ($args[2] == 3 && $strow['side'] == $strifers[$targetindex]['side']) || ($args[2] == 4 && $targetuser == $strow['ID'])) { //this strifer falls within the scope
+                    || ($args[2] == 3 && $strow['side'] == $strifers[$targetindex]['side']) || ($args[2] == 4 && $targetuser == $strow['id'])) { //this strifer falls within the scope
                         $strifers[$st]['energy'] += $args[1];
                         if ($args[3] != 1) {
                             if ($strifers[$st]['energy'] > $strifers[$st]['maxenergy'] && $args[1] > 0) { //we don't want overenergizes
@@ -169,15 +169,15 @@ while (!empty($consumeffect[$conscount])) {
         case "BONUS": //Adds a string to the bonuses field of the target strifer. Format: BONUS:<bonus string>:<scope>:<resist>:<message>
             foreach ($strifers as $st => $strow) { //cycle through each strifer
                 if ($strow['health'] > 0) { //don't affect dead guys
-                    if (($args[2] == 0 && $consumuser == $strow['ID']) || ($args[2] == 1 && $strow['side'] == $strifers[$consumerindex]['side'])
+                    if (($args[2] == 0 && $consumuser == $strow['id']) || ($args[2] == 1 && $strow['side'] == $strifers[$consumerindex]['side'])
                     || ($args[2] == 2)
-                    || ($args[2] == 3 && $strow['side'] == $strifers[$targetindex]['side']) || ($args[2] == 4 && $targetuser == $strow['ID'])) { //this strifer falls within the scope
+                    || ($args[2] == 3 && $strow['side'] == $strifers[$targetindex]['side']) || ($args[2] == 4 && $targetuser == $strow['id'])) { //this strifer falls within the scope
                         $roll = rand(1, 100);
                         $resisted = surgicalSearch($strow['resistances'], "|" . $args[3], true); //Pull the target's appropriate resistance if any
                         $target = 100 - $resisted[1]; //Simplified because chance is always 100 in this case
                         if ($roll < $target) {
                             $args[1] = str_replace("@", ":", $args[1]); //Substitute out the @'s in preparation for writing to the target's status
-                            $updatedbonus[$strow['ID']] .= $args[1] . "|";
+                            $updatedbonus[$strow['id']] .= $args[1] . "|";
                             if (empty($args[4])) {
                                 $args[4] = "%TARGET%'s power was affected.";
                             } //extremely generic default message
@@ -198,15 +198,15 @@ while (!empty($consumeffect[$conscount])) {
             $cures = explode(",", $args[1]);
             foreach ($strifers as $st => $strow) { //cycle through each strifer
                 if ($strow['health'] > 0) { //don't affect dead guys
-                    if (($args[2] == 0 && $consumuser == $strow['ID']) || ($args[2] == 1 && $strow['side'] == $strifers[$consumerindex]['side'])
+                    if (($args[2] == 0 && $consumuser == $strow['id']) || ($args[2] == 1 && $strow['side'] == $strifers[$consumerindex]['side'])
                     || ($args[2] == 2)
-                    || ($args[2] == 3 && $strow['side'] == $strifers[$targetindex]['side']) || ($args[2] == 4 && $targetuser == $strow['ID'])) { //this strifer falls within the scope
+                    || ($args[2] == 3 && $strow['side'] == $strifers[$targetindex]['side']) || ($args[2] == 4 && $targetuser == $strow['id'])) { //this strifer falls within the scope
                         $ii = 0;
                         while (!empty($cures[$ii])) {
                             $has = surgicalSearch($strow['status'], $cures[$ii]); //see if the target has this status
                             $iii = 0;
                             while (!empty($has[$iii])) {
-                                $updatedstatus[$strow['ID']] = str_replace(implode(":", $has[$iii]) . "|", "", $updatedstatus[$strow['ID']]); //remove this instance of the status
+                                $updatedstatus[$strow['id']] = str_replace(implode(":", $has[$iii]) . "|", "", $updatedstatus[$strow['id']]); //remove this instance of the status
                                 $iii++;
                             }
                             $ii++;
@@ -235,16 +235,16 @@ while (!empty($consumeffect[$conscount])) {
             }
             foreach ($strifers as $st => $strow) { //cycle through each strifer
                 if ($strow['health'] > 0) { //don't affect dead guys
-                    if (($args[2] == 0 && $consumuser == $strow['ID']) || ($args[2] == 1 && $strow['side'] == $strifers[$consumerindex]['side'])
+                    if (($args[2] == 0 && $consumuser == $strow['id']) || ($args[2] == 1 && $strow['side'] == $strifers[$consumerindex]['side'])
                     || ($args[2] == 2)
-                    || ($args[2] == 3 && $strow['side'] == $strifers[$targetindex]['side']) || ($args[2] == 4 && $targetuser == $strow['ID'])) { //this strifer falls within the scope
+                    || ($args[2] == 3 && $strow['side'] == $strifers[$targetindex]['side']) || ($args[2] == 4 && $targetuser == $strow['id'])) { //this strifer falls within the scope
                         $roll = rand(1, 100);
                         $resisted = surgicalSearch($strow['resistances'], "|" . $args[2], true); //Pull the target's appropriate resistance if any
                         $target = 100 - $resisted[1]; //Simplified because chance is always 100 in this case
                         if ($roll < $target) {
                             $args[0] = str_replace("@", ":", $args[0]); //Substitute out the @'s in preparation for writing to the target's status
                             $args[0] = str_replace("&", "@", $args[0]); //Some status effects want their own @'s to substitute out!
-                            $updatedstatus[$strow['ID']] .= $args[0] . "|";
+                            $updatedstatus[$strow['id']] .= $args[0] . "|";
                             $args[3] = str_replace("%USER%", $strifers[$consumerindex]['name'], $args[3]);
                             $args[3] = str_replace("%TARGET%", $strow['name'], $args[3]);
                             echo $args[3] . "<br />";

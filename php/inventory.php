@@ -62,9 +62,9 @@ if (empty($_SESSION['character'])) {
                         $consumerindex = 1; //User is your waking self.
                         $consumuser = $charrow['wakeself'];
                         if (empty($_POST['target'])) {
-                            $_POST['target'] = $charrow['ID'];
+                            $_POST['target'] = $charrow['id'];
                         }
-                        if ($_POST['target'] != $charrow['ID']) { //Fetch the target's rows and do some verification
+                        if ($_POST['target'] != $charrow['id']) { //Fetch the target's rows and do some verification
                             $targetcharresult = mysqli_query($connection, "SELECT * FROM Characters WHERE Characters.ID = ". mysqli_real_escape_string($connection, $_POST['target']) ." LIMIT 1;");
                             $targetcharrow = mysqli_fetch_array($targetcharresult);
                             if ($targetcharrow['dreamingstatus'] != "Awake") {
@@ -95,14 +95,14 @@ if (empty($_SESSION['character'])) {
                         while ($row = mysqli_fetch_array($striferesult)) {
                             $n++; //NOTE - This means the first strifer will be entry 1 in the array, NOT entry 0
                             $strifers[$n] = $row; //Store each strifer in a successive index
-                            if ($strifers[$n]['ID'] == $consumuser) {
+                            if ($strifers[$n]['id'] == $consumuser) {
                                 $consumerindex = $n;
                             }
-                            if ($strifers[$n]['ID'] == $targetuser) {
+                            if ($strifers[$n]['id'] == $targetuser) {
                                 $targetindex = $n;
                             }
-                            $updatedstatus[$strifers[$n]['ID']] = $strifers[$n]['status']; //We will add new statuses to this if they pop up over the course of resolution.
-                            $updatedbonus[$strifers[$n]['ID']] = $strifers[$n]['bonuses']; //ditto with bonuses
+                            $updatedstatus[$strifers[$n]['id']] = $strifers[$n]['status']; //We will add new statuses to this if they pop up over the course of resolution.
+                            $updatedbonus[$strifers[$n]['id']] = $strifers[$n]['bonuses']; //ditto with bonuses
                         }
                         if (empty($targetindex)) { //Target not found. Default to the consumable user.
                             //Yes, this means you need to coordinate so that you don't accidentally target an already dead strifer
@@ -122,22 +122,22 @@ if (empty($_SESSION['character'])) {
                         $i = 1;
                         while ($i <= $n) {
                             //Check out EOT effects in the status field here
-                            $strifers[$i]['status'] = $updatedstatus[$strifers[$i]['ID']];
-                            $strifers[$i]['bonuses'] = $updatedbonus[$strifers[$i]['ID']];
+                            $strifers[$i]['status'] = $updatedstatus[$strifers[$i]['id']];
+                            $strifers[$i]['bonuses'] = $updatedbonus[$strifers[$i]['id']];
                             $i++;
                         }
                         include "includes/strifefunctions.php"; //for the megaquery
                         $megaquery = buildMegaquery($strifers, $n, $connection);
                         mysqli_query($connection, $megaquery);
                     }
-                } elseif ($irow[$i]['ID'] == 14) { //Hard-coded usage of cruxite artifact
+                } elseif ($irow[$i]['id'] == 14) { //Hard-coded usage of cruxite artifact
                     echo "<a href='enter.php'>If you're ready, enter here.</a><br />";
                 } else {
                     echo "You can't use this item in any special way.<br />";
                 }
             } elseif ($_POST['invaction'] == "drop") { //player wants to drop this item
                 if (!empty($_POST['target'])) {
-                    if ($_POST['target'] == $charrow['ID']) {
+                    if ($_POST['target'] == $charrow['id']) {
                         echo "OW! Why did you do that?<br />";
                     } else {
                         echo "Your ally is not particularly amused by this development.<br />";
@@ -212,7 +212,7 @@ if (empty($_SESSION['character'])) {
                         $invNew = str_replace($i."|", "", $invNew);
                         $invSlotsNew = $charrow['invslots']; //There was a +1 here, but I don't think that's necessary.
 
-                        mysqli_query($connection, "UPDATE `characters` SET `grists` = '$newgrist', `inventory` = '$invNew', `invslots` = " . strval($invSlotsNew) . " WHERE `characters`.`id` = " . $charrow['ID'] . " LIMIT 1;");
+                        mysqli_query($connection, "UPDATE `characters` SET `grists` = '$newgrist', `inventory` = '$invNew', `invslots` = " . strval($invSlotsNew) . " WHERE `characters`.`id` = " . $charrow['id'] . " LIMIT 1;");
                     }
                 } else {
                     echo "You have no items to recycle!<br />";
@@ -412,7 +412,7 @@ if (empty($_SESSION['character'])) {
                 $eresult = mysqli_query($connection, "SELECT * FROM Captchalogue WHERE ID = " . $newequip);
                 $irow[$newequip] = mysqli_fetch_array($eresult);
             }
-            if ($irow[$newequip]['ID'] == intval($args[0])) {
+            if ($irow[$newequip]['id'] == intval($args[0])) {
                 echo "<option value='" . $args[0] . "|" . $args[2] . "'>" . $irow[$newequip]['name']; //puts $args[2] as part of options so we can be sure we're
                 //retrieving the card with the right punched code, for instance
                 if (strpos($args[2], "CODE=") !== false) { //Has a code

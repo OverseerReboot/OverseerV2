@@ -35,7 +35,7 @@ if (empty($_SESSION['character'])) {
                 $sessionesc = str_replace("'", "''", $_POST['session']);
                 $sessionresult = mysqli_query($connection, "SELECT * FROM Sessions WHERE `name` = '". mysqli_real_escape_string($connection, $sessionesc) ."';");
                 $sessionrow = mysqli_fetch_array($sessionresult);
-                $sessionid = $sessionrow['ID'];
+                $sessionid = $sessionrow['id'];
             }
 
             if ($_POST['target'] == $charrow['name']) { //Player is trying to wire themselves boondollars!
@@ -52,7 +52,7 @@ if (empty($_SESSION['character'])) {
                         if ($wirerow2['name'] == $_POST['target']) {
                             $targetfound = true;
                             $modifier = intval($_POST['amount']);
-                            notifyCharacter($wirerow2['ID'], $charrow['name'] . " has sent you ". $modifier . " boondollars!");
+                            notifyCharacter($wirerow2['id'], $charrow['name'] . " has sent you ". $modifier . " boondollars!");
                             $lessmoney = mysqli_query($connection, "UPDATE Characters SET boondollars = boondollars - $modifier WHERE name = '$charrow[name]' AND session = $charrow[session];");
                             $quantity = $charrow['boondollars'] - $modifier;
                             $moremoney = mysqli_query($connection, "UPDATE Characters SET boondollars = boondollars + $modifier WHERE name = '". mysqli_real_escape_string($connection, $_POST['target']) ."' AND session = $sessionid;");

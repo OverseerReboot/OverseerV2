@@ -16,7 +16,7 @@ if (!isset($_GET['c'])) {
 }
 
 // Grab the user's account line
-$accquery = $db->prepare("SELECT ID,username,characters FROM Users WHERE ID = :userid");
+$accquery = $db->prepare("SELECT ID,username,characters FROM `users` WHERE ID = :userid");
 $accquery->bindParam(':userid', $_SESSION['userid']);
 $accquery->execute();
 if ($accquery->rowcount() != 1) {
@@ -36,14 +36,14 @@ $charrow = $charquery->fetch();
 unset($charquery);
 
 // Friends don't let friends delete other friends characters!
-if ($charrow['owner'] != $accrow['ID']) {
+if ($charrow['owner'] != $accrow['id']) {
     exit("You cannot delete a character that is not yours!");
 }
 
 // Check that it has been confirmed.
 if (!isset($_GET['confirm'])) {
     echo('u gon delete '.$charrow['name']."<br>\n");
-    echo('<a href="?c='.$charrow['ID'].'&confirm">click here to confirm</a>');
+    echo('<a href="?c='.$charrow['id'].'&confirm">click here to confirm</a>');
     exit();
 }
 
@@ -69,7 +69,7 @@ if ($sessionquery->rowcount() != 1) {
 $sessionrow = $sessionquery->fetch();
 unset($sessionquery);
 $sessmembers = explode('|', $sessionrow['members']);
-unset($sessmembers[array_search($charrow['ID'], $sessmembers)]);
+unset($sessmembers[array_search($charrow['id'], $sessmembers)]);
 $sessionrow['members'] = implode('|', $sessmembers);
 $sessionquery = $db->prepare("UPDATE Sessions SET members = :members WHERE ID = :sessionid");
 $sessionquery->bindParam(':sessionid', $charrow['session']);
@@ -79,22 +79,22 @@ unset($sessionquery);
 
 // Get the session's data, modify it to remove the user, and put it back
 $userchars = explode('|', $accrow['characters']);
-unset($userchars[array_search($charrow['ID'], $userchars)]);
+unset($userchars[array_search($charrow['id'], $userchars)]);
 $accrow['characters'] = implode('|', $userchars);
-$userquery = $db->prepare("UPDATE Users SET characters = :characters WHERE ID = :userid");
-$userquery->bindParam(':userid', $accrow['ID']);
+$userquery = $db->prepare("UPDATE `users` SET characters = :characters WHERE ID = :userid");
+$userquery->bindParam(':userid', $accrow['id']);
 $userquery->bindParam(':characters', $accrow['characters']);
 $userquery->execute();
 unset($userquery);
 
-if (($charrow['server'] != 0) && ($charrow['server'] != $charrow['ID'])) {
+if (($charrow['server'] != 0) && ($charrow['server'] != $charrow['id'])) {
     $serverreset = $db->prepare("UPDATE Characters SET client = 0 WHERE ID = :serverid");
     $serverreset->bindParam(':serverid', $charrow['server']);
     $serverreset->execute();
     unset($serverreset);
 }
 
-if (($charrow['client'] != 0) && ($charrow['client'] != $charrow['ID'])) {
+if (($charrow['client'] != 0) && ($charrow['client'] != $charrow['id'])) {
     $clientreset = $db->prepare("UPDATE Characters SET server = 0 WHERE ID = :clientid");
     $clientreset->bindParam(':clientid', $charrow['client']);
     $clientreset->execute();

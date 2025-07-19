@@ -12,7 +12,7 @@ $sessionquery = mysqli_query($connection, "SELECT * FROM `sessions` WHERE `id` =
 $session = mysqli_fetch_array($sessionquery, MYSQLI_ASSOC);
 
 $characterids = explode("|", $session['members']);
-echo 'Session ' . $session['ID'] . ' named "' . $session['name'] . '" owned by ' . $session['creator'] . ' with ' . (count($characterids) - 1) .' members.<br>';
+echo 'Session ' . $session['id'] . ' named "' . $session['name'] . '" owned by ' . $session['creator'] . ' with ' . (count($characterids) - 1) .' members.<br>';
 ?>
 <table>
 <tr><th>Name</th><th>Server Player</th><th>Client Player</th></tr>
@@ -28,14 +28,14 @@ foreach ($characterids as $characterid) {
     } echo rowProfileStringSoft($curchar) . '</td>';
     if ($curchar['server'] == 0) {
         echo '<td style="background-color: #FFDDDD;"></td>';
-    } elseif ($curchar['server'] == $curchar['ID']) {
+    } elseif ($curchar['server'] == $curchar['id']) {
         echo '<td style="background-color: #DDDDDD;">' . rowProfileStringSoft($curchar) . '</td>';
     } else {
         echo '<td>' . profileStringSoft($curchar['server']) . '</td>';
     }
     if ($curchar['client'] == 0) {
         echo '<td style="background-color: #FFDDDD;"></td>';
-    } elseif ($curchar['client'] == $curchar['ID']) {
+    } elseif ($curchar['client'] == $curchar['id']) {
         echo '<td style="background-color: #DDDDDD";>' . rowProfileStringSoft($curchar) . '</td>';
     } else {
         echo '<td>' . profileStringSoft($curchar['client']) . '</td>';

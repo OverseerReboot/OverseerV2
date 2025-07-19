@@ -111,7 +111,7 @@ class Item
         }
         $itemrow = $itemquery->fetch(PDO::FETCH_ASSOC);
         unset($itemquery);
-        $this->id = $itemrow['ID'];
+        $this->id = $itemrow['id'];
 
         // Turn all strings and integers directly into data keys
         $this->_data = array(

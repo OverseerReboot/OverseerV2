@@ -51,11 +51,11 @@ if ($striferow['strifeID'] == 0 || empty($striferow['strifeID'])) { //This user 
         //we'd end up in an infinite loop of attacks.
         $strifers[$n]['luck'] += $strifers[$n]['brief_luck']; //Add temporary luck to the luck value
         $strifers[$n]['bonuses'] .= $strifers[$n]['equipbonuses']; //Add equip bonuses to the bonuses field here
-        $updatedstatus[$strifers[$n]['ID']] = $strifers[$n]['status']; //We will add new statuses to this if they pop up over the course of resolution.
+        $updatedstatus[$strifers[$n]['id']] = $strifers[$n]['status']; //We will add new statuses to this if they pop up over the course of resolution.
         $strifers[$n]['status'] .= $strifers[$n]['equipstatus']; //Add in status effects granted by equips here so that they don't get duplicated
         //IMPORTANT NOTE - Every entry will tick down immediately in the post effects area! Always add an additional turn to the duration of statuses
         //added to updatedstatus.
-        if ($strifers[$n]['owner'] == $charrow['ID']) {
+        if ($strifers[$n]['owner'] == $charrow['id']) {
             $playerside = $strifers[$n]['side'];
         } //Set $playerside to the side the player is on
     }
@@ -63,13 +63,13 @@ if ($striferow['strifeID'] == 0 || empty($striferow['strifeID'])) { //This user 
         //First, we set them to lastactive and lastpassive. This way if nothing acts to change them, they will remain at those values.
         $strifers[$i]['active'] = $strifers[$i]['lastactive'];
         $strifers[$i]['passive'] = $strifers[$i]['lastpassive'];
-        $activestr = strval($strifers[$i]['ID']) . "active";
-        $passivestr = strval($strifers[$i]['ID']) . "passive";
+        $activestr = strval($strifers[$i]['id']) . "active";
+        $passivestr = strval($strifers[$i]['id']) . "passive";
         //Set the commands according to form input, if any.
-        if (!empty($_POST[$activestr]) && $strifers[$i]['control'] == 1 && $strifers[$i]['owner'] == $charrow['ID']) {
+        if (!empty($_POST[$activestr]) && $strifers[$i]['control'] == 1 && $strifers[$i]['owner'] == $charrow['id']) {
             $strifers[$i]['active'] = $_POST[$activestr];
         }
-        if (!empty($_POST[$passivestr]) && $strifers[$i]['control'] == 1 && $strifers[$i]['owner'] == $charrow['ID']) {
+        if (!empty($_POST[$passivestr]) && $strifers[$i]['control'] == 1 && $strifers[$i]['owner'] == $charrow['id']) {
             $strifers[$i]['passive'] = $_POST[$passivestr];
         }
         //Set lastactive and lastpassive again. (If no change, they'll just end up the same as they were!)
@@ -143,7 +143,7 @@ if ($striferow['strifeID'] == 0 || empty($striferow['strifeID'])) { //This user 
                     }
                     $offense = floor($attackerpower['offense'] * (rand($minoffenseroll, 110) / 100));
 
-                    if ($strifers[$i]['owner'] == $charrow['ID']) {
+                    if ($strifers[$i]['owner'] == $charrow['id']) {
                         maxStat($charrow, 'maxdamage', $offense);
                     }
 

@@ -49,12 +49,12 @@ if (empty($_SESSION['username'])) {
             $sessionmates = mysqli_query($connection, "SELECT * FROM Characters WHERE `characters`.`id` = " . $_POST['client']);
             while ($row = mysqli_fetch_array($sessionmates)) {
                 if ($row['session'] == $charrow['session']) { //Make sure the client is actually in the correct session!
-                    if ($row['ID'] == $_POST['client'] && ($row['server'] == 0 || $row['server'] == $cid)) { //Ensure they don't already have a server player
+                    if ($row['id'] == $_POST['client'] && ($row['server'] == 0 || $row['server'] == $cid)) { //Ensure they don't already have a server player
                         $playerfound = true;
                         $client = mysqli_real_escape_string($connection, $_POST['client']);
                         mysqli_query($connection, "UPDATE `characters` SET `server` = $cid WHERE `characters`.`id` = $client LIMIT 1 ;");
                         mysqli_query($connection, "UPDATE `characters` SET `client` = $client WHERE `characters`.`id` = $cid LIMIT 1 ;");
-                        notifyCharacter($row['ID'], $charrow['name'] . " has become your server player!");
+                        notifyCharacter($row['id'], $charrow['name'] . " has become your server player!");
                         echo "Client registered.<br />";
                         $charrow['client'] = $client;
                     } else {
@@ -88,7 +88,7 @@ if (empty($_SESSION['username'])) {
                         $foundone = true;
                         echo '<form action="sburbserver.php" method="post">Register client player: <select name="client">';
                     }
-                    echo '<option value="' . strval($clientrow['ID']) . '">' . $clientrow['name'] . '</option>';
+                    echo '<option value="' . strval($clientrow['id']) . '">' . $clientrow['name'] . '</option>';
                 }
                 if ($foundone) {
                     echo '</select><input type="submit" value="Connect it!" /></form><br />';
@@ -109,7 +109,7 @@ if (empty($_SESSION['username'])) {
             }
             if ($clientrow['server'] != $cid) {
                 echo "Something went amiss, and your client player doesn't have you set as their server! We've just attempted to fix this, but if you see this message multiple times, please submit a bug report.<br />";
-                mysqli_query($connection, "UPDATE `characters` SET `server` = $cid WHERE `characters`.`id` = '" . $clientrow['ID'] . "' LIMIT 1;");
+                mysqli_query($connection, "UPDATE `characters` SET `server` = $cid WHERE `characters`.`id` = '" . $clientrow['id'] . "' LIMIT 1;");
             }
 
             if (!empty($_POST['build'])) { //Working on the client player's house
@@ -118,12 +118,12 @@ if (empty($_SESSION['username'])) {
                         $buildit = intval($_POST['build']);
                         $newtotal = $buildit + $clientrow['house_build'];
                         $newgrist = modifyGrist($clientrow['grists'], "Build_Grist", ($buildit * -1));
-                        mysqli_query($connection, "UPDATE `characters` SET `house_build` = '$newtotal', `grists` = '$newgrist' WHERE `characters`.`id` = '" . $clientrow['ID'] . "' LIMIT 1 ;"); //Debit the grist
+                        mysqli_query($connection, "UPDATE `characters` SET `house_build` = '$newtotal', `grists` = '$newgrist' WHERE `characters`.`id` = '" . $clientrow['id'] . "' LIMIT 1 ;"); //Debit the grist
                         echo "Build successful!<br />";
                         if ($newtotal >= 24000000) {
                             setAchievement($charrow, 'gate7');
                         }
-                        notifyCharacter($clientrow['ID'], $charrow['name'] . " has spent " . $buildit . " Build Grist building your house!");
+                        notifyCharacter($clientrow['id'], $charrow['name'] . " has spent " . $buildit . " Build Grist building your house!");
                         $clientrow['house_build'] = $newtotal;
                         $build -= $buildit;
                     } else {
@@ -137,7 +137,7 @@ if (empty($_SESSION['username'])) {
                             $buildit = intval($_POST['build']);
                             $newtotal = $buildit + $clientrow['house_build'];
                             $newgrist = modifyGrist($clientrow['grists'], "Build_Grist", ($buildit * -1));
-                            mysqli_query($connection, "UPDATE `characters` SET `house_build` = '$newtotal', `grists` = '$newgrist' WHERE `characters`.`id` = '" . $clientrow['ID'] . "' LIMIT 1 ;"); //Credit the grist
+                            mysqli_query($connection, "UPDATE `characters` SET `house_build` = '$newtotal', `grists` = '$newgrist' WHERE `characters`.`id` = '" . $clientrow['id'] . "' LIMIT 1 ;"); //Credit the grist
                             echo "Unbuild successful!<br />";
                             $clientrow['house_build'] = $newtotal;
                             $build -= $buildit;
@@ -167,10 +167,10 @@ if (empty($_SESSION['username'])) {
                         if ($currentstack < $fullstack || $drow['code'] == "11111111") { //the user doesn't have this in their storage yet
                             $canafford = false;
                             $extras = "";
-                            if ($deploytag[1] == "FREE" || ($clientrow['inmedium'] == 0 && $drow['ID'] == 11)) {
+                            if ($deploytag[1] == "FREE" || ($clientrow['inmedium'] == 0 && $drow['id'] == 11)) {
                                 $canafford = true;
                                 $newgrist = $clientrow['grists'];
-                                if ($drow['ID'] == 11) {
+                                if ($drow['id'] == 11) {
                                     $extras = "CODE=cZCMY4Qf.";
                                 } //This is the code and ID for the pre-punched card.
                             } elseif ($deploytag[1] == "TIER1") {
@@ -190,11 +190,11 @@ if (empty($_SESSION['username'])) {
                                 }
                             }
                             if ($canafford) {
-                                $success = storeItem($clientrow, $drow['ID'], 1, $extras);
+                                $success = storeItem($clientrow, $drow['id'], 1, $extras);
                                 if ($success) {
                                     mysqli_query($connection, "UPDATE Characters SET grists = '$newgrist' WHERE ID = '$clientrow[ID]' LIMIT 1;");
-                                    notifyCharacterOnce($charrow, $clientrow['ID'], $charrow['name'] . " has deployed a " . $drow['name'] . " in your house!");
-                                    if ($clientrow['inmedium'] == 0 && $drow['ID'] == 11) {
+                                    notifyCharacterOnce($charrow, $clientrow['id'], $charrow['name'] . " has deployed a " . $drow['name'] . " in your house!");
+                                    if ($clientrow['inmedium'] == 0 && $drow['id'] == 11) {
                                         echo "Pre-punched Card successfully deployed!<br />";
                                     } else {
                                         echo $drow['name'] . " successfully deployed!<br />";
@@ -231,7 +231,7 @@ if (empty($_SESSION['username'])) {
                         if (!empty($_POST['r-' . $args[0]])) { //This item is being recycled
                             $iresult = mysqli_query($connection, "SELECT * FROM `captchalogue` WHERE `captchalogue`.`id` = " . $args[0] . " LIMIT 1;");
                             $irow = mysqli_fetch_array($iresult);
-                            if ($irow['ID'] == $args[0]) {
+                            if ($irow['id'] == $args[0]) {
                                 if ($_POST['q-' . $args[0]] < 1 || empty($_POST['q-' . $args[0]])) {
                                     $_POST['q-' . $args[0]] = 1;
                                 } //set to 1 if blank or less than 0
@@ -287,7 +287,7 @@ if (empty($_SESSION['username'])) {
                         $i++;
                     }
                     if ($updatestore != $clientrow['storeditems']) {
-                        mysqli_query($connection, "UPDATE `characters` SET `grists` = '$newgrist', `storeditems` = '$updatestore', `storedspace` = " . strval($clientrow['storedspace']) . " WHERE `characters`.`id` = " . $clientrow['ID'] . " LIMIT 1;");
+                        mysqli_query($connection, "UPDATE `characters` SET `grists` = '$newgrist', `storeditems` = '$updatestore', `storedspace` = " . strval($clientrow['storedspace']) . " WHERE `characters`.`id` = " . $clientrow['id'] . " LIMIT 1;");
                     }
                 } else {
                     echo "Your client has nothing to recycle!<br />";
@@ -300,7 +300,7 @@ if (empty($_SESSION['username'])) {
             //refresh clientrow so that things like grist and storage are up-to-date. yeah it's inefficient but I'm lazy so
 
             echo "SBURB Server Menu<br />";
-            echo "Client player: " . profileString($clientrow['ID']) . "<br />";
+            echo "Client player: " . profileString($clientrow['id']) . "<br />";
             echo "Client's build grist: $build<br /><br />";
 
             echo "&gt;Revise<br />";
@@ -349,7 +349,7 @@ if (empty($_SESSION['username'])) {
                     $coststring = howMuchGrist($drow['gristcosts'], "Build_Grist") . " Build Grist";
                 }
                 if ($coststring == "--" || $clientrow['inmedium'] == 1) { //don't allow other stuff to be deployed until the player enters the medium
-                    echo '<option value="' . $drow['ID'] . '">' . $drow['name'] . ' (Cost: ' . $coststring . ')</option>';
+                    echo '<option value="' . $drow['id'] . '">' . $drow['name'] . ' (Cost: ' . $coststring . ')</option>';
                 }
             }
             if ($clientrow['inmedium'] == 0) {
@@ -368,7 +368,7 @@ if (empty($_SESSION['username'])) {
                     $args = explode(":", $boom[$i - 1]);
                     $iresult = mysqli_query($connection, "SELECT `id`,`name` FROM `captchalogue` WHERE `id` = " . $args[0] . " LIMIT 1;");
                     $irow = mysqli_fetch_array($iresult);
-                    if ($irow['ID'] == intval($args[0])) {
+                    if ($irow['id'] == intval($args[0])) {
                         echo '<input type="checkbox" name="r-' . $args[0] . '" value="yes">';
                         echo $irow['name'] . ' x ' . $args[1];
                         if ($args[1] > 1) {

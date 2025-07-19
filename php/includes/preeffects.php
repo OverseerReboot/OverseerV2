@@ -23,7 +23,7 @@ while ($i <= $n) {
                 $roll = rand(1, 100);
                 if ($roll <= 20) {
                     $strifers[$i]['status'] .= "CANTATTACK:1|";
-                    $updatedstatus[$strifers[$i]['ID']] .= "GLITCHED:6|";
+                    $updatedstatus[$strifers[$i]['id']] .= "GLITCHED:6|";
                     $output .= generateGlitchString() . "<br />";
                 }
                 break;
@@ -114,7 +114,7 @@ while ($i <= $n) {
                 break;
             case "11": //Blockhead (ID 11)
                 $amount = ceil($strifers[$i]['maxpower'] / 33.3); //3% of max power recovered every round if it's drained.
-                $updatedstatus[$strifers[$i]['ID']] .= "RECOVERY:1:$amount|";
+                $updatedstatus[$strifers[$i]['id']] .= "RECOVERY:1:$amount|";
                 $output .= $strifers[$i]['name'] . "'s Level 29 Mindcraft Blockhead activates! A combination of combat focus and stubbornness removes some of the power drain affecting them, if any.<br />";
                 break;
             case "17": //Blood Bonds (ID 17)
@@ -234,7 +234,7 @@ while ($i <= $n) {
                         $strifers[$k]['health'] -= $damage;
                         $strifers[$k]['damagetaken'] += $damage;
                         $strifers[$k]['power'] -= $powerdown;
-                        $updatedstatus[$strifers[$k]['ID']] .= $status; //Don't want unlucky appearing and affecting before the player can do anything
+                        $updatedstatus[$strifers[$k]['id']] .= $status; //Don't want unlucky appearing and affecting before the player can do anything
                         $strifers[$k]['bonuses'] .= $bonus;
                         $k++;
                     }
@@ -275,7 +275,7 @@ while ($i <= $n) {
             case "Time/II":
                 $j = 1;
                 while ($j <= $n) {
-                    if ($strifers[$j]['ID'] != $strifers[$i]['ID']) {
+                    if ($strifers[$j]['id'] != $strifers[$i]['id']) {
                         $strifers[$j]['status'] .= "CANTATTACK:1|CANTDEFEND:1|";
                     }
                     $j++;

@@ -94,7 +94,7 @@ if (empty($_SESSION['username'])) {
                             mysqli_query($connection, "UPDATE `feedback` SET `defunct` = 0, `clarify` = 0, `greenlight` = 0, `suspended` = 0, `halp` = 0 WHERE `feedback`.`id` = '" . strval($_POST['moderatethis']) . "' ;");
                             mysqli_query($connection, "UPDATE `feedback` SET `$dostring` = 1 WHERE `feedback`.`id` = '" . strval($_POST['moderatethis']) . "' ;");
                             if ($dostring == "greenlight") {
-                                $playersql = mysqli_query($connection, "SELECT * FROM Users WHERE username ='" . $feedrow['user'] . "';"); //should give me the user row
+                                $playersql = mysqli_query($connection, "SELECT * FROM `users` WHERE username ='" . $feedrow['user'] . "';"); //should give me the user row
                                 $playerarray = mysqli_fetch_array($playersql);
                                 $playerchars = explode("|", $playerarray['characters']);
                                 array_pop($playerchars); //remove phantom character from the end
@@ -124,7 +124,7 @@ if (empty($_SESSION['username'])) {
     if (!empty($_GET['view'])) {
         $feedresult = mysqli_query($connection, "SELECT * FROM `feedback` WHERE `feedback`.`id` = '" . mysqli_real_escape_string($connection, strval($_GET['view'])) . "' ;");
         $feedrow = mysqli_fetch_array($feedresult);
-        if ($feedrow['ID'] == $_GET['view']) {
+        if ($feedrow['id'] == $_GET['view']) {
             if (!empty($_POST['vote'])) {
                 if ($feedrow['user'] != $username) {
                     if (strrpos($feedrow['likers'], $username) === false) {
@@ -180,15 +180,15 @@ if (empty($_SESSION['username'])) {
                                 $msgfield = "msg" . strval($check);
                                 $newmsgstring = "Submissions|";
                                 if ($dostring == "greenlight") {
-                                      $newmsgstring = $newmsgstring . "Your submission was greenlit (ID " . strval($feedrow['ID']) . ")|";
+                                      $newmsgstring = $newmsgstring . "Your submission was greenlit (ID " . strval($feedrow['id']) . ")|";
                                   } elseif ($dostring == "defunct") {
-                                      $newmsgstring = $newmsgstring . "Your submission was marked for deletion (ID " . strval($feedrow['ID']) . ")|";
+                                      $newmsgstring = $newmsgstring . "Your submission was marked for deletion (ID " . strval($feedrow['id']) . ")|";
                                   } elseif ($dostring == "clarify") {
-                                      $newmsgstring = $newmsgstring . "Your submission requires clarification (ID " . strval($feedrow['ID']) . ")|";
+                                      $newmsgstring = $newmsgstring . "Your submission requires clarification (ID " . strval($feedrow['id']) . ")|";
                                   } elseif ($dostring == "suspended") {
-                                      $newmsgstring = $newmsgstring . "Your submission was suspended (ID " . strval($feedrow['ID']) . ")|";
+                                      $newmsgstring = $newmsgstring . "Your submission was suspended (ID " . strval($feedrow['id']) . ")|";
                                   }
-                                  $newmsgstring = mysqli_real_escape_string($connection, $newmsgstring . 'A moderator flagged <a href="submissions.php?view=' . strval($feedrow['ID']) . '">' . $feedrow['name'] . "</a> and said the following:</br>" . $realbody);
+                                  $newmsgstring = mysqli_real_escape_string($connection, $newmsgstring . 'A moderator flagged <a href="submissions.php?view=' . strval($feedrow['id']) . '">' . $feedrow['name'] . "</a> and said the following:</br>" . $realbody);
                                   if (!empty($_POST['greenenc']) && $dostring == "greenlight") {
                                       if ($accrow['modlevel'] >= 3) {
                                       $reward = intval($_POST['greenenc']);
@@ -252,7 +252,7 @@ if (empty($_SESSION['username'])) {
                 $stylestring = "randomized";
             }
             $likestring = "+" . strval($feedrow['likes']);
-            echo '<' . $stylestring . '>Submission ID: ' . strval($feedrow['ID']) . ' <b>(' . $likestring . ')</b></' . $stylestring . '></br>';
+            echo '<' . $stylestring . '>Submission ID: ' . strval($feedrow['id']) . ' <b>(' . $likestring . ')</b></' . $stylestring . '></br>';
             if ($accrow['modlevel'] >= 1) {
                 echo 'Submitted by: ' . $feedrow['user'] . '</br>';
                 echo 'Item code: <itemcode>' . $feedrow['code'] . '</itemcode></br>';
@@ -361,7 +361,7 @@ if (empty($_SESSION['username'])) {
             }
             //echo produceTimeSinceUpdate($feedrow['lastupdated']);
             echo "</br>";
-            echo '<form action="submissions.php?view=' . strval($feedrow['ID']) . '&page=' . strval($page) . '&sort=' . $sort . '&mode=' . $mode . '&order=' . $order . '" method="post" id="usercomment">';
+            echo '<form action="submissions.php?view=' . strval($feedrow['id']) . '&page=' . strval($page) . '&sort=' . $sort . '&mode=' . $mode . '&order=' . $order . '" method="post" id="usercomment">';
             echo '<input type="checkbox" name="vote" value="vote"> Vote Up</br>';
             echo 'Leave a comment (optional): Use this field to offer improvements on the submission, such as recipe changes, grist costs, or power levels. Every idea helps!</br><textarea name="body" rows="6" cols="40" form="usercomment"></textarea></br>';
             if ($feedrow['clarify'] == 1) {
@@ -369,8 +369,8 @@ if (empty($_SESSION['username'])) {
             }
             if ($accrow['modlevel'] >= 1) {
                 echo '</br>Moderative actions:</br>';
-                //echo '<form action="submissions.php?view=' . strval($feedrow['ID']) . '&page=' . strval($page) . '&sort=' . $sort . '&mode=' . $mode . '" method="post">';
-                echo '<input type="hidden" name="moderatethis" value="' . strval($feedrow['ID']) . '">';
+                //echo '<form action="submissions.php?view=' . strval($feedrow['id']) . '&page=' . strval($page) . '&sort=' . $sort . '&mode=' . $mode . '" method="post">';
+                echo '<input type="hidden" name="moderatethis" value="' . strval($feedrow['id']) . '">';
                 echo '<input type="radio" name="modaction" value="defunct"> <defunct>Mark for deletion</defunct></br>';
                 echo '<input type="radio" name="modaction" value="clarify"> <clarify>Request clarification</clarify></br>';
                 echo '<input type="radio" name="modaction" value="greenlight"> <greenlit>Greenlight item</greenlit>';
@@ -386,10 +386,10 @@ if (empty($_SESSION['username'])) {
             }
             echo '<input type="submit" value="Share your opinion" /></form>';
             if ($feedrow['user'] == $username || ($accrow['modlevel'] >= 3 && $feedrow['defunct'] == 1)) {
-                echo '</br><form action="submissions.php?page=' . strval($page) . '&sort=' . $sort . '&mode=' . $mode . '&order=' . $order . '" method="post"><input type="hidden" name="delete" value="' . strval($feedrow['ID']) . '"><input type="submit" value="Delete this submission"></form></br>';
+                echo '</br><form action="submissions.php?page=' . strval($page) . '&sort=' . $sort . '&mode=' . $mode . '&order=' . $order . '" method="post"><input type="hidden" name="delete" value="' . strval($feedrow['id']) . '"><input type="submit" value="Delete this submission"></form></br>';
             }
             if ($feedrow['greenlight'] == 1 && $accrow['modlevel'] >= 4) {
-                echo '</br><form action="devtools/itemedit.php" method="get" target="_blank"><input type="hidden" name="sub" value="' . strval($feedrow['ID']) . '"><input type="submit" value="Take this to the Item Editor"></form></br>';
+                echo '</br><form action="devtools/itemedit.php" method="get" target="_blank"><input type="hidden" name="sub" value="' . strval($feedrow['id']) . '"><input type="submit" value="Take this to the Item Editor"></form></br>';
             }
         } else {
             echo 'No item submission with that ID exists.</br>';
@@ -482,7 +482,7 @@ if (empty($_SESSION['username'])) {
         }
         $boom = explode("|", $showrow['usercomments']);
         $allmessages = count($boom) - 1;
-        echo '<tr><td><' . $stylestring . '>' . strval($showrow['ID']) . '</' . $stylestring . '></td><td><a href="submissions.php?view=' . strval($showrow['ID']) . '&page=' . strval($page) . '&sort=' . $sort . '&mode=' . $mode . '&order=' . $order . '">' . $showrow['name'] . '</a></td><td>+' . strval($showrow['likes']) . '</td><td>' . strval($allmessages) . '</td></tr>';
+        echo '<tr><td><' . $stylestring . '>' . strval($showrow['id']) . '</' . $stylestring . '></td><td><a href="submissions.php?view=' . strval($showrow['id']) . '&page=' . strval($page) . '&sort=' . $sort . '&mode=' . $mode . '&order=' . $order . '">' . $showrow['name'] . '</a></td><td>+' . strval($showrow['likes']) . '</td><td>' . strval($allmessages) . '</td></tr>';
     }
     if (!$results) {
         echo '<tr><td colspan="4">No submissions found. Either this is an invalid page number, or nothing matches those parameters.</td></tr>';
@@ -526,8 +526,8 @@ if (empty($_SESSION['username'])) {
     }
     echo "<br />Total results: $alltotal</center><br /><br />";
     $currentitem = "";
-    if (!empty($feedrow['ID'])) {
-        $currentitem = strval($feedrow['ID']);
+    if (!empty($feedrow['id'])) {
+        $currentitem = strval($feedrow['id']);
     }
     echo '<form action="submissions.php" method="get"><input type="hidden" name="view" value="' . $currentitem . '"><table width="100%" cellpadding="3" cellspacing="3"><tr><td><center>Show only:</center></br>';
     echo '<input type="radio" name="mode" value="none" checked /> All<br /><input type="radio" name="mode" value="yours" /> Your submissions<br /><input type="radio" name="mode" value="black" /> Unmarked<br /><input type="radio" name="mode" value="red" /> Defunct<br /><input type="radio" name="mode" value="yellow" /> Clarification needed<br /><input type="radio" name="mode" value="green" /> Greenlit<br /><input type="radio" name="mode" value="blue" /> Challenge Mode<br /><input type="radio" name="mode" value="gray" /> Suspended<br /><input type="radio" name="mode" value="orange" /> Randomized<br /><input type="radio" name="mode" value="white" /> Dev requested</td>';

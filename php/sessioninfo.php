@@ -53,20 +53,20 @@ if (!empty($session)) { //Session to examine
         $strifernames = [];
         $striferpower = [];
         while ($striferrow = mysqli_fetch_assoc($striferquery)) {
-            $strifernames[$striferrow['ID']] = $striferrow['name'];
-            $striferpower[$striferrow['ID']] = $striferrow['power'];
+            $strifernames[$striferrow['id']] = $striferrow['name'];
+            $striferpower[$striferrow['id']] = $striferrow['power'];
         }
 
         $itemquery = mysqli_query($connection, "SELECT * FROM Captchalogue;");
         $itemnames = [];
         while ($itemrow = mysqli_fetch_assoc($itemquery)) {
-            $itemnames[$itemrow['ID']] = $itemrow['name'];
+            $itemnames[$itemrow['id']] = $itemrow['name'];
         }
 
 
         foreach ($characterids as $characterid) {
             $row = getChar($characterid);
-            if ($row['session'] == $sessionrow['ID']) { //Paranoia: Player is a participant in this session.
+            if ($row['session'] == $sessionrow['id']) { //Paranoia: Player is a participant in this session.
                 if ($row['colour'] != "") {
                     $favcolour = $row['colour'];
                 } else {

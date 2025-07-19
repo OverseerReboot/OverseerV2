@@ -12,7 +12,7 @@ if (empty($_SESSION['character'])) {
     if ($charrow['dreamingstatus'] == "Awake") {
         $striferow = loadStriferow($charrow['wakeself']);
         if ($striferow['strifeID'] == 0 && $charrow['dungeon'] == 0) {
-            mysqli_query($connection, "UPDATE `characters` SET `dreamingstatus` = '" . $charrow['dreamer'] . "' WHERE `characters`.`id` = " . $charrow['ID'] . " LIMIT 1;");
+            mysqli_query($connection, "UPDATE `characters` SET `dreamingstatus` = '" . $charrow['dreamer'] . "' WHERE `characters`.`id` = " . $charrow['id'] . " LIMIT 1;");
             echo "You drift off to sleep...or do you wake up? Either way, you are now in control of your dreamself.<br />";
         } elseif ($charrow['dungeon'] == 0) {
             echo "It's kind of hard to get to sleep in the middle of strife!<br />";
@@ -22,7 +22,7 @@ if (empty($_SESSION['character'])) {
     } else {
         $striferow = loadStriferow($charrow['dreamself']);
         if ($striferow['strifeID'] == 0) {
-            mysqli_query($connection, "UPDATE `characters` SET `dreamingstatus` = 'Awake' WHERE `characters`.`id` = " . $charrow['ID'] . " LIMIT 1;");
+            mysqli_query($connection, "UPDATE `characters` SET `dreamingstatus` = 'Awake' WHERE `characters`.`id` = " . $charrow['id'] . " LIMIT 1;");
             echo "You drift off to sleep...or do you wake up? Either way, you are now in control of your waking self.<br />";
         } else {
             echo "It's kind of hard to get to sleep in the middle of strife!<br />";

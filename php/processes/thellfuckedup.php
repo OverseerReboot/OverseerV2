@@ -13,7 +13,7 @@ $backupRows = mysqli_query($backup, "SELECT * FROM `users`;");
 $n = 1;
 while ($liveRow = mysqli_fetch_assoc($liveRows)) {
     if ($liveRow['password'] == '0') {
-        $restoreID = $liveRow['ID'];
+        $restoreID = $liveRow['id'];
         $backupQuery = mysqli_query($backup, "SELECT * FROM `users` WHERE `id` = '$restoreID';");
         $backupRow = mysqli_fetch_array($backupQuery);
         $restorePassword = $backupRow['password'];

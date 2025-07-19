@@ -26,7 +26,7 @@ function addItem(array $charrow, string $id, string $extras = "", bool $shouldej
         if ($taken >= $charrow['invslots']) { //if we're here, it means the modus will eject
             $charrow['inventory'] = ejectItem($charrow);
         }
-        //mysqli_query($connection, "UPDATE `characters` SET `inventory` = '" . $charrow['inventory'] . "', `metadata` = '" . $charrow['metadata'] . "' WHERE `characters`.`id` = " . strval($charrow['ID']));
+        //mysqli_query($connection, "UPDATE `characters` SET `inventory` = '" . $charrow['inventory'] . "', `metadata` = '" . $charrow['metadata'] . "' WHERE `characters`.`id` = " . strval($charrow['id']));
         if ($shouldrefreshatheneum) {
             refreshAtheneum($charrow, $id, 2);
         }
@@ -97,7 +97,7 @@ function storeItem(&$charrow, $id, $amount, $extras = "", $shouldrefreshatheneum
         $newstorage .= strval($id) . ":$amount:" . $extras . "|";
     }
     $newstorage = mysqli_real_escape_string($connection, $newstorage);
-    mysqli_query($connection, "UPDATE `characters` SET `storeditems` = '$newstorage', `storedspace` = " . strval($charrow['storedspace'] + $size) . " WHERE `id` = " . strval($charrow['ID']));
+    mysqli_query($connection, "UPDATE `characters` SET `storeditems` = '$newstorage', `storedspace` = " . strval($charrow['storedspace'] + $size) . " WHERE `id` = " . strval($charrow['id']));
     $charrow['storeditems'] = $newstorage;
     $charrow['storedspace'] += $size;
     if ($shouldrefreshatheneum) {

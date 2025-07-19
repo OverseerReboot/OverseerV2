@@ -38,7 +38,7 @@ if ($_SESSION['username'] != $sessionRow['creator']) {
         $doomMembers = $doomRow['members'].$exileChar."|";
         mysqli_query($connection, "UPDATE `sessions` SET `members` = '$doomMembers' WHERE `id` = '-1';");
         echo "Exiled ".$exiledRow['name']."!<br><br>";
-        notifyCharacter($exiledRow['ID'], "You have been exiled! Welcome to DoomHeim, the exile session!");
+        notifyCharacter($exiledRow['id'], "You have been exiled! Welcome to DoomHeim, the exile session!");
     } else {
         echo "This character isn't in your session.<br><br>";
     }
@@ -65,7 +65,7 @@ if ($_SESSION['username'] != $sessionRow['creator']) {
 
     while ($exileplayer = mysqli_fetch_assoc($session_query)) {
         $exiledRow = $exileplayer;
-        $exileChar = $exiledRow['ID'];
+        $exileChar = $exiledRow['id'];
         $exiledClient = $exiledRow['client'];
         $exiledServer = $exiledRow['server'];
         $exiledSession = $exiledRow['session'];
@@ -134,15 +134,15 @@ if ($_SESSION['username'] != $sessionRow['creator']) {
         echo "The server isn't in your session.<br><br>";
     } else {
         // Start the stuff
-        $serverID = $serverRow['ID'];
-        $clientID = $clientRow['ID'];
+        $serverID = $serverRow['id'];
+        $clientID = $clientRow['id'];
         // Do we need to collison check? Yes - check nobody else has that client
         mysqli_query($connection, "UPDATE `characters` SET `client` = '0' WHERE `client` = '$clientID';");
         mysqli_query($connection, "UPDATE `characters` SET `server` = '0' WHERE `server` = '$serverID';");
         mysqli_query($connection, "UPDATE `characters` SET `client` = '$clientID' WHERE `id` = '$serverID';");
         mysqli_query($connection, "UPDATE `characters` SET `server` = '$serverID' WHERE `id` = '$clientID';");
         echo 'Successfully set '.$serverRow['name'].' to '.$clientRow['name'].'\'s server.<br><br>';
-        notifyCharacter($clientRow['ID'], $serverRow['name'] . " has become your server player!");
+        notifyCharacter($clientRow['id'], $serverRow['name'] . " has become your server player!");
     }
 }
 
@@ -158,7 +158,7 @@ echo 'Select a character to be the new session admin: <form id="admin" action="s
 	Username: <select name="adminchar">
   <option value="">Select...</option>';
 while ($namesRow = mysqli_fetch_assoc($namesResult)) {
-    echo '<option value="'.$namesRow['ID'].'">'.$namesRow['name'].'</option>';
+    echo '<option value="'.$namesRow['id'].'">'.$namesRow['name'].'</option>';
 }
 echo '</select> <input type="submit" value="ADMIN"></form><br><br>';
 
@@ -168,7 +168,7 @@ echo 'Exile a character from the session: <form id="exile" action="sessionadmin.
   <option value="">Select...</option>';
 $namesResult = mysqli_query($connection, "SELECT * FROM `characters` WHERE `session` = '$charSession';");
 while ($namesRow = mysqli_fetch_assoc($namesResult)) {
-    echo '<option value="'.$namesRow['ID'].'">'.$namesRow['name'].'</option>';
+    echo '<option value="'.$namesRow['id'].'">'.$namesRow['name'].'</option>';
 }
 echo '</select> <input type="submit" value="EXILE"></form><br><br>';
 
@@ -197,13 +197,13 @@ echo '<br> Set <form id="chain" action="sessionadmin.php" method="post">
 	<select name="chainserver">
 	<option value="">Select Server</option>'; // Start selecting server.
 while ($namesRow = mysqli_fetch_assoc($namesResult)) {
-    echo '<option value="'.$namesRow['ID'].'">'.$namesRow['name'].'</option>';
+    echo '<option value="'.$namesRow['id'].'">'.$namesRow['name'].'</option>';
 }
 $namesResult = mysqli_query($connection, "SELECT * FROM `characters` WHERE `session` = '$charSession';");
 echo '</select>\'s client to <select name="chainclient">
 	<option value="">Select Client</option>'; // Client
 while ($namesRow = mysqli_fetch_assoc($namesResult)) {
-    echo '<option value="'.$namesRow['ID'].'">'.$namesRow['name'].'</option>';
+    echo '<option value="'.$namesRow['id'].'">'.$namesRow['name'].'</option>';
 }
 echo ' <input type="submit" value="REASSIGN"><br><br>';
 

@@ -162,11 +162,11 @@ function buildMegaquery($strifers, $n, $connection): string //$n is the number o
         while ($k <= $n) {
             if (!empty($strifers[$k])) { //Defeated enemies will leave "holes" in the array. These are to be ignored.
                 if ($types[$j] == "num") { //Data is a number. No quotes.
-                    $megaquery .= "WHEN " . $strifers[$k]['ID'] . " THEN " . strval($strifers[$k][$values[$j]]) . " ";
+                    $megaquery .= "WHEN " . $strifers[$k]['id'] . " THEN " . strval($strifers[$k][$values[$j]]) . " ";
                 } else { //Data is a string. We need quotes.
-                    $megaquery .= "WHEN " . $strifers[$k]['ID'] . " THEN '" . mysqli_real_escape_string($connection, strval($strifers[$k][$values[$j]])) . "' ";
+                    $megaquery .= "WHEN " . $strifers[$k]['id'] . " THEN '" . mysqli_real_escape_string($connection, strval($strifers[$k][$values[$j]])) . "' ";
                 }
-                $idlist .= $strifers[$k]['ID']; //This is a number, so no quotes around it.
+                $idlist .= $strifers[$k]['id']; //This is a number, so no quotes around it.
                 $idlist .= ", ";
             }
             $k++;

@@ -66,7 +66,7 @@ foreach ($characterids as $chara) {
     if ($char['name'] != '[ERROR RETRIEVING PLAYER ID]') {
         echo
         '<tr>
-		<td>' . $char['ID'] . '</td>
+		<td>' . $char['id'] . '</td>
 		<td><div title="'.$char['name'].'"><b>' . rowProfileStringSoft($char) . '</b></div></td>
 		<td>' . $char['echeladder'] . '</td>
 		<td>' . (($char['denizendown'] == 1) ? 'Skaia' : $char["gatescleared"]) . '</td>

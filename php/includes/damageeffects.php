@@ -4,7 +4,7 @@
 //Probably in the preeffects file. Also remember that $damage is the current damage, $offense is the offense applied, and $defense is the defense applied.
 //$i is the attacker, $t is the defender. Things that add to the damage probably care about order and need to be handled earlier somehow.
 
-//Reminder: Append new statuses to $updatedstatus[$strifers[$t]['ID']] so they don't affect strifer $t's later damage resolutions
+//Reminder: Append new statuses to $updatedstatus[$strifers[$t]['id']] so they don't affect strifer $t's later damage resolutions
 //Note that they will need a duration of at least 2 if they are not to be removed immediately. (A duration of 1 might be useful for some specific cases
 //such as removing an ability at the end of the turn)
 $flatdamage = 0; //Anything added to "flatdamage" will be added to the damage without being affected by multipliers of any kind.
@@ -116,15 +116,15 @@ if ($damage > 0) { //On-hit effects only apply if damage is dealt!
         switch ($strifers[$i]['currentmotif']) {
             case "Mind/I":
                 $flatdamage += 413;
-                $updatedstatus[$strifers[$t]['ID']] .= "POWERLOSS:1:2413|"; //Special status effect: Causes power loss and disappears
+                $updatedstatus[$strifers[$t]['id']] .= "POWERLOSS:1:2413|"; //Special status effect: Causes power loss and disappears
                 break;
             case "Blood/I":
                 $flatdamage += 690;
-                $updatedstatus[$strifers[$t]['ID']] .= "BLEEDING:3:5|";
+                $updatedstatus[$strifers[$t]['id']] .= "BLEEDING:3:5|";
                 $j = 1;
                 while ($j <= $n) {
                     if ($strifers[$j]['side'] == $strifers[$i]['side']) {
-                        $updatedstatus[$strifers[$j]['ID']] .= "POWERGAIN:1:690|";
+                        $updatedstatus[$strifers[$j]['id']] .= "POWERGAIN:1:690|";
                     } //See POWERLOSS
                     $j++;
                 }
@@ -152,29 +152,29 @@ if ($damage > 0) { //On-hit effects only apply if damage is dealt!
                 break;
             case "Breath/II":
                 $flatdamage += 5000;
-                $updatedstatus[$strifers[$t]['ID']] .= "KNOCKDOWN:2|";
+                $updatedstatus[$strifers[$t]['id']] .= "KNOCKDOWN:2|";
                 break;
             case "Heart/II":
                 $flatdamage += ($strifers[$t]['power'] * 2);
                 break;
             case "Blood/II":
-                $updatedstatus[$strifers[$t]['ID']] .= "ISOLATED:3|POWERLOSS:1:690|";
+                $updatedstatus[$strifers[$t]['id']] .= "ISOLATED:3|POWERLOSS:1:690|";
                 break;
             case "Doom/II":
                 if ($strifers[$t]['leader'] == 1) {
                     $flatdamage += 50000;
-                    $updatedstatus[$strifers[$t]['ID']] .= "ISOLATED:2|HOPELESS:2|";
+                    $updatedstatus[$strifers[$t]['id']] .= "ISOLATED:2|HOPELESS:2|";
                 }
                 break;
             case "Rage/II":
                 $side = rand(0, 255);
-                $updatedstatus[$strifers[$t]['ID']] .= "CHARMED:2:$side|";
+                $updatedstatus[$strifers[$t]['id']] .= "CHARMED:2:$side|";
                 break;
             case "Void/II":
-                $updatedstatus[$strifers[$t]['ID']] .= "UNSTUCK:5|";
+                $updatedstatus[$strifers[$t]['id']] .= "UNSTUCK:5|";
                 break;
             case "Space/II":
-                $updatedstatus[$strifers[$t]['ID']] .= "BURNING:0:2500|BURNING:0:2500|BURNING:0:2500|BURNING:0:2500|BURNING:0:2500|BURNING:0:2500|";
+                $updatedstatus[$strifers[$t]['id']] .= "BURNING:0:2500|BURNING:0:2500|BURNING:0:2500|BURNING:0:2500|BURNING:0:2500|BURNING:0:2500|";
                 $flatdamage += 10000;
                 break;
             case "Light/II":
@@ -230,7 +230,7 @@ if ($damage > 0) { //On-hit effects only apply if damage is dealt!
                 $roll = rand($lowestresult, 100);
                 if ($roll > $target) { //Knockdown applied
                     $output .= $strifers[$t]['name'] . " is sent flying by the force of " . $strifers[$i]['name'] . "'s blow!<br />";
-                    $updatedstatus[$strifers[$t]['ID']] .= "KNOCKDOWN:2|"; //This will reduce to 1 in the end of turn status check.
+                    $updatedstatus[$strifers[$t]['id']] .= "KNOCKDOWN:2|"; //This will reduce to 1 in the end of turn status check.
                 }
                 break;
             case "COMPUTER": //We don't care about this property here, so skip it.
@@ -247,7 +247,7 @@ if ($damage > 0) { //On-hit effects only apply if damage is dealt!
                 $target = 100 - (intval($currenteffect[1]) * $resistfactor); //Shrink the application window according to the resistance found
                 if ($roll > $target) {
                     $currenteffect[0] = str_replace("@", ":", $currenteffect[0]); //Substitute out the @'s in preparation for writing to the target's status
-                    $updatedstatus[$strifers[$t]['ID']] .= $currenteffect[0] . "|";
+                    $updatedstatus[$strifers[$t]['id']] .= $currenteffect[0] . "|";
                     $currenteffect[3] = str_replace("%USER%", $strifers[$i]['name'], $currenteffect[3]);
                     $currenteffect[3] = str_replace("%TARGET%", $strifers[$t]['name'], $currenteffect[3]);
                     $output .= $currenteffect[3] . "<br />";

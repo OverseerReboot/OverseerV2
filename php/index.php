@@ -234,8 +234,8 @@ function showCaptcha(): void
                 $sname[$row['session']] = $sesrow['name'];
             }
             $symbol = "'" . $row['symbol'] . "'";?>
-						<a title="<?php echo($sname[$row['session']]); ?>" href="/changechar.php?c=<?php echo($row['ID']); ?>">
-							<div class="character" charid="<?php echo($row['ID']); ?>" style="<?php echo(getcharbgcolor('#'.$row['colour'])); ?>;">
+						<a title="<?php echo($sname[$row['session']]); ?>" href="/changechar.php?c=<?php echo($row['id']); ?>">
+							<div class="character" charid="<?php echo($row['id']); ?>" style="<?php echo(getcharbgcolor('#'.$row['colour'])); ?>;">
 								<div class="charimg" style="background: url(<?php echo($symbol); ?>) center center no-repeat, #fff;"></div>
 								<div class="chartext">
 									<span style="text-decoration: underline;">Name</span>:<br>
