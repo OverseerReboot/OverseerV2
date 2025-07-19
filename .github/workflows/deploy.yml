@@ -15,7 +15,7 @@ jobs:
     - name: 'Create env file, run Docker'
       run: |
           touch .env
-          echo DB_HOSTNAME="localhost" >> .env
+          echo DB_HOSTNAME="host.docker.internal" >> .env
           echo DB_USERNAME="root" >> .env
           echo DB_PASSWORD="" >> .env
           echo DB_DATABASE="overseer_v2" >> .env
