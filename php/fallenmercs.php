@@ -6,7 +6,7 @@ if (empty($_SESSION['character'])) {
     echo "Choose a character to see your killed consorts.<br />";
 } else {
     echo 'You are entering the graveyard of the Land of '.$charrow['land1'].' and '.$charrow['land2'].', a silent memorial to one of the grandest, most violent, most cataclysmic battles the Incipisphere has ever borne witness to.';
-    $consortRows = mysqli_query($connection, "SELECT * FROM `deadconsorts` WHERE `belongedto` = '".$charrow['ID']."';");
+    $consortRows = mysqli_query($connection, "SELECT * FROM `dead_consorts` WHERE `belongedto` = '".$charrow['ID']."';");
     $consortArray = mysqli_fetch_array($consortRows);
     if ($consortArray) {
         setAchievement($charrow, 'deadconsort');

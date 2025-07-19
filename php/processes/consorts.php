@@ -22,7 +22,7 @@ while ($row = mysqli_fetch_assoc($consortsResult)) {
             'skip' => array('min' => 0, 'max' => 100),
         );
         if ($row['injurycount'] >= 3) {
-            mysqli_query($connection, "INSERT INTO `deadconsorts` (`belongedto`, `name`) VALUES ('$charID', '$consortName');");
+            mysqli_query($connection, "INSERT INTO `dead_consorts` (`belongedto`, `name`) VALUES ('$charID', '$consortName');");
             mysqli_query($connection, "DELETE FROM `consorts` WHERE `id` = '$consortID';");
             $consortCountNew = $charRow['consortcount'] - 1;
             mysqli_query($connection, "UPDATE `characters` SET `consortcount` = '$consortCountNew' WHERE `id` = '$charID';");

@@ -13757,10 +13757,10 @@ INSERT INTO `consort_dialogue` (`id`, `dialogue`, `victory_dialogue`, `completio
 -- --------------------------------------------------------
 
 --
--- Table structure for table `deadconsorts`
+-- Table structure for table `dead_consorts`
 --
 
-CREATE TABLE `deadconsorts` (
+CREATE TABLE `dead_consorts` (
   `id` int(11) NOT NULL,
   `belongedto` int(11) NOT NULL,
   `name` text NOT NULL
@@ -14358,9 +14358,9 @@ ALTER TABLE `consort_dialogue`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `deadconsorts`
+-- Indexes for table `dead_consorts`
 --
-ALTER TABLE `deadconsorts`
+ALTER TABLE `dead_consorts`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -14473,9 +14473,9 @@ ALTER TABLE `consorts`
 ALTER TABLE `consort_dialogue`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'dialogue ID', AUTO_INCREMENT=121;
 --
--- AUTO_INCREMENT for table `deadconsorts`
+-- AUTO_INCREMENT for table `dead_consorts`
 --
-ALTER TABLE `deadconsorts`
+ALTER TABLE `dead_consorts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=247026;
 --
 -- AUTO_INCREMENT for table `dungeons`
